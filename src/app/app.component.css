@@ -7,3 +7,28 @@
   z-index: 1100;
   position: relative;
 }
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-container {
+  display: flex;
+  flex: 1;
+  position: relative;
+  min-height: calc(100vh - var(--navbar-height) - var(--footer-height));
+}
+
+.content-area {
+  flex: 1;
+  padding: 1rem;
+  transition: margin-left 0.3s ease;
+  width: 100%;
+}
+
+.sidebar-open .content-area {
+  margin-left: 250px; /* Ancho del sidebar */
+}
+

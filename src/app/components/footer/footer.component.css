@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  position: relative;
+  z-index: 1000; /* Mayor que el z-index del sidebar */
+  background-color: white;
+  width: 100%;
+}
+
+footer {
+  border-top: 1px solid rgba(0,0,0,.125);
+}

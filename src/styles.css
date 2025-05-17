@@ -2,6 +2,9 @@
 @import 'bootswatch/dist/sandstone/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
+/* Definir las variables necesarias */
 :root {
-  --navbar-height: 73px;
+  --navbar-height: 56px; /* Ajusta según la altura real de tu navbar */
+  --footer-height: 56px; /* Ajusta según la altura real de tu footer */
+  --sidebar-width: 250px; /* Ancho del sidebar */
 }
