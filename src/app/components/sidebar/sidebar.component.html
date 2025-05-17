@@ -5,7 +5,7 @@
   <ul class="nav flex-column p-2">
     @for (item of menuItems; track item.name) {
       <li class="nav-item">
-        <a class="nav-link d-flex align-items-center py-3" [routerLink]="item.route">
+        <a class="nav-link d-flex align-items-center py-3 text-dark" [routerLink]="item.route">
           <i class="{{item.icon}} me-2"></i>
           <span>{{item.name}}</span>
         </a>
