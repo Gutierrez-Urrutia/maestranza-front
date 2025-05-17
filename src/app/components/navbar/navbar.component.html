@@ -1,0 +1,19 @@
+<nav class="navbar navbar-expand-lg bg-white navbar-light border-bottom border-secondary-subtle">
+    <div class="container-fluid">
+        <!-- Botón hamburguesa personalizado para abrir el sidebar -->
+        <button class="btn btn-outline-dark me-2" (click)="toggleSidebar.emit()" aria-label="Abrir menú lateral">
+            &#9776;
+        </button>
+        <ul class="navbar-nav ms-2 me-auto">
+            <li class="nav-item">
+                <h1>Gestión de Inventario
+                    <span class="visually-hidden">(current)</span>
+                </h1>
+            </li>
+        </ul>
+        <form class="d-flex">
+            <input class="form-control me-sm-2" type="search" placeholder="Search">
+        </form>
+    </div>
+
+</nav>

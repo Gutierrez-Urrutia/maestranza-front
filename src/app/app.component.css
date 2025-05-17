@@ -1,0 +1,9 @@
+.hamburger {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 1rem;
+  z-index: 1100;
+  position: relative;
+}
