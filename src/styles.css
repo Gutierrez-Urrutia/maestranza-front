@@ -4,7 +4,8 @@
 
 /* Definir las variables necesarias */
 :root {
-  --navbar-height: 56px; /* Ajusta según la altura real de tu navbar */
+  --navbar-height: 76px; /* Ajusta según la altura real de tu navbar */
   --footer-height: 56px; /* Ajusta según la altura real de tu footer */
   --sidebar-width: 250px; /* Ancho del sidebar */
 }
+

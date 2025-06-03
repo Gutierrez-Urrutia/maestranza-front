@@ -1,7 +1,7 @@
 <div class="app-container">
   <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
 
-  <div class="main-container" [class.sidebar-open]="sidebarVisible">
+  <div class="main-content-with-fixed-nav" [class.sidebar-open]="sidebarVisible">
     <app-sidebar [visible]="sidebarVisible"></app-sidebar>
     
     <div class="content-area">

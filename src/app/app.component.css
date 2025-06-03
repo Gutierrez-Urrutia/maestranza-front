@@ -14,21 +14,32 @@
   min-height: 100vh;
 }
 
-.main-container {
+.sidebar-open .content-area {
+  margin-left: var(--sidebar-width);
+}
+
+/* Asegura que app-container use toda la altura disponible */
+.app-container {
   display: flex;
-  flex: 1;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Ajuste para contenedor principal con navbar fijo */
+.main-content-with-fixed-nav {
+  display: flex;
   position: relative;
-  min-height: calc(100vh - var(--navbar-height) - var(--footer-height));
+  margin-top: 76px; /* Altura fija del navbar en píxeles */
+  min-height: calc(100vh - 76px - 56px); /* viewport - navbar - footer */
 }
 
 .content-area {
   flex: 1;
   padding: 1rem;
-  transition: margin-left 0.3s ease;
   width: 100%;
+  transition: margin-left 0.3s ease;
 }
 
 .sidebar-open .content-area {
-  margin-left: 250px; /* Ancho del sidebar */
+  margin-left: 250px; /* Ancho fijo del sidebar */
 }
-

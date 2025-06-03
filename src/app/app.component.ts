@@ -1,9 +1,10 @@
 import { Component, AfterViewInit, HostListener } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { NavbarComponent } from "./components/navbar/navbar.component";
 import { FooterComponent } from "./components/footer/footer.component";
 import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,15 @@ import { CommonModule } from '@angular/common';
 export class AppComponent implements AfterViewInit {
   title = 'maestranza-front';
   sidebarVisible = false;
+  isLoginPage = false;
+
+  constructor(private router: Router) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.isLoginPage = event.url === '/' || event.url === '/login';
+    });
+  }
 
   toggleSidebar() {
     this.sidebarVisible = !this.sidebarVisible;
