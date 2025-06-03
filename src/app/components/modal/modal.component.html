@@ -1,0 +1,22 @@
+<div class="modal fade" [id]="modalId" tabindex="-1" [attr.aria-labelledby]="modalId + 'Label'" aria-hidden="true">
+    <div class="modal-dialog" [class]="size ? 'modal-' + size : ''">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" [id]="modalId + 'Label'">
+                    <i class="bi {{icon}} me-2 {{iconColor}}"></i>
+                    {{title}}
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="onCloseClick()"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Contenido proyectado -->
+                <ng-content></ng-content>
+            </div>
+            <div class="modal-footer">
+                <!-- Footer proyectado -->
+                <ng-content select="[slot=footer]"></ng-content>
+            </div>
+        </div>
+    </div>
+</div>

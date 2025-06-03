@@ -1,0 +1,38 @@
+<form (ngSubmit)="onSubmit()">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="editCodigo" class="form-label">Código</label>
+                <input type="text" class="form-control" id="editCodigo" [value]="producto?.codigo" required>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="editNombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="editNombre" [value]="producto?.nombre" required>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="editCategoria" class="form-label">Categoría</label>
+                <select class="form-select" id="editCategoria" required>
+                    <option value="Herramientas" [selected]="producto?.categoria === 'Herramientas'">Herramientas
+                    </option>
+                    <option value="Ferretería" [selected]="producto?.categoria === 'Ferretería'">Ferretería</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="editStock" class="form-label">Stock</label>
+                <input type="number" class="form-control" id="editStock" [value]="producto?.stock" required>
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="editPrecio" class="form-label">Precio (USD)</label>
+        <input type="number" class="form-control" id="editPrecio" [value]="producto?.precio" step="0.01" required>
+    </div>
+</form>

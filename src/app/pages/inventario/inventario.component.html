@@ -31,21 +31,131 @@
                         }
                     </div>
                 </div>
-                <input type="text" class="form-control" placeholder="Buscar producto" aria-label="Buscar producto">
             </div>
         </div>
         <div class="row mt-4">
             <div class="col-12 d-flex justify-content-between align-items-center mb-3">
                 <h2 class="mb-2 text-start">Lista de Productos</h2>
                 <div>
-                    @for (boton of botonesAcciones; track boton.texto) {
-                    <button class="btn {{boton.color}} me-2">
-                        <i class="bi {{boton.icono}} me-1"></i>{{boton.texto}}
+                    <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#modalProducto"
+                        (click)="abrirModal('agregar')">
+                        <i class="bi bi-plus-circle me-1"></i>Agregar
                     </button>
-                    }
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Tabla PrimeNG -->
+            <div class="col-12 table-responsive">
+                <p-table #dt [value]="productos" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+                    [rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-gridlines"
+                    [globalFilterFields]="['codigo','nombre','categoria']" responsiveLayout="scroll">
+
+                    <ng-template pTemplate="caption">
+                        <div class="row align-items-center">
+                            <div class="col-12">
+                                <div class="position-relative">
+                                    <input pInputText type="text"
+                                        (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                                        placeholder="Buscar productos..." class="form-control ps-5" />
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="codigo">
+                                Código
+                                <p-sortIcon field="codigo"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="nombre">
+                                Nombre
+                                <p-sortIcon field="nombre"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="categoria">
+                                Categoría
+                                <p-sortIcon field="categoria"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="stock">
+                                Stock
+                                <p-sortIcon field="stock"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="precio">
+                                Precio
+                                <p-sortIcon field="precio"></p-sortIcon>
+                            </th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-producto>
+                        <tr>
+                            <td>{{producto.codigo}}</td>
+                            <td>{{producto.nombre}}</td>
+                            <td>{{producto.categoria}}</td>
+                            <td>{{producto.stock}}</td>
+                            <td>{{producto.precio | currency:'USD':'symbol':'1.2-2'}}</td>
+                            <td>
+                                <p-tag [value]="getEstado(producto.stock)"
+                                    [severity]="getSeverity(producto.stock)"></p-tag>
+                            </td>
+                            <td class="text-center">
+                                <!-- Botón Editar -->
+                                <button class="btn btn-sm btn-outline-warning me-2" data-bs-toggle="modal"
+                                    data-bs-target="#modalProducto" (click)="abrirModal('editar', producto)">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <!-- Botón Eliminar -->
+                                <button class="btn btn-sm btn-outline-danger" (click)="eliminarProducto(producto)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="empty">
+                        <tr>
+                            <td colspan="7" class="text-center">No se encontraron productos</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
             </div>
         </div>
     </div>
     <app-footer></app-footer>
 </div>
+
+<!-- Modal -->
+<!-- Al final del archivo, reemplazar <app-modal></app-modal> con: -->
+
+<app-modal modalId="modalProducto" [title]="modalConfig.title" [icon]="modalConfig.icon"
+    [iconColor]="modalConfig.iconColor" size="lg" (onSave)="guardarProducto()">
+
+    <!-- Contenido del modal -->
+    @if (tipoModal === 'agregar') {
+    <app-agregar-form (formSubmit)="onAgregarProducto($event)"></app-agregar-form>
+    } @else if (tipoModal === 'editar') {
+    <app-editar-form [producto]="productoSeleccionado" (formSubmit)="onEditarProducto($event)">
+    </app-editar-form>
+    }
+
+    <!-- Footer personalizado -->
+    <div slot="footer">
+        <button type="button" class="btn btn-outline-danger me-2" data-bs-dismiss="modal">
+            <i class="bi bi-x-lg me-1"></i>Cancelar
+        </button>
+
+        @if (tipoModal === 'agregar') {
+        <button type="button" class="btn btn-outline-success" (click)="onAgregarProducto({})">
+            <i class="bi bi-check-lg me-1"></i>Agregar Producto
+        </button>
+        } @else if (tipoModal === 'editar') {
+        <button type="button" class="btn btn-outline-success" (click)="onEditarProducto({})">
+            <i class="bi bi-check-lg me-1"></i>Guardar Cambios
+        </button>
+        }
+    </div>
+</app-modal>

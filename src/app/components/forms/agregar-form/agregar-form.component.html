@@ -1,0 +1,38 @@
+<form (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="codigo" class="form-label">Código</label>
+            <input type="text" class="form-control" id="codigo" placeholder="Ej: A001" required>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" placeholder="Ej: Martillo" required>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="categoria" class="form-label">Categoría</label>
+            <select class="form-select" id="categoria" required>
+              <option selected disabled>Seleccione una categoría</option>
+              <option value="Herramientas">Herramientas</option>
+              <option value="Ferretería">Ferretería</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="stock" class="form-label">Stock</label>
+            <input type="number" class="form-control" id="stock" placeholder="0" min="0" required>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="precio" class="form-label">Precio (USD)</label>
+        <input type="number" class="form-control" id="precio" placeholder="0.00" step="0.01" min="0" required>
+      </div>
+    </form>

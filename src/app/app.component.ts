@@ -2,7 +2,6 @@ import { Component, AfterViewInit, HostListener } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { NavbarComponent } from "./components/navbar/navbar.component";
-import { FooterComponent } from "./components/footer/footer.component";
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 
@@ -11,7 +10,7 @@ import { filter } from 'rxjs/operators';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, NavbarComponent, FooterComponent, CommonModule],
+  imports: [RouterOutlet, SidebarComponent, NavbarComponent, CommonModule],
 })
 export class AppComponent implements AfterViewInit {
   title = 'maestranza-front';
