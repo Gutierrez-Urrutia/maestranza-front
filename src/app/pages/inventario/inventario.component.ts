@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { BotonAccion } from '../../interfaces/BotonAccion';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-inventario',
   templateUrl: './inventario.component.html',
   styleUrls: ['./inventario.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, FooterComponent]
 })
 export class InventarioComponent {
 
