@@ -43,35 +43,3 @@
 .sidebar-open .content-area {
   margin-left: 250px; /* Ancho fijo del sidebar */
 }
-
-/* PrimeNg Table Styles */
-/* Centrar todo el contenido de la tabla */
-::ng-deep .p-datatable .p-datatable-tbody > tr > td {
-    text-align: center !important;
-    vertical-align: middle !important;
-}
-
-/* Centrar encabezados */
-::ng-deep .p-datatable .p-datatable-thead > tr > th {
-    text-align: center !important;
-    vertical-align: middle !important;
-}
-
-/* Centrar mensaje cuando no hay datos */
-::ng-deep .p-datatable .p-datatable-emptymessage > td {
-    text-align: center !important;
-}
-
-/* Estilos adicionales para mejorar apariencia */
-::ng-deep .p-datatable {
-    font-size: 14px;
-}
-
-::ng-deep .p-datatable .p-datatable-tbody > tr > td {
-    padding: 12px 8px;
-}
-
-::ng-deep .p-datatable .p-datatable-thead > tr > th {
-    padding: 12px 8px;
-    font-weight: 600;
-}

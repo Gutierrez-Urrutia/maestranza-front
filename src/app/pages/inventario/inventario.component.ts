@@ -1,21 +1,44 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { BotonAccion } from '../../interfaces/BotonAccion';
 import { FooterComponent } from '../../components/footer/footer.component';
-import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { AgregarFormComponent } from '../../components/forms/agregar-form/agregar-form.component';
 import { EditarFormComponent } from '../../components/forms/editar-form/editar-form.component';
+import { CommonModule } from '@angular/common';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-inventario',
   templateUrl: './inventario.component.html',
   styleUrls: ['./inventario.component.css'],
   standalone: true,
-  imports: [CommonModule, FooterComponent, TableModule, TagModule, ModalComponent, AgregarFormComponent, EditarFormComponent]
+  imports: [
+    CommonModule,
+    FooterComponent,
+    ModalComponent,
+    AgregarFormComponent,
+    EditarFormComponent,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ]
 })
-export class InventarioComponent {
+export class InventarioComponent implements AfterViewInit {
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  displayedColumns: string[] = ['codigo', 'nombre', 'categoria', 'stock', 'precio', 'acciones'];
+  dataSource = new MatTableDataSource<any>();
 
   tipoModal: 'agregar' | 'editar' = 'agregar';
   productoSeleccionado: any = null;
@@ -94,6 +117,15 @@ export class InventarioComponent {
     { id: 1, codigo: 'A001', nombre: 'Martillo', categoria: 'Herramientas', stock: 25, precio: 45.99 },
     { id: 2, codigo: 'B002', nombre: 'Destornillador', categoria: 'Herramientas', stock: 3, precio: 12.50 },
     { id: 3, codigo: 'C003', nombre: 'Tornillos', categoria: 'Ferretería', stock: 0, precio: 8.75 },
+    { id: 4, codigo: 'D004', nombre: 'Taladro', categoria: 'Herramientas', stock: 15, precio: 89.99 },
+    { id: 5, codigo: 'E005', nombre: 'Sierra', categoria: 'Herramientas', stock: 8, precio: 67.50 },
+    { id: 6, codigo: 'F006', nombre: 'Nivel', categoria: 'Equipos de Medición', stock: 12, precio: 23.75 },
+    { id: 7, codigo: 'G007', nombre: 'Casco', categoria: 'Equipos de Seguridad', stock: 20, precio: 35.00 },
+    { id: 8, codigo: 'H008', nombre: 'Guantes', categoria: 'Equipos de Seguridad', stock: 0, precio: 15.99 },
+    { id: 9, codigo: 'I009', nombre: 'Gafas', categoria: 'Equipos de Seguridad', stock: 5, precio: 18.50 },
+    { id: 10, codigo: 'J010', nombre: 'Llave Inglesa', categoria: 'Herramientas', stock: 7, precio: 28.75 },
+    { id: 11, codigo: 'K011', nombre: 'Alicate', categoria: 'Herramientas', stock: 14, precio: 19.99 },
+    { id: 12, codigo: 'L012', nombre: 'Cemento', categoria: 'Materiales Básicos', stock: 50, precio: 12.00 }
   ];
 
   opcionesStock: string[] = [
@@ -111,8 +143,6 @@ export class InventarioComponent {
     { texto: '', color: 'btn-outline-secondary', icono: 'bi-trash', accion: 'eliminar' }
   ];
 
-
-
   categoriaSeleccionada: string = 'Todos';
   stockSeleccionado: string = 'Todos';
 
@@ -126,15 +156,42 @@ export class InventarioComponent {
     // Aquí implementarías la lógica de filtrado real
   }
 
-  getEstado(stock: number): string {
-    if (stock === 0) return 'Agotado';
-    if (stock < 10) return 'Bajo Stock';
-    return 'Disponible';
+  ngOnInit() {
+    this.dataSource.data = this.productos;
   }
 
-  getSeverity(stock: number): string {
-    if (stock === 0) return 'danger';
-    if (stock < 10) return 'warning';
-    return 'success';
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
+
+  editarProducto(producto: any) {
+    this.abrirModal('editar', producto);
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    // Forzar actualización del paginador
+    if (this.paginator) {
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página:';
+      this.paginator._intl.nextPageLabel = 'Página siguiente';
+      this.paginator._intl.previousPageLabel = 'Página anterior';
+      this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+        if (length === 0 || pageSize === 0) {
+          return `0 de ${length}`;
+        }
+        const startIndex = page * pageSize;
+        const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+        return `${startIndex + 1} - ${endIndex} de ${length}`;
+      };
+      this.paginator._intl.changes.next();
+    }
+  }
+
 }

@@ -45,83 +45,98 @@
             </div>
         </div>
         <div class="row">
-            <!-- Tabla PrimeNG -->
-            <div class="col-12 table-responsive">
-                <p-table #dt [value]="productos" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
-                    [rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-gridlines"
-                    [globalFilterFields]="['codigo','nombre','categoria']" responsiveLayout="scroll">
+            <!-- Material Table -->
+            <div class="col-12 ">
+                <!-- Encabezado con botón agregar -->
+                <!-- Campo de búsqueda -->
+                <mat-form-field class="w-100 mb-3">
+                    <mat-label>Buscar productos</mat-label>
+                    <input matInput (keyup)="applyFilter($event)"
+                        placeholder="Buscar por código, nombre o categoría...">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
 
-                    <ng-template pTemplate="caption">
-                        <div class="row align-items-center">
-                            <div class="col-12">
-                                <div class="position-relative">
-                                    <input pInputText type="text"
-                                        (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                                        placeholder="Buscar productos..." class="form-control ps-5" />
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
+                <!-- Tabla Material -->
+                <div class="table-responsive">
+                    <div class="mat-elevation-4">
+                        <table mat-table [dataSource]="dataSource" matSort class="w-100">
 
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th pSortableColumn="codigo">
-                                Código
-                                <p-sortIcon field="codigo"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="nombre">
-                                Nombre
-                                <p-sortIcon field="nombre"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="categoria">
-                                Categoría
-                                <p-sortIcon field="categoria"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="stock">
-                                Stock
-                                <p-sortIcon field="stock"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="precio">
-                                Precio
-                                <p-sortIcon field="precio"></p-sortIcon>
-                            </th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </ng-template>
+                            <!-- Columna Código -->
+                            <ng-container matColumnDef="codigo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+                                <td mat-cell *matCellDef="let producto" class="text-center">
+                                    <strong class="d-block text-center">{{producto.codigo}}</strong>
+                                </td>
+                            </ng-container>
 
-                    <ng-template pTemplate="body" let-producto>
-                        <tr>
-                            <td>{{producto.codigo}}</td>
-                            <td>{{producto.nombre}}</td>
-                            <td>{{producto.categoria}}</td>
-                            <td>{{producto.stock}}</td>
-                            <td>{{producto.precio | currency:'USD':'symbol':'1.2-2'}}</td>
-                            <td>
-                                <p-tag [value]="getEstado(producto.stock)"
-                                    [severity]="getSeverity(producto.stock)"></p-tag>
-                            </td>
-                            <td class="text-center">
-                                <!-- Botón Editar -->
-                                <button class="btn btn-sm btn-outline-warning me-2" data-bs-toggle="modal"
-                                    data-bs-target="#modalProducto" (click)="abrirModal('editar', producto)">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <!-- Botón Eliminar -->
-                                <button class="btn btn-sm btn-outline-danger" (click)="eliminarProducto(producto)">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </ng-template>
+                            <!-- Columna Nombre -->
+                            <ng-container matColumnDef="nombre">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+                                <td mat-cell *matCellDef="let producto" class="text-center">
+                                    <span class="d-block text-center">{{producto.nombre}}</span>
+                                </td>
+                            </ng-container>
 
-                    <ng-template pTemplate="empty">
-                        <tr>
-                            <td colspan="7" class="text-center">No se encontraron productos</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
+                            <!-- Columna Categoría -->
+                            <ng-container matColumnDef="categoria">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Categoría</th>
+                                <td mat-cell *matCellDef="let producto" class="text-center">
+                                    <span class="badge bg-secondary mx-auto">{{producto.categoria}}</span>
+                                </td>
+                            </ng-container>
+
+                            <!-- Columna Stock - AGREGAR text-center y mx-auto -->
+                            <ng-container matColumnDef="stock">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock</th>
+                                <td mat-cell *matCellDef="let producto" class="text-center">
+                                    <span class="badge mx-auto"
+                                        [class]="producto.stock > 0 ? 'bg-success' : 'bg-danger'">
+                                        {{producto.stock}}
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <!-- Columna Precio - AGREGAR text-center -->
+                            <ng-container matColumnDef="precio">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+                                <td mat-cell *matCellDef="let producto" class="text-center">
+                                    <span class="d-block text-center">${{producto.precio | number:'1.2-2'}}</span>
+                                </td>
+                            </ng-container>
+
+                            <!-- Columna Acciones - AGREGAR text-center -->
+                            <ng-container matColumnDef="acciones">
+                                <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
+                                <td mat-cell *matCellDef="let producto" class="text-center">
+                                    <button mat-icon-button class="mat-warning" (click)="editarProducto(producto)"
+                                        data-bs-toggle="modal" data-bs-target="#modalProducto" matTooltip="Editar">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button mat-icon-button class="mat-danger" (click)="eliminarProducto(producto)"
+                                        matTooltip="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <!-- Definir filas -->
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                            <!-- Mensaje cuando no hay datos -->
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell text-center p-4" [attr.colspan]="displayedColumns.length">
+                                    <i class="bi bi-search me-2"></i>
+                                    No se encontraron productos que coincidan con "{{dataSource.filter}}"
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Paginador -->
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

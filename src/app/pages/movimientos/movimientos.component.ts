@@ -1,17 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FooterComponent } from '../../components/footer/footer.component';
-import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-movimientos',
   templateUrl: './movimientos.component.html',
   styleUrls: ['./movimientos.component.css'],
   standalone: true,
-  imports: [CommonModule, FooterComponent, TableModule, TagModule, ButtonModule, InputTextModule]
+  imports: [CommonModule, FooterComponent]
 })
 export class MovimientosComponent {
 
