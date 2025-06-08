@@ -66,3 +66,64 @@
 ::ng-deep .mat-mdc-icon-button.mat-danger:hover {
     color: #e00000 !important;
 }
+
+/* Efecto hover en las imágenes de la tabla */
+::ng-deep .mat-mdc-cell img.img-thumbnail {
+    transition: transform 0.2s ease-in-out !important;
+    border: 2px solid transparent !important;
+}
+
+::ng-deep .mat-mdc-cell img.img-thumbnail:hover {
+    transform: scale(1.05) !important;
+    border-color: #007bff !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+}
+
+/* altura de filas*/
+/* ::ng-deep .custom-table .mat-mdc-row {
+    height: 60px !important;
+    min-height: 60px !important;
+}
+
+::ng-deep .custom-table .mat-mdc-header-row {
+    height: 60px !important;  
+    min-height: 60px !important;
+} */
+
+::ng-deep .custom-table .mat-mdc-cell,
+::ng-deep .custom-table .mat-mdc-header-cell {
+    padding: 6px !important;
+}
+
+/* tamaño de imagen */
+/* tamaño de imagen responsive */
+.image-size {
+    max-height: 40vh !important; /* 40% del viewport height */
+    max-width: 80vw !important;  /* 80% del viewport width */
+    width: 100% !important;      /* Se adapta al contenedor */
+    height: auto !important;     /* Mantiene proporción */
+    object-fit: contain !important;
+    margin: 0 auto !important;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+    .image-size {
+        max-height: 30vh !important; /* Más pequeña en móviles */
+        max-width: 90vw !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .image-size {
+        max-height: 25vh !important; /* Aún más pequeña en pantallas muy pequeñas */
+        max-width: 95vw !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .image-size {
+        max-height: 50vh !important; /* Más grande en pantallas grandes */
+        max-width: 60vw !important;
+    }
+}

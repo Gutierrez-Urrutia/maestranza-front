@@ -37,8 +37,9 @@ export class InventarioComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  displayedColumns: string[] = ['codigo', 'nombre', 'categoria', 'stock', 'precio', 'acciones'];
+  displayedColumns: string[] = ['imagen', 'codigo', 'nombre', 'categoria', 'stock', 'precio', 'acciones'];
   dataSource = new MatTableDataSource<any>();
+  productoParaImagen: any = null;
 
   tipoModal: 'agregar' | 'editar' = 'agregar';
   productoSeleccionado: any = null;
@@ -55,6 +56,10 @@ export class InventarioComponent implements AfterViewInit {
 
     // Configurar el modal según el tipo
     this.configurarModal(tipo);
+  }
+
+  abrirModalImagen(producto: any) {
+    this.productoParaImagen = producto;
   }
 
   private configurarModal(tipo: 'agregar' | 'editar') {
@@ -114,18 +119,18 @@ export class InventarioComponent implements AfterViewInit {
   ];
 
   productos: any = [
-    { id: 1, codigo: 'A001', nombre: 'Martillo', categoria: 'Herramientas', stock: 25, precio: 45.99 },
-    { id: 2, codigo: 'B002', nombre: 'Destornillador', categoria: 'Herramientas', stock: 3, precio: 12.50 },
-    { id: 3, codigo: 'C003', nombre: 'Tornillos', categoria: 'Ferretería', stock: 0, precio: 8.75 },
-    { id: 4, codigo: 'D004', nombre: 'Taladro', categoria: 'Herramientas', stock: 15, precio: 89.99 },
-    { id: 5, codigo: 'E005', nombre: 'Sierra', categoria: 'Herramientas', stock: 8, precio: 67.50 },
-    { id: 6, codigo: 'F006', nombre: 'Nivel', categoria: 'Equipos de Medición', stock: 12, precio: 23.75 },
-    { id: 7, codigo: 'G007', nombre: 'Casco', categoria: 'Equipos de Seguridad', stock: 20, precio: 35.00 },
-    { id: 8, codigo: 'H008', nombre: 'Guantes', categoria: 'Equipos de Seguridad', stock: 0, precio: 15.99 },
-    { id: 9, codigo: 'I009', nombre: 'Gafas', categoria: 'Equipos de Seguridad', stock: 5, precio: 18.50 },
-    { id: 10, codigo: 'J010', nombre: 'Llave Inglesa', categoria: 'Herramientas', stock: 7, precio: 28.75 },
-    { id: 11, codigo: 'K011', nombre: 'Alicate', categoria: 'Herramientas', stock: 14, precio: 19.99 },
-    { id: 12, codigo: 'L012', nombre: 'Cemento', categoria: 'Materiales Básicos', stock: 50, precio: 12.00 }
+    { id: 1, codigo: 'A001', nombre: 'Martillo', categoria: 'Herramientas', stock: 25, precio: 45.99, image_url: '/image.png' },
+    { id: 2, codigo: 'B002', nombre: 'Destornillador', categoria: 'Herramientas', stock: 3, precio: 12.50, image_url: '/image.png' },
+    { id: 3, codigo: 'C003', nombre: 'Tornillos', categoria: 'Ferretería', stock: 0, precio: 8.75, image_url: '/image.png' },
+    { id: 4, codigo: 'D004', nombre: 'Taladro', categoria: 'Herramientas', stock: 15, precio: 89.99, image_url: '/image.png' },
+    { id: 5, codigo: 'E005', nombre: 'Sierra', categoria: 'Herramientas', stock: 8, precio: 67.50, image_url: '/image.png' },
+    { id: 6, codigo: 'F006', nombre: 'Nivel', categoria: 'Equipos de Medición', stock: 12, precio: 23.75, image_url: '/image.png' },
+    { id: 7, codigo: 'G007', nombre: 'Casco', categoria: 'Equipos de Seguridad', stock: 20, precio: 35.00, image_url: '/image.png' },
+    { id: 8, codigo: 'H008', nombre: 'Guantes', categoria: 'Equipos de Seguridad', stock: 0, precio: 15.99, image_url: '/image.png' },
+    { id: 9, codigo: 'I009', nombre: 'Gafas', categoria: 'Equipos de Seguridad', stock: 5, precio: 18.50, image_url: '/image.png' },
+    { id: 10, codigo: 'J010', nombre: 'Llave Inglesa', categoria: 'Herramientas', stock: 7, precio: 28.75, image_url: '/image.png' },
+    { id: 11, codigo: 'K011', nombre: 'Alicate', categoria: 'Herramientas', stock: 14, precio: 19.99, image_url: '/image.png' },
+    { id: 12, codigo: 'L012', nombre: 'Cemento', categoria: 'Materiales Básicos', stock: 50, precio: 12.00, image_url: '/image.png' }
   ];
 
   opcionesStock: string[] = [
