@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ProductoService } from '../../services/producto/producto.service';
 import { CategoriaService } from '../../services/categoria/categoria.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-inventario',
@@ -123,6 +124,17 @@ export class InventarioComponent implements AfterViewInit, OnInit {
       },
       error: (error) => {
         console.error('Error al cargar categorías:', error);
+
+        Swal.fire({
+          icon: 'warning',
+          title: 'Error al cargar categorías',
+          text: 'Se usarán las categorías por defecto',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000
+        });
+
         // Mantener categorías por defecto en caso de error
         this.categorias = [
           { id: 0, nombre: 'Todos' },
@@ -146,6 +158,20 @@ export class InventarioComponent implements AfterViewInit, OnInit {
       },
       error: (error) => {
         console.error('Error al cargar productos:', error);
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al cargar productos',
+          text: 'No se pudieron cargar los productos. Intente nuevamente.',
+          confirmButtonText: 'Reintentar',
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.cargarProductos();
+          }
+        });
+
         // Mantener productos por defecto en caso de error o mostrar mensaje
         this.productos = [];
         this.dataSource.data = [];
@@ -194,8 +220,28 @@ export class InventarioComponent implements AfterViewInit, OnInit {
     // Validar que los datos están completos
     if (!formData || !formData.codigo || !formData.nombre || !formData.categoriaId) {
       console.error('Datos del formulario incompletos:', formData);
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Datos incompletos',
+        text: 'Por favor complete todos los campos requeridos',
+        confirmButtonText: 'Entendido'
+      });
+
       return;
     }
+
+    // Mostrar loading
+    Swal.fire({
+      title: 'Agregando producto...',
+      text: 'Por favor espere',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
 
     // Construir el objeto producto según lo que espera el backend
     const productoData = {
@@ -224,7 +270,13 @@ export class InventarioComponent implements AfterViewInit, OnInit {
         }
 
         // Opcional: mostrar mensaje de éxito
-        alert('Producto agregado exitosamente');
+        Swal.fire({
+          icon: 'success',
+          title: '¡Producto agregado!',
+          text: `El producto "${productoCreado.nombre}" se agregó exitosamente`,
+          timer: 2000,
+          showConfirmButton: false
+        });
       },
       error: (error) => {
         console.error('Error completo:', error);
@@ -238,7 +290,12 @@ export class InventarioComponent implements AfterViewInit, OnInit {
           errorMessage = error.message;
         }
 
-        alert('Error: ' + errorMessage);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al agregar producto',
+          text: errorMessage,
+          confirmButtonText: 'Intentar de nuevo'
+        });
       }
     });
   }
@@ -248,14 +305,41 @@ export class InventarioComponent implements AfterViewInit, OnInit {
 
     if (!this.productoSeleccionado) {
       console.error('No hay producto seleccionado para editar');
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No hay producto seleccionado para editar'
+      });
+
       return;
     }
 
     // Validar que los datos están completos
     if (!formData || !formData.codigo || !formData.nombre || !formData.categoriaId) {
       console.error('Datos del formulario incompletos:', formData);
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Datos incompletos',
+        text: 'Por favor complete todos los campos requeridos',
+        confirmButtonText: 'Entendido'
+      });
+
       return;
     }
+
+    // Mostrar loading
+    Swal.fire({
+      title: 'Editando producto...',
+      text: 'Por favor espere',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
 
     // Construir el objeto producto para actualizar
     const productoData = {
@@ -282,8 +366,13 @@ export class InventarioComponent implements AfterViewInit, OnInit {
           }
         }
 
-        // Opcional: mostrar mensaje de éxito
-        alert('Producto editado exitosamente');
+        Swal.fire({
+          icon: 'success',
+          title: '¡Producto editado!',
+          text: `El producto "${productoActualizado.nombre}" se editó exitosamente`,
+          timer: 2000,
+          showConfirmButton: false
+        });
       },
       error: (error) => {
         console.error('Error completo:', error);
@@ -297,24 +386,74 @@ export class InventarioComponent implements AfterViewInit, OnInit {
           errorMessage = error.message;
         }
 
-        alert('Error: ' + errorMessage);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al editar producto',
+          text: errorMessage,
+          confirmButtonText: 'Intentar de nuevo'
+        });
       }
     });
   }
 
   eliminarProducto(producto: any) {
-    // Aquí podrías usar SweetAlert para confirmar la eliminación
-    if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
-      this.productoService.eliminarProducto(producto.id).subscribe({
-        next: () => {
-          console.log('Producto eliminado:', producto);
-          this.cargarProductos(); // Recargar la lista
-        },
-        error: (error) => {
-          console.error('Error al eliminar producto:', error);
-        }
-      });
-    }
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: `¿Quieres eliminar el producto "${producto.nombre}"? Esta acción no se puede deshacer.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Mostrar loading durante la eliminación
+        Swal.fire({
+          title: 'Eliminando producto...',
+          text: 'Por favor espere',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        this.productoService.eliminarProducto(producto.id).subscribe({
+          next: () => {
+            console.log('Producto eliminado:', producto);
+            this.cargarProductos();
+
+            Swal.fire({
+              icon: 'success',
+              title: '¡Eliminado!',
+              text: `El producto "${producto.nombre}" ha sido eliminado`,
+              timer: 2000,
+              showConfirmButton: false
+            });
+          },
+          error: (error) => {
+            console.error('Error al eliminar producto:', error);
+
+            let errorMessage = 'Error al eliminar el producto';
+            if (error.error && error.error.message) {
+              errorMessage = error.error.message;
+            } else if (error.message) {
+              errorMessage = error.message;
+            }
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al eliminar',
+              text: errorMessage,
+              confirmButtonText: 'Entendido'
+            });
+          }
+        });
+      }
+    });
   }
 
   applyFilter(event: Event) {
