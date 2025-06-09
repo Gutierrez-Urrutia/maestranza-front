@@ -248,9 +248,9 @@ export class InventarioComponent implements AfterViewInit, OnInit {
       codigo: formData.codigo,
       nombre: formData.nombre,
       stock: formData.stock || 0,
-      categoriaId: formData.categoriaId, // Ya viene como número del formulario
-      // El precio se maneja como parte del historial de precios
-      precio: formData.precio || 0 // Convertir a centavos si es necesario
+      categoriaId: formData.categoriaId,
+      precio: formData.precio || 0,
+      image_url: formData.imageUrl || null // Agregar la URL de la imagen
     };
 
     console.log('Datos a enviar al backend:', productoData); // Debug

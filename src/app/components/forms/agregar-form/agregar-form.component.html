@@ -15,6 +15,7 @@
       </div>
     </div>
   </div>
+
   <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
@@ -43,14 +44,47 @@
       step="0.01" min="0" required>
   </div>
 
+  <!-- Sección de imagen -->
+  <div class="mb-4">
+    <label class="form-label">Imagen del producto</label>
+    <div class="card">
+      <div class="card-body">
+        <!-- Previsualización de imagen -->
+        <div class="text-center mb-3" *ngIf="imagePreview">
+          <img [src]="imagePreview" alt="Vista previa" class="img-thumbnail"
+            style="max-width: 200px; max-height: 200px; object-fit: contain;">
+          <div class="mt-2">
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeImage()">
+              <i class="bi bi-trash"></i> Quitar imagen
+            </button>
+          </div>
+        </div>
+
+        <!-- Botones para agregar imagen -->
+        <div class="d-flex gap-2 justify-content-center" *ngIf="!imagePreview">
+          <button type="button" class="btn btn-outline-primary" (click)="openCamera()">
+            <i class="bi bi-camera"></i> Tomar foto
+          </button>
+          <button type="button" class="btn btn-outline-secondary" (click)="selectFile()">
+            <i class="bi bi-upload"></i> Seleccionar archivo
+          </button>
+        </div>
+
+        <!-- Input file oculto -->
+        <input type="file" #fileInput class="d-none" accept="image/*" (change)="onFileSelected($event)">
+      </div>
+    </div>
+  </div>
+
   <!-- Botones del formulario -->
   <div class="d-flex justify-content-end gap-2 mt-4">
     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
       <i class="bi bi-x-circle me-2"></i>Cancelar
     </button>
     <button type="submit" class="btn btn-outline-success"
-      [disabled]="!formData.codigo || !formData.nombre || !formData.categoriaId">
-      <i class="bi bi-check-circle me-2"></i>Agregar
+      [disabled]="!formData.codigo || !formData.nombre || !formData.categoriaId || isProcessingImage">
+      <i class="bi bi-check-circle me-2"></i>
+      {{ isProcessingImage ? 'Procesando...' : 'Agregar' }}
     </button>
   </div>
 </form>
