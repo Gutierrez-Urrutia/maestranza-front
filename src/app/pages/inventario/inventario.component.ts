@@ -263,7 +263,7 @@ export class InventarioComponent implements AfterViewInit, OnInit {
       nombre: formData.nombre,
       stock: formData.stock || 0,
       categoriaId: formData.categoriaId,
-      precio: Math.round((formData.precio || 0) * 100) // Convertir a centavos si es necesario
+      precio: formData.precio || 0 // Convertir a centavos si es necesario
     };
 
     console.log('Datos a enviar al backend para editar:', productoData); // Debug

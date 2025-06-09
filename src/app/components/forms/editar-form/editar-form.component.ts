@@ -57,6 +57,6 @@ export class EditarFormComponent implements OnInit { // Implementar OnInit
       return 0;
     }
     // Obtener el precio más reciente
-    return producto.historialPrecios[0].precio / 100; // Si está en centavos
+    return producto.historialPrecios[0].precio; // Si está en centavos
   }
 }
