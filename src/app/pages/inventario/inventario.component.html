@@ -164,7 +164,7 @@
 <!-- Modal -->
 
 <app-modal modalId="modalProducto" [title]="modalConfig.title" [icon]="modalConfig.icon"
-    [iconColor]="modalConfig.iconColor" size="lg" (onSave)="guardarProducto()">
+    [iconColor]="modalConfig.iconColor" size="lg">
 
     @if (tipoModal === 'agregar') {
     <app-agregar-form [categorias]="categorias" (formSubmit)="onAgregarProducto($event)"></app-agregar-form>

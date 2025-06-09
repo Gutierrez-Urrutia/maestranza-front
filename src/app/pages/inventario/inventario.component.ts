@@ -95,15 +95,6 @@ export class InventarioComponent implements AfterViewInit, OnInit {
     }
   }
 
-  // Método para manejar el botón guardar del modal
-  guardarProducto() {
-    if (this.tipoModal === 'agregar') {
-      this.onAgregarProducto({});
-    } else if (this.tipoModal === 'editar') {
-      this.onEditarProducto({});
-    }
-  }
-
   botonesAcciones: BotonAccion[] = [
     { texto: 'Agregar', color: 'btn-outline-secondary', icono: 'bi-plus-circle', accion: 'agregar' },
   ];
@@ -198,31 +189,117 @@ export class InventarioComponent implements AfterViewInit, OnInit {
   }
 
   onAgregarProducto(formData: any) {
-    this.productoService.crearProducto(formData).subscribe({
+    console.log('Datos recibidos del formulario:', formData); // Debug
+
+    // Validar que los datos están completos
+    if (!formData || !formData.codigo || !formData.nombre || !formData.categoriaId) {
+      console.error('Datos del formulario incompletos:', formData);
+      return;
+    }
+
+    // Construir el objeto producto según lo que espera el backend
+    const productoData = {
+      codigo: formData.codigo,
+      nombre: formData.nombre,
+      stock: formData.stock || 0,
+      categoriaId: formData.categoriaId, // Ya viene como número del formulario
+      // El precio se maneja como parte del historial de precios
+      precio: Math.round((formData.precio || 0) * 100) // Convertir a centavos si es necesario
+    };
+
+    console.log('Datos a enviar al backend:', productoData); // Debug
+
+    this.productoService.crearProducto(productoData).subscribe({
       next: (productoCreado) => {
-        console.log('Producto agregado:', productoCreado);
+        console.log('Producto agregado exitosamente:', productoCreado);
         this.cargarProductos(); // Recargar la lista
-        // Cerrar modal después de agregar
+
+        // Cerrar modal programáticamente
+        const modalElement = document.getElementById('modalProducto');
+        if (modalElement) {
+          const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+          if (modal) {
+            modal.hide();
+          }
+        }
+
+        // Opcional: mostrar mensaje de éxito
+        alert('Producto agregado exitosamente');
       },
       error: (error) => {
-        console.error('Error al agregar producto:', error);
+        console.error('Error completo:', error);
+        console.error('Error al agregar producto:', error.error);
+
+        // Mostrar error específico del backend si está disponible
+        let errorMessage = 'Error al agregar producto';
+        if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+
+        alert('Error: ' + errorMessage);
       }
     });
   }
 
   onEditarProducto(formData: any) {
-    if (this.productoSeleccionado) {
-      this.productoService.actualizarProducto(this.productoSeleccionado.id, formData).subscribe({
-        next: (productoActualizado) => {
-          console.log('Producto editado:', productoActualizado);
-          this.cargarProductos(); // Recargar la lista
-          // Cerrar modal después de editar
-        },
-        error: (error) => {
-          console.error('Error al editar producto:', error);
-        }
-      });
+    console.log('Datos recibidos del formulario para editar:', formData); // Debug
+
+    if (!this.productoSeleccionado) {
+      console.error('No hay producto seleccionado para editar');
+      return;
     }
+
+    // Validar que los datos están completos
+    if (!formData || !formData.codigo || !formData.nombre || !formData.categoriaId) {
+      console.error('Datos del formulario incompletos:', formData);
+      return;
+    }
+
+    // Construir el objeto producto para actualizar
+    const productoData = {
+      codigo: formData.codigo,
+      nombre: formData.nombre,
+      stock: formData.stock || 0,
+      categoriaId: formData.categoriaId,
+      precio: Math.round((formData.precio || 0) * 100) // Convertir a centavos si es necesario
+    };
+
+    console.log('Datos a enviar al backend para editar:', productoData); // Debug
+
+    this.productoService.actualizarProducto(this.productoSeleccionado.id, productoData).subscribe({
+      next: (productoActualizado) => {
+        console.log('Producto editado exitosamente:', productoActualizado);
+        this.cargarProductos(); // Recargar la lista
+
+        // Cerrar modal programáticamente
+        const modalElement = document.getElementById('modalProducto');
+        if (modalElement) {
+          const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+          if (modal) {
+            modal.hide();
+          }
+        }
+
+        // Opcional: mostrar mensaje de éxito
+        alert('Producto editado exitosamente');
+      },
+      error: (error) => {
+        console.error('Error completo:', error);
+        console.error('Error al editar producto:', error.error);
+
+        // Mostrar error específico del backend si está disponible
+        let errorMessage = 'Error al editar producto';
+        if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+
+        alert('Error: ' + errorMessage);
+      }
+    });
   }
 
   eliminarProducto(producto: any) {
