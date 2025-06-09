@@ -2,37 +2,45 @@
     <div class="row">
         <div class="col-md-6">
             <div class="mb-3">
-                <label for="editCodigo" class="form-label">Código</label>
-                <input type="text" class="form-control" id="editCodigo" [value]="producto?.codigo" required>
+                <label for="codigo-edit" class="form-label">Código</label>
+                <input type="text" class="form-control" id="codigo-edit" [(ngModel)]="formData.codigo" name="codigo"
+                    required>
             </div>
         </div>
         <div class="col-md-6">
             <div class="mb-3">
-                <label for="editNombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="editNombre" [value]="producto?.nombre" required>
+                <label for="nombre-edit" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre-edit" [(ngModel)]="formData.nombre" name="nombre"
+                    required>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
             <div class="mb-3">
-                <label for="editCategoria" class="form-label">Categoría</label>
-                <select class="form-select" id="editCategoria" required>
-                    <option value="Herramientas" [selected]="producto?.categoria === 'Herramientas'">Herramientas
-                    </option>
-                    <option value="Ferretería" [selected]="producto?.categoria === 'Ferretería'">Ferretería</option>
+                <label for="categoria-edit" class="form-label">Categoría</label>
+                <select class="form-select" id="categoria-edit" [(ngModel)]="formData.categoriaId" name="categoriaId"
+                    required>
+                    <option value="" disabled>Seleccione una categoría</option>
+                    @for (categoria of categorias; track categoria.id) {
+                    @if (categoria.id !== 0) {
+                    <option [value]="categoria.id">{{categoria.nombre}}</option>
+                    }
+                    }
                 </select>
             </div>
         </div>
         <div class="col-md-6">
             <div class="mb-3">
-                <label for="editStock" class="form-label">Stock</label>
-                <input type="number" class="form-control" id="editStock" [value]="producto?.stock" required>
+                <label for="stock-edit" class="form-label">Stock</label>
+                <input type="number" class="form-control" id="stock-edit" [(ngModel)]="formData.stock" name="stock"
+                    min="0" required>
             </div>
         </div>
     </div>
     <div class="mb-3">
-        <label for="editPrecio" class="form-label">Precio (USD)</label>
-        <input type="number" class="form-control" id="editPrecio" [value]="producto?.precio" step="0.01" required>
+        <label for="precio-edit" class="form-label">Precio (USD)</label>
+        <input type="number" class="form-control" id="precio-edit" [(ngModel)]="formData.precio" name="precio"
+            step="0.01" min="0" required>
     </div>
 </form>

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { BotonAccion } from '../../interfaces/BotonAccion';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { ModalComponent } from '../../components/modal/modal.component';
@@ -12,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ProductoService } from '../../services/producto/producto.service';
+import { CategoriaService } from '../../services/categoria/categoria.service';
 
 @Component({
   selector: 'app-inventario',
@@ -33,7 +35,10 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
   ]
 })
-export class InventarioComponent implements AfterViewInit {
+export class InventarioComponent implements AfterViewInit, OnInit {
+
+  private productoService = inject(ProductoService);
+  private categoriaService = inject(CategoriaService);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -49,6 +54,15 @@ export class InventarioComponent implements AfterViewInit {
     icon: 'bi-plus-circle',
     iconColor: 'text-primary'
   };
+
+  categorias: any[] = [];
+  productos: any[] = [];
+
+  opcionesStock: string[] = [
+    'Todos',
+    'En Stock',
+    'Agotados'
+  ];
 
   abrirModal(tipo: 'agregar' | 'editar', producto?: any) {
     this.tipoModal = tipo;
@@ -81,24 +95,6 @@ export class InventarioComponent implements AfterViewInit {
     }
   }
 
-  eliminarProducto(producto: any) {
-    console.log('Eliminar producto:', producto);
-    // Aquí implementaremos SweetAlert
-  }
-
-  onAgregarProducto(formData: any) {
-    console.log('Agregando producto:', formData);
-    // Lógica para agregar producto
-    // Cerrar modal después de agregar
-  }
-
-  // Agregar este método que falta:
-  onEditarProducto(formData: any) {
-    console.log('Editando producto:', formData);
-    // Lógica para editar producto
-    // Cerrar modal después de editar
-  }
-
   // Método para manejar el botón guardar del modal
   guardarProducto() {
     if (this.tipoModal === 'agregar') {
@@ -107,37 +103,6 @@ export class InventarioComponent implements AfterViewInit {
       this.onEditarProducto({});
     }
   }
-
-  categorias: string[] = [
-    'Todos',
-    'Herramientas',
-    'Materiales Básicos',
-    'Equipos de Seguridad',
-    'Tornillos y Anclajes',
-    'Fijaciones y Adhesión',
-    'Equipos de Medición'
-  ];
-
-  productos: any = [
-    { id: 1, codigo: 'A001', nombre: 'Martillo', categoria: 'Herramientas', stock: 25, precio: 45.99, image_url: '/image.png' },
-    { id: 2, codigo: 'B002', nombre: 'Destornillador', categoria: 'Herramientas', stock: 3, precio: 12.50, image_url: '/image.png' },
-    { id: 3, codigo: 'C003', nombre: 'Tornillos', categoria: 'Ferretería', stock: 0, precio: 8.75, image_url: '/image.png' },
-    { id: 4, codigo: 'D004', nombre: 'Taladro', categoria: 'Herramientas', stock: 15, precio: 89.99, image_url: '/image.png' },
-    { id: 5, codigo: 'E005', nombre: 'Sierra', categoria: 'Herramientas', stock: 8, precio: 67.50, image_url: '/image.png' },
-    { id: 6, codigo: 'F006', nombre: 'Nivel', categoria: 'Equipos de Medición', stock: 12, precio: 23.75, image_url: '/image.png' },
-    { id: 7, codigo: 'G007', nombre: 'Casco', categoria: 'Equipos de Seguridad', stock: 20, precio: 35.00, image_url: '/image.png' },
-    { id: 8, codigo: 'H008', nombre: 'Guantes', categoria: 'Equipos de Seguridad', stock: 0, precio: 15.99, image_url: '/image.png' },
-    { id: 9, codigo: 'I009', nombre: 'Gafas', categoria: 'Equipos de Seguridad', stock: 5, precio: 18.50, image_url: '/image.png' },
-    { id: 10, codigo: 'J010', nombre: 'Llave Inglesa', categoria: 'Herramientas', stock: 7, precio: 28.75, image_url: '/image.png' },
-    { id: 11, codigo: 'K011', nombre: 'Alicate', categoria: 'Herramientas', stock: 14, precio: 19.99, image_url: '/image.png' },
-    { id: 12, codigo: 'L012', nombre: 'Cemento', categoria: 'Materiales Básicos', stock: 50, precio: 12.00, image_url: '/image.png' }
-  ];
-
-  opcionesStock: string[] = [
-    'Todos',
-    'En Stock',
-    'Agotados'
-  ];
 
   botonesAcciones: BotonAccion[] = [
     { texto: 'Agregar', color: 'btn-outline-secondary', icono: 'bi-plus-circle', accion: 'agregar' },
@@ -151,18 +116,128 @@ export class InventarioComponent implements AfterViewInit {
   categoriaSeleccionada: string = 'Todos';
   stockSeleccionado: string = 'Todos';
 
-  seleccionarCategoria(categoria: string): void {
-    this.categoriaSeleccionada = categoria;
-    // Aquí implementarías la lógica de filtrado real
+  ngOnInit() {
+    this.cargarCategorias();
+    this.cargarProductos();
+  }
+
+  private cargarCategorias() {
+    this.categoriaService.obtenerCategorias().subscribe({
+      next: (categorias) => {
+        // Agregar la opción "Todos" al inicio
+        this.categorias = [
+          { id: 0, nombre: 'Todos' },
+          ...categorias
+        ];
+      },
+      error: (error) => {
+        console.error('Error al cargar categorías:', error);
+        // Mantener categorías por defecto en caso de error
+        this.categorias = [
+          { id: 0, nombre: 'Todos' },
+          { id: 1, nombre: 'Herramientas' },
+          { id: 2, nombre: 'Ferretería' },
+          { id: 3, nombre: 'Materiales Básicos' },
+          { id: 4, nombre: 'Equipos de Seguridad' },
+          { id: 5, nombre: 'Tornillos y Anclajes' },
+          { id: 6, nombre: 'Fijaciones y Adhesión' },
+          { id: 7, nombre: 'Equipos de Medición' }
+        ];
+      }
+    });
+  }
+
+  private cargarProductos() {
+    this.productoService.obtenerProductos().subscribe({
+      next: (productos) => {
+        this.productos = productos;
+        this.dataSource.data = productos;
+      },
+      error: (error) => {
+        console.error('Error al cargar productos:', error);
+        // Mantener productos por defecto en caso de error o mostrar mensaje
+        this.productos = [];
+        this.dataSource.data = [];
+      }
+    });
+  }
+
+  refrescarDatos() {
+    this.cargarCategorias();
+    this.cargarProductos();
+  }
+
+  seleccionarCategoria(categoria: any): void {
+    this.categoriaSeleccionada = categoria.nombre || categoria;
+    this.aplicarFiltros();
   }
 
   seleccionarStock(stock: string): void {
     this.stockSeleccionado = stock;
-    // Aquí implementarías la lógica de filtrado real
+    this.aplicarFiltros();
   }
 
-  ngOnInit() {
-    this.dataSource.data = this.productos;
+  private aplicarFiltros() {
+    let productosFiltrados = [...this.productos];
+
+    // Filtrar por categoría
+    if (this.categoriaSeleccionada !== 'Todos') {
+      productosFiltrados = productosFiltrados.filter(producto =>
+        producto.categoria.nombre === this.categoriaSeleccionada
+      );
+    }
+
+    // Filtrar por stock
+    if (this.stockSeleccionado === 'En Stock') {
+      productosFiltrados = productosFiltrados.filter(producto => producto.stock > 0);
+    } else if (this.stockSeleccionado === 'Agotados') {
+      productosFiltrados = productosFiltrados.filter(producto => producto.stock === 0);
+    }
+
+    this.dataSource.data = productosFiltrados;
+  }
+
+  onAgregarProducto(formData: any) {
+    this.productoService.crearProducto(formData).subscribe({
+      next: (productoCreado) => {
+        console.log('Producto agregado:', productoCreado);
+        this.cargarProductos(); // Recargar la lista
+        // Cerrar modal después de agregar
+      },
+      error: (error) => {
+        console.error('Error al agregar producto:', error);
+      }
+    });
+  }
+
+  onEditarProducto(formData: any) {
+    if (this.productoSeleccionado) {
+      this.productoService.actualizarProducto(this.productoSeleccionado.id, formData).subscribe({
+        next: (productoActualizado) => {
+          console.log('Producto editado:', productoActualizado);
+          this.cargarProductos(); // Recargar la lista
+          // Cerrar modal después de editar
+        },
+        error: (error) => {
+          console.error('Error al editar producto:', error);
+        }
+      });
+    }
+  }
+
+  eliminarProducto(producto: any) {
+    // Aquí podrías usar SweetAlert para confirmar la eliminación
+    if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+      this.productoService.eliminarProducto(producto.id).subscribe({
+        next: () => {
+          console.log('Producto eliminado:', producto);
+          this.cargarProductos(); // Recargar la lista
+        },
+        error: (error) => {
+          console.error('Error al eliminar producto:', error);
+        }
+      });
+    }
   }
 
   applyFilter(event: Event) {
