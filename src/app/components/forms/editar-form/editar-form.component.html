@@ -15,6 +15,12 @@
             </div>
         </div>
     </div>
+    <!-- Campo de descripción añadido -->
+    <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea class="form-control" id="descripcion" [(ngModel)]="formData.descripcion" name="descripcion"
+            placeholder="Describe las características del producto, parte o pieza..." rows="3"></textarea>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <div class="mb-3">
