@@ -472,7 +472,7 @@ export class InventarioComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-
+    
     // Forzar actualización del paginador
     if (this.paginator) {
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página:';
