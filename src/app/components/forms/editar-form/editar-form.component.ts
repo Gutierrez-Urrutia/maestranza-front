@@ -22,6 +22,7 @@ export class EditarFormComponent implements OnInit { // Implementar OnInit
   formData = {
     codigo: '',
     nombre: '',
+    descripcion: '',
     categoriaId: '', // Mantener como string
     stock: 0,
     precio: 0
@@ -32,6 +33,7 @@ export class EditarFormComponent implements OnInit { // Implementar OnInit
       this.formData = {
         codigo: this.producto.codigo || '',
         nombre: this.producto.nombre || '',
+        descripcion: this.producto.descripcion || '',
         categoriaId: this.producto.categoria?.id?.toString() || '', // Convertir a string
         stock: this.producto.stock || 0,
         precio: this.obtenerPrecioActual(this.producto) || 0
@@ -59,4 +61,5 @@ export class EditarFormComponent implements OnInit { // Implementar OnInit
     // Obtener el precio más reciente
     return producto.historialPrecios[0].precio; // Si está en centavos
   }
+
 }

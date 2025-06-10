@@ -22,6 +22,7 @@ export class AgregarFormComponent {
   formData = {
     codigo: '',
     nombre: '',
+    descripcion: '',
     categoriaId: '',
     stock: 0,
     precio: 0,
@@ -378,6 +379,7 @@ export class AgregarFormComponent {
     this.formData = {
       codigo: '',
       nombre: '',
+      descripcion: '',
       categoriaId: '',
       stock: 0,
       precio: 0,

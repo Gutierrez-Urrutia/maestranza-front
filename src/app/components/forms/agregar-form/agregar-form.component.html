@@ -15,7 +15,12 @@
       </div>
     </div>
   </div>
-
+  <!-- Campo de descripción añadido -->
+  <div class="mb-3">
+    <label for="descripcion" class="form-label">Descripción</label>
+    <textarea class="form-control" id="descripcion" [(ngModel)]="formData.descripcion" name="descripcion"
+      placeholder="Describe las características del producto, parte o pieza..." rows="3"></textarea>
+  </div>
   <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
@@ -40,7 +45,7 @@
   </div>
   <div class="mb-3">
     <label for="precio" class="form-label">Precio</label>
-    <input type="number" class="form-control" id="precio" [(ngModel)]="formData.precio" name="precio" placeholder="0.00"
+    <input type="number" class="form-control" id="precio" [(ngModel)]="formData.precio" name="precio" placeholder="0"
       step="0.01" min="0" required>
   </div>
 
