@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Categoria } from '../../../interfaces/Categoria';
 import { Producto } from '../../../interfaces/Producto';
@@ -37,6 +37,35 @@ export class EditarFormComponent implements OnInit { // Implementar OnInit
         categoriaId: this.producto.categoria?.id?.toString() || '', // Convertir a string
         stock: this.producto.stock || 0,
         precio: this.obtenerPrecioActual(this.producto) || 0
+      };
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['producto']) {
+      this.cargarDatosProducto();
+    }
+  }
+
+  private cargarDatosProducto() {
+    if (this.producto) {
+      this.formData = {
+        codigo: this.producto.codigo || '',
+        nombre: this.producto.nombre || '',
+        descripcion: this.producto.descripcion || '',
+        categoriaId: this.producto.categoria?.id?.toString() || '',
+        stock: this.producto.stock || 0,
+        precio: this.obtenerPrecioActual(this.producto) || 0
+      };
+    } else {
+      // Limpiar formulario si no hay producto
+      this.formData = {
+        codigo: '',
+        nombre: '',
+        descripcion: '',
+        categoriaId: '',
+        stock: 0,
+        precio: 0
       };
     }
   }
