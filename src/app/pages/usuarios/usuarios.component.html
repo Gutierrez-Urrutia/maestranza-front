@@ -1,11 +1,187 @@
 <div class="page-container">
     <div class="container text-center">
+        <div class="row my-3">
+            <div class="col-12 my-3">
+                <h3>Gestión de Usuarios</h3>
+                <p>Administra los usuarios del sistema y sus permisos.</p>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-12 mb-2">
+                <h3>Filtros</h3>
+            </div>
+            <div>
+                <label class="fw-bold me-2 mb-2">Rol:</label>
+                <div class="d-flex flex-wrap mb-2 justify-content-center">
+                    @for (rol of opcionesRol; track rol) {
+                    <button type="button" class="btn btn-outline-secondary me-2 mb-2"
+                        [class.active]="rolSeleccionado === rol" (click)="seleccionarRol(rol)">
+                        {{rol}}
+                    </button>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label class="fw-bold me-2 mb-2">Estado:</label>
+                    <div class="d-flex flex-wrap mb-2 justify-content-center">
+                        @for (estado of opcionesEstado; track estado) {
+                        <button type="button" class="btn btn-outline-secondary me-2 mb-2"
+                            [class.active]="estadoSeleccionado === estado" (click)="seleccionarEstado(estado)">
+                            {{estado}}
+                        </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-2 text-start">Lista de Usuarios</h2>
+                <div>
+                    <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#modalUsuario"
+                        (click)="abrirModal('agregar')">
+                        <i class="bi bi-person-plus me-1"></i>Agregar Usuario
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
-            <div class="col-12 mt-5">
-                <h3>Usuarios</h3>
-                <p></p>
-                <input type="text" class="form-control" placeholder="Buscar producto" aria-label="Buscar producto">
+            <div class="col-12">
+                <!-- Campo de búsqueda -->
+                <mat-form-field class="w-100 mb-3">
+                    <mat-label>Buscar usuarios</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por nombre, email o rol...">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+
+                <!-- Tabla Material -->
+                <div class="table-responsive">
+                    <div class="mat-elevation-4">
+                        <table mat-table [dataSource]="dataSource" matSort class="w-100 custom-table">
+
+                            <!-- Columna Nombre -->
+                            <ng-container matColumnDef="nombre">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+                                <td mat-cell *matCellDef="let usuario" class="text-center">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="me-3">
+                                            <div
+                                                class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center">
+                                                {{usuario.nombre.charAt(0).toUpperCase()}}
+                                            </div>
+                                        </div>
+                                        <span class="fw-medium">{{usuario.nombre}}</span>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Columna Email -->
+                            <ng-container matColumnDef="email">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                                <td mat-cell *matCellDef="let usuario" class="text-center">
+                                    <span class="text-muted">{{usuario.email}}</span>
+                                </td>
+                            </ng-container>
+
+                            <!-- Columna Rol -->
+                            <ng-container matColumnDef="rol">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Rol</th>
+                                <td mat-cell *matCellDef="let usuario" class="text-center">
+                                    <span class="badge mx-auto" [ngClass]="{
+                                            'bg-danger': usuario.rol === 'Administrador',
+                                            'bg-primary': usuario.rol === 'Supervisor',
+                                            'bg-secondary': usuario.rol === 'Usuario'
+                                        }">
+                                        {{usuario.rol}}
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <!-- Columna Estado -->
+                            <ng-container matColumnDef="estado">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+                                <td mat-cell *matCellDef="let usuario" class="text-center">
+                                    <span class="badge mx-auto"
+                                        [class]="usuario.activo ? 'bg-success' : 'bg-secondary'">
+                                        {{usuario.activo ? 'Activo' : 'Inactivo'}}
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <!-- Columna Fecha Creación -->
+                            <ng-container matColumnDef="fechaCreacion">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Creación</th>
+                                <td mat-cell *matCellDef="let usuario" class="text-center">
+                                    <span class="text-muted">{{usuario.fechaCreacion | date:'dd/MM/yyyy'}}</span>
+                                </td>
+                            </ng-container>
+
+                            <!-- Columna Último Acceso -->
+                            <ng-container matColumnDef="ultimoAcceso">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Último Acceso</th>
+                                <td mat-cell *matCellDef="let usuario" class="text-center">
+                                    <span class="text-muted">
+                                        {{usuario.ultimoAcceso ? (usuario.ultimoAcceso | date:'dd/MM/yyyy HH:mm') :
+                                        'Nunca'}}
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <!-- Columna Acciones -->
+                            <ng-container matColumnDef="acciones">
+                                <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
+                                <td mat-cell *matCellDef="let usuario" class="text-center">
+                                    <button mat-icon-button class="mat-warning" (click)="editarUsuario(usuario)"
+                                        data-bs-toggle="modal" data-bs-target="#modalUsuario" matTooltip="Editar">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button mat-icon-button [class]="usuario.activo ? 'text-warning' : 'text-success'"
+                                        (click)="toggleEstadoUsuario(usuario)"
+                                        [matTooltip]="usuario.activo ? 'Desactivar' : 'Activar'">
+                                        <i [class]="usuario.activo ? 'bi bi-pause-circle' : 'bi bi-play-circle'"></i>
+                                    </button>
+                                    <button mat-icon-button class="mat-danger" (click)="eliminarUsuario(usuario)"
+                                        matTooltip="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <!-- Definir filas -->
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                            <!-- Mensaje cuando no hay datos -->
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell text-center p-4" [attr.colspan]="displayedColumns.length">
+                                    <i class="bi bi-search me-2"></i>
+                                    No se encontraron usuarios que coincidan con "{{dataSource.filter}}"
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Paginador -->
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>  
+    <app-footer></app-footer>
+</div>
+
+<!-- Modal de Usuario -->
+<app-modal modalId="modalUsuario" [title]="modalConfig.title" [icon]="modalConfig.icon"
+    [iconColor]="modalConfig.iconColor" size="lg">
+
+    <!-- Aquí irían tus formularios de agregar/editar usuario -->
+    <div class="text-center p-4">
+        <p class="text-muted">Formulario de {{tipoModal}} usuario pendiente de implementar</p>
+        @if (usuarioSeleccionado) {
+        <p><strong>Usuario seleccionado:</strong> {{usuarioSeleccionado.nombre}}</p>
+        }
+    </div>
+</app-modal>

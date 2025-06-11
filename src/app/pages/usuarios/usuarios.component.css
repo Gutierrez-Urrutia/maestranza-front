@@ -1,0 +1,43 @@
+/* Heredar todos los estilos de inventario */
+@import '../inventario/inventario.component.css';
+
+/* Estilos específicos para usuarios */
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Ajustes específicos para la tabla de usuarios */
+::ng-deep .custom-table .mat-mdc-cell,
+::ng-deep .custom-table .mat-mdc-header-cell {
+  padding: 12px 8px !important;
+}
+
+/* Estilos para badges de rol */
+::ng-deep .mat-mdc-cell .badge.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+::ng-deep .mat-mdc-cell .badge.bg-primary {
+  background-color: #0d6efd !important;
+}
+
+::ng-deep .mat-mdc-cell .badge.bg-secondary {
+  background-color: #6c757d !important;
+}
+
+::ng-deep .mat-mdc-cell .badge.bg-success {
+  background-color: #198754 !important;
+}
+
+/* Hover effects para botones de acción */
+::ng-deep .mat-mdc-icon-button.text-warning:hover {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-icon-button.text-success:hover {
+  background-color: rgba(25, 135, 84, 0.1) !important;
+}
