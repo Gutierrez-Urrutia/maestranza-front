@@ -472,7 +472,24 @@ export class InventarioComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    
+
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const searchTerm = filter.toLowerCase();
+
+      // Definir los campos en los que queremos buscar (excluyendo descripción)
+      const searchableFields = [
+        data.codigo?.toString().toLowerCase() || '',
+        data.nombre?.toString().toLowerCase() || '',
+        data.categoria?.nombre?.toString().toLowerCase() || '',
+        data.stock?.toString().toLowerCase() || '',
+        // Puedes agregar más campos aquí si necesitas
+        // data.precio?.toString().toLowerCase() || ''
+      ];
+
+      // Buscar el término en cualquiera de los campos permitidos
+      return searchableFields.some(field => field.includes(searchTerm));
+    };
+
     // Forzar actualización del paginador
     if (this.paginator) {
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página:';
