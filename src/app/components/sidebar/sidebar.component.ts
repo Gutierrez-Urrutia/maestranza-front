@@ -70,15 +70,48 @@ export class SidebarComponent {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.authService.logout();
-        this.router.navigate(['/login']);
-
+        // Mostrar loading
         Swal.fire({
-          title: '¡Sesión cerrada!',
-          text: 'Has cerrado sesión exitosamente',
-          icon: 'success',
-          timer: 1500,
-          showConfirmButton: false
+          title: 'Cerrando sesión...',
+          text: 'Por favor espera',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        // Hacer logout con petición al servidor
+        this.authService.logoutFromServer().subscribe({
+          next: () => {
+            console.log('Logout completado');
+            // Mostrar mensaje de éxito
+            Swal.fire({
+              title: '¡Sesión cerrada!',
+              text: 'Has cerrado sesión exitosamente',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false,
+              allowOutsideClick: false
+            }).then(() => {
+              // Redirigir al login
+              this.router.navigate(['/login']);
+            });
+          },
+          error: (error) => {
+            console.error('Error en logout:', error);
+            // Aún así redirigir al login
+            Swal.fire({
+              title: 'Sesión cerrada',
+              text: 'Has sido desconectado del sistema',
+              icon: 'info',
+              timer: 1500,
+              showConfirmButton: false
+            }).then(() => {
+              this.router.navigate(['/login']);
+            });
+          }
         });
       }
     });

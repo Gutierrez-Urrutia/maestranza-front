@@ -1,15 +1,20 @@
 <div class="sidebar" [class.open]="visible">
-  <!-- <div class="sidebar-header">
-    <h5 class="p-3 border-bottom">Menú de Navegación</h5>
-  </div> -->
-  <ul class="nav flex-column p-2">
+  <ul class="nav flex-column p-2 mt-3">
     @for (item of menuItems; track item.name) {
-      <li class="nav-item">
-        <a class="nav-link d-flex align-items-center py-3 text-dark" [routerLink]="item.route">
-          <i class="{{item.icon}} me-2"></i>
-          <span>{{item.name}}</span>
-        </a>
-      </li>
+    <li class="nav-item my-1">
+      @if (item.route === '/logout') {
+      <!-- Botón especial para logout -->
+      <button class="nav-link d-flex align-items-center py-3 text-danger logout-btn" (click)="onMenuItemClick(item)">
+        <i class="{{item.icon}} me-2"></i>
+        <span>{{item.name}}</span>
+      </button>
+      } @else {
+      <a class="nav-link d-flex align-items-center py-3 text-dark" [routerLink]="item.route">
+        <i class="{{item.icon}} me-2"></i>
+        <span>{{item.name}}</span>
+      </a>
+      }
+    </li>
     }
   </ul>
 </div>
