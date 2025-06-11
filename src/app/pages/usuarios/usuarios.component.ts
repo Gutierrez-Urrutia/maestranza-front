@@ -11,8 +11,11 @@ import { FooterComponent } from '../../components/footer/footer.component';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Usuario } from '../../interfaces/Usuario';
+import { Rol } from '../../interfaces/Rol';
 import Swal from 'sweetalert2';
 import { UsuarioService } from '../../services/usuario/usuario.service';
+import { RolService } from '../../services/rol/rol.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-usuarios',
@@ -50,20 +53,11 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
   };
 
   usuarios: Usuario[] = [];
+  roles: Rol[] = [];
   isLoading = false;
 
-  // Roles disponibles según el backend
-  opcionesRol: string[] = [
-    'Todos',
-    'ROLE_ADMINISTRADOR',
-    'ROLE_INVENTARIO',
-    'ROLE_COMPRAS',
-    'ROLE_LOGISTICA',
-    'ROLE_PRODUCCION',
-    'ROLE_AUDITOR',
-    'ROLE_GERENCIA',
-    'ROLE_TRABAJADOR'
-  ];
+  // Opciones de rol dinámicas desde el backend
+  opcionesRol: string[] = ['Todos'];
 
   opcionesEstado: string[] = [
     'Todos',
@@ -74,31 +68,53 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
   rolSeleccionado: string = 'Todos';
   estadoSeleccionado: string = 'Todos';
 
-  constructor(private usuarioService: UsuarioService) { }
+  constructor(
+    private usuarioService: UsuarioService,
+    private rolService: RolService
+  ) { }
 
   ngOnInit() {
-    this.cargarUsuarios();
+    this.cargarDatos();
   }
 
-  private cargarUsuarios() {
+  private cargarDatos() {
     this.isLoading = true;
-    this.usuarioService.obtenerTodos().subscribe({
-      next: (usuarios) => {
+
+    // Cargar usuarios y roles en paralelo
+    forkJoin({
+      usuarios: this.usuarioService.obtenerTodos(),
+      roles: this.rolService.obtenerTodos()
+    }).subscribe({
+      next: ({ usuarios, roles }) => {
         console.log('Usuarios cargados:', usuarios);
+        console.log('Roles cargados:', roles);
+
         this.usuarios = usuarios;
+        this.roles = roles;
         this.dataSource.data = usuarios;
+
+        // Actualizar opciones de rol con los datos del backend
+        this.opcionesRol = ['Todos', ...roles.map(rol => rol.nombre)];
+
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error al cargar usuarios:', error);
+        console.error('Error al cargar datos:', error);
         this.isLoading = false;
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'No se pudieron cargar los usuarios'
+          text: 'No se pudieron cargar los datos'
         });
       }
     });
+  }
+
+  // Método helper para obtener iniciales
+  getIniciales(usuario: Usuario): string {
+    const primeraNombre = usuario.nombre.charAt(0).toUpperCase();
+    const primeraApellido = usuario.apellido.charAt(0).toUpperCase();
+    return primeraNombre + primeraApellido;
   }
 
   // Método helper para obtener nombres completos
@@ -143,6 +159,8 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
   // Método helper para obtener nombre de rol más legible
   getRolDisplayName(rol: string): string {
     switch (rol) {
+      case 'Todos':
+        return 'Todos';
       case 'ROLE_ADMINISTRADOR':
         return 'Administrador';
       case 'ROLE_INVENTARIO':
