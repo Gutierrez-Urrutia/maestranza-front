@@ -79,17 +79,6 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
 }
 
-/* altura de filas*/
-/* ::ng-deep .custom-table .mat-mdc-row {
-    height: 60px !important;
-    min-height: 60px !important;
-}
-
-::ng-deep .custom-table .mat-mdc-header-row {
-    height: 60px !important;  
-    min-height: 60px !important;
-} */
-
 ::ng-deep .custom-table .mat-mdc-cell,
 ::ng-deep .custom-table .mat-mdc-header-cell {
     padding: 6px !important;
