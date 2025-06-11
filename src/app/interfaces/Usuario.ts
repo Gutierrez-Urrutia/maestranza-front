@@ -1,9 +1,9 @@
 export interface Usuario {
   id: number;
-  nombre: string;
+  username: string;
   email: string;
-  rol: string;
+  nombre: string;
+  apellido: string;
   activo: boolean;
-  fechaCreacion: Date;
-  ultimoAcceso?: Date;
+  roles: string[]; 
 }

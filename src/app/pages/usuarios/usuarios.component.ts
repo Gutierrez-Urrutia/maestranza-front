@@ -10,8 +10,9 @@ import { MatInputModule } from '@angular/material/input';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Usuario } from '../../interfaces/Usuario'
+import { Usuario } from '../../interfaces/Usuario';
 import Swal from 'sweetalert2';
+import { UsuarioService } from '../../services/usuario/usuario.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -36,7 +37,7 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  displayedColumns: string[] = ['nombre', 'email', 'rol', 'estado', 'fechaCreacion', 'ultimoAcceso', 'acciones'];
+  displayedColumns: string[] = ['nombre', 'username', 'email', 'roles', 'estado', 'acciones'];
   dataSource = new MatTableDataSource<Usuario>();
 
   tipoModal: 'agregar' | 'editar' = 'agregar';
@@ -49,12 +50,19 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
   };
 
   usuarios: Usuario[] = [];
+  isLoading = false;
 
+  // Roles disponibles según el backend
   opcionesRol: string[] = [
     'Todos',
-    'Administrador',
-    'Usuario',
-    'Supervisor'
+    'ROLE_ADMINISTRADOR',
+    'ROLE_INVENTARIO',
+    'ROLE_COMPRAS',
+    'ROLE_LOGISTICA',
+    'ROLE_PRODUCCION',
+    'ROLE_AUDITOR',
+    'ROLE_GERENCIA',
+    'ROLE_TRABAJADOR'
   ];
 
   opcionesEstado: string[] = [
@@ -66,55 +74,133 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
   rolSeleccionado: string = 'Todos';
   estadoSeleccionado: string = 'Todos';
 
+  constructor(private usuarioService: UsuarioService) { }
+
   ngOnInit() {
     this.cargarUsuarios();
   }
 
   private cargarUsuarios() {
-    // Aquí deberías llamar a tu servicio de usuarios
-    // this.usuarioService.obtenerUsuarios().subscribe({...})
-    
-    // Datos de ejemplo mientras implementas el servicio
-    this.usuarios = [
-      {
-        id: 1,
-        nombre: 'Juan Pérez',
-        email: 'juan.perez@empresa.com',
-        rol: 'Administrador',
-        activo: true,
-        fechaCreacion: new Date('2024-01-15'),
-        ultimoAcceso: new Date('2024-06-10')
+    this.isLoading = true;
+    this.usuarioService.obtenerTodos().subscribe({
+      next: (usuarios) => {
+        console.log('Usuarios cargados:', usuarios);
+        this.usuarios = usuarios;
+        this.dataSource.data = usuarios;
+        this.isLoading = false;
       },
-      {
-        id: 2,
-        nombre: 'María González',
-        email: 'maria.gonzalez@empresa.com',
-        rol: 'Usuario',
-        activo: true,
-        fechaCreacion: new Date('2024-02-20'),
-        ultimoAcceso: new Date('2024-06-09')
-      },
-      {
-        id: 3,
-        nombre: 'Carlos Rodríguez',
-        email: 'carlos.rodriguez@empresa.com',
-        rol: 'Supervisor',
-        activo: false,
-        fechaCreacion: new Date('2024-03-10'),
-        ultimoAcceso: new Date('2024-05-28')
-      },
-      {
-        id: 4,
-        nombre: 'Ana Martínez',
-        email: 'ana.martinez@empresa.com',
-        rol: 'Usuario',
-        activo: true,
-        fechaCreacion: new Date('2024-04-05'),
-        ultimoAcceso: new Date('2024-06-11')
+      error: (error) => {
+        console.error('Error al cargar usuarios:', error);
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudieron cargar los usuarios'
+        });
       }
-    ];
+    });
+  }
 
-    this.dataSource.data = this.usuarios;
+  // Método helper para obtener nombres completos
+  getNombreCompleto(usuario: Usuario): string {
+    return `${usuario.nombre} ${usuario.apellido}`.trim();
+  }
+
+  // Método helper para obtener roles como string
+  getRolesString(usuario: Usuario): string {
+    return usuario.roles.join(', ');
+  }
+
+  // Método helper para filtrar por rol
+  private usuarioTieneRol(usuario: Usuario, rolBuscado: string): boolean {
+    return usuario.roles.includes(rolBuscado);
+  }
+
+  // Método helper para obtener la clase CSS del badge según el rol
+  getRolBadgeClass(rol: string): string {
+    switch (rol) {
+      case 'ROLE_ADMINISTRADOR':
+        return 'bg-danger';
+      case 'ROLE_GERENCIA':
+        return 'bg-dark';
+      case 'ROLE_AUDITOR':
+        return 'bg-warning text-dark';
+      case 'ROLE_INVENTARIO':
+        return 'bg-primary';
+      case 'ROLE_COMPRAS':
+        return 'bg-success';
+      case 'ROLE_LOGISTICA':
+        return 'bg-info';
+      case 'ROLE_PRODUCCION':
+        return 'bg-secondary';
+      case 'ROLE_TRABAJADOR':
+        return 'bg-light text-dark';
+      default:
+        return 'bg-secondary';
+    }
+  }
+
+  // Método helper para obtener nombre de rol más legible
+  getRolDisplayName(rol: string): string {
+    switch (rol) {
+      case 'ROLE_ADMINISTRADOR':
+        return 'Administrador';
+      case 'ROLE_INVENTARIO':
+        return 'Inventario';
+      case 'ROLE_COMPRAS':
+        return 'Compras';
+      case 'ROLE_LOGISTICA':
+        return 'Logística';
+      case 'ROLE_PRODUCCION':
+        return 'Producción';
+      case 'ROLE_AUDITOR':
+        return 'Auditor';
+      case 'ROLE_GERENCIA':
+        return 'Gerencia';
+      case 'ROLE_TRABAJADOR':
+        return 'Trabajador';
+      default:
+        return rol.replace('ROLE_', '');
+    }
+  }
+
+  seleccionarRol(rol: string): void {
+    this.rolSeleccionado = rol;
+    this.aplicarFiltros();
+  }
+
+  seleccionarEstado(estado: string): void {
+    this.estadoSeleccionado = estado;
+    this.aplicarFiltros();
+  }
+
+  private aplicarFiltros() {
+    let usuariosFiltrados = [...this.usuarios];
+
+    // Filtrar por rol
+    if (this.rolSeleccionado !== 'Todos') {
+      usuariosFiltrados = usuariosFiltrados.filter(usuario =>
+        this.usuarioTieneRol(usuario, this.rolSeleccionado)
+      );
+    }
+
+    // Filtrar por estado
+    if (this.estadoSeleccionado === 'Activos') {
+      usuariosFiltrados = usuariosFiltrados.filter(usuario => usuario.activo);
+    } else if (this.estadoSeleccionado === 'Inactivos') {
+      usuariosFiltrados = usuariosFiltrados.filter(usuario => !usuario.activo);
+    }
+
+    this.dataSource.data = usuariosFiltrados;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   abrirModal(tipo: 'agregar' | 'editar', usuario?: Usuario) {
@@ -142,74 +228,69 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
     }
   }
 
-  seleccionarRol(rol: string): void {
-    this.rolSeleccionado = rol;
-    this.aplicarFiltros();
-  }
-
-  seleccionarEstado(estado: string): void {
-    this.estadoSeleccionado = estado;
-    this.aplicarFiltros();
-  }
-
-  private aplicarFiltros() {
-    let usuariosFiltrados = [...this.usuarios];
-
-    // Filtrar por rol
-    if (this.rolSeleccionado !== 'Todos') {
-      usuariosFiltrados = usuariosFiltrados.filter(usuario =>
-        usuario.rol === this.rolSeleccionado
-      );
-    }
-
-    // Filtrar por estado
-    if (this.estadoSeleccionado === 'Activos') {
-      usuariosFiltrados = usuariosFiltrados.filter(usuario => usuario.activo);
-    } else if (this.estadoSeleccionado === 'Inactivos') {
-      usuariosFiltrados = usuariosFiltrados.filter(usuario => !usuario.activo);
-    }
-
-    this.dataSource.data = usuariosFiltrados;
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
   editarUsuario(usuario: Usuario) {
     this.abrirModal('editar', usuario);
   }
 
   toggleEstadoUsuario(usuario: Usuario) {
     const accion = usuario.activo ? 'desactivar' : 'activar';
-    const nuevoEstado = !usuario.activo;
 
     Swal.fire({
       title: `¿${accion.charAt(0).toUpperCase() + accion.slice(1)} usuario?`,
-      text: `¿Estás seguro de que quieres ${accion} a "${usuario.nombre}"?`,
+      text: `¿Estás seguro de que quieres ${accion} a "${this.getNombreCompleto(usuario)}"?`,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: nuevoEstado ? '#28a745' : '#dc3545',
+      confirmButtonColor: !usuario.activo ? '#28a745' : '#dc3545',
       cancelButtonColor: '#6c757d',
       confirmButtonText: `Sí, ${accion}`,
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Aquí llamarías a tu servicio para cambiar el estado
-        usuario.activo = nuevoEstado;
-        
-        Swal.fire({
-          icon: 'success',
-          title: '¡Estado actualizado!',
-          text: `El usuario "${usuario.nombre}" ha sido ${accion}do`,
-          timer: 2000,
-          showConfirmButton: false
-        });
+        if (usuario.activo) {
+          // Desactivar usuario
+          this.usuarioService.desactivar(usuario.id).subscribe({
+            next: (usuarioActualizado) => {
+              usuario.activo = false;
+              Swal.fire({
+                icon: 'success',
+                title: '¡Usuario desactivado!',
+                text: `El usuario "${this.getNombreCompleto(usuario)}" ha sido desactivado`,
+                timer: 2000,
+                showConfirmButton: false
+              });
+            },
+            error: (error) => {
+              console.error('Error al desactivar usuario:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo desactivar el usuario'
+              });
+            }
+          });
+        } else {
+          // Activar usuario
+          this.usuarioService.activar(usuario.id).subscribe({
+            next: (usuarioActualizado) => {
+              usuario.activo = true;
+              Swal.fire({
+                icon: 'success',
+                title: '¡Usuario activado!',
+                text: `El usuario "${this.getNombreCompleto(usuario)}" ha sido activado`,
+                timer: 2000,
+                showConfirmButton: false
+              });
+            },
+            error: (error) => {
+              console.error('Error al activar usuario:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo activar el usuario'
+              });
+            }
+          });
+        }
       }
     });
   }
@@ -217,7 +298,7 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
   eliminarUsuario(usuario: Usuario) {
     Swal.fire({
       title: '¿Estás seguro?',
-      text: `¿Quieres eliminar al usuario "${usuario.nombre}"? Esta acción no se puede deshacer.`,
+      text: `¿Quieres eliminar al usuario "${this.getNombreCompleto(usuario)}"? Esta acción no se puede deshacer.`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -227,16 +308,27 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        // Aquí llamarías a tu servicio para eliminar el usuario
-        this.usuarios = this.usuarios.filter(u => u.id !== usuario.id);
-        this.dataSource.data = this.usuarios;
+        this.usuarioService.eliminar(usuario.id).subscribe({
+          next: () => {
+            this.usuarios = this.usuarios.filter(u => u.id !== usuario.id);
+            this.dataSource.data = this.usuarios;
 
-        Swal.fire({
-          icon: 'success',
-          title: '¡Eliminado!',
-          text: `El usuario "${usuario.nombre}" ha sido eliminado`,
-          timer: 2000,
-          showConfirmButton: false
+            Swal.fire({
+              icon: 'success',
+              title: '¡Eliminado!',
+              text: `El usuario "${this.getNombreCompleto(usuario)}" ha sido eliminado`,
+              timer: 2000,
+              showConfirmButton: false
+            });
+          },
+          error: (error) => {
+            console.error('Error al eliminar usuario:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo eliminar el usuario'
+            });
+          }
         });
       }
     });
@@ -252,8 +344,10 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
 
       const searchableFields = [
         data.nombre?.toString().toLowerCase() || '',
+        data.apellido?.toString().toLowerCase() || '',
+        data.username?.toString().toLowerCase() || '',
         data.email?.toString().toLowerCase() || '',
-        data.rol?.toString().toLowerCase() || ''
+        this.getRolesString(data).toLowerCase() || ''
       ];
 
       return searchableFields.some(field => field.includes(searchTerm));
