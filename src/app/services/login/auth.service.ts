@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 import { LoginRequest } from '../../interfaces/LoginRequest';
 import { LoginResponse } from '../../interfaces/LoginResponse';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -63,7 +64,42 @@ export class AuthService {
       );
   }
 
+  // Logout con petición HTTP al servidor
+  logoutFromServer(): Observable<any> {
+    const token = this.getToken();
+
+    if (!token) {
+      // Si no hay token, hacer logout local
+      this.logout();
+      return of(null);
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': token,
+      'Content-Type': 'application/json'
+    });
+
+    console.log('Enviando logout a:', `${this.baseUrl}/logout`);
+    console.log('Con token:', token);
+
+    return this.http.post(`${this.baseUrl}/logout`, {}, { headers })
+      .pipe(
+        tap(() => {
+          console.log('Logout exitoso en el servidor');
+          this.logout();
+        }),
+        catchError(error => {
+          console.error('Error en logout del servidor:', error);
+          // Aunque falle el logout en el servidor, limpiar sesión local
+          this.logout();
+          return of(null);
+        })
+      );
+  }
+
+  // Logout solo local (sin petición al servidor)
   logout(): void {
+    console.log('Limpiando sesión local...');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.tokenSubject.next(null);
