@@ -1,1 +1,118 @@
-<p>agregar-usuario works!</p>
+<form (ngSubmit)="onSubmit()">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" [(ngModel)]="formData.nombre" name="nombre"
+                    placeholder="Ej: Juan" required>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input type="text" class="form-control" id="apellido" [(ngModel)]="formData.apellido" name="apellido"
+                    placeholder="Ej: Pérez" required>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="username" class="form-label">Nombre de Usuario</label>
+                <input type="text" class="form-control" id="username" [(ngModel)]="formData.username" name="username"
+                    placeholder="Ej: jperez" required>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" [(ngModel)]="formData.email" name="email"
+                    placeholder="Ej: juan.perez@empresa.com" required>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <div class="input-group">
+                    <input [type]="mostrarPassword ? 'text' : 'password'" class="form-control" id="password"
+                        [(ngModel)]="formData.password" name="password" placeholder="Ingrese la contraseña" required>
+                    <button class="btn btn-outline-secondary" type="button"
+                        (click)="togglePasswordVisibility('password')">
+                        <i [class]="mostrarPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                <div class="input-group">
+                    <input [type]="mostrarConfirmPassword ? 'text' : 'password'" class="form-control"
+                        id="confirmPassword" [(ngModel)]="formData.confirmPassword" name="confirmPassword"
+                        placeholder="Confirme la contraseña" required>
+                    <button class="btn btn-outline-secondary" type="button"
+                        (click)="togglePasswordVisibility('confirmPassword')">
+                        <i [class]="mostrarConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                    </button>
+                </div>
+                @if (formData.confirmPassword && !passwordsMatch()) {
+                <div class="text-danger small mt-1">Las contraseñas no coinciden</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Selección de Roles -->
+    <div class="mb-3">
+        <label class="form-label">Roles</label>
+        <div class="row">
+            @for (rol of roles; track rol.id) {
+            <div class="col-md-4 mb-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" [id]="'rol-' + rol.id"
+                        [checked]="isRoleSelected(rol.nombre)" (change)="onRoleChange(rol.nombre, $event)">
+                    <label class="form-check-label" [for]="'rol-' + rol.id">
+                        {{getRolDisplayName(rol.nombre)}}
+                    </label>
+                </div>
+            </div>
+            }
+        </div>
+        @if (formData.roles.length === 0) {
+        <div class="text-danger small">Debe seleccionar al menos un rol</div>
+        }
+    </div>
+
+    <!-- Mostrar roles seleccionados -->
+    @if (formData.roles.length > 0) {
+    <div class="mb-3">
+        <small class="text-muted">Roles seleccionados:</small>
+        <div class="mt-1">
+            @for (rolSeleccionado of formData.roles; track rolSeleccionado) {
+            <span class="badge bg-primary me-1 mb-1">
+                {{getRolDisplayName(rolSeleccionado)}}
+            </span>
+            }
+        </div>
+    </div>
+    }
+
+    <!-- Botones del formulario -->
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="button" class="btn btn-outline-danger" (click)="onCancel()">
+            <i class="bi bi-x-circle me-2"></i>Cancelar
+        </button>
+        <button type="submit" class="btn btn-outline-success" [disabled]="!isFormValid() || isSubmitting">
+            @if (isSubmitting) {
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Creando...
+            } @else {
+            <i class="bi bi-check-circle me-2"></i>Agregar
+            }
+        </button>
+    </div>
+</form>

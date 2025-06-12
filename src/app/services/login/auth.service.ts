@@ -5,6 +5,7 @@ import { tap, catchError } from 'rxjs/operators';
 import { LoginRequest } from '../../interfaces/LoginRequest';
 import { LoginResponse } from '../../interfaces/LoginResponse';
 import { of } from 'rxjs';
+import { RegistroUsuario } from '../../interfaces/RegistroUsuario';
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +65,9 @@ export class AuthService {
       );
   }
 
+  registro(usuario: RegistroUsuario): Observable<any> {
+    return this.http.post(`${this.baseUrl}/registro`, usuario);
+  }
   // Logout con petición HTTP al servidor
   logoutFromServer(): Observable<any> {
     const token = this.getToken();

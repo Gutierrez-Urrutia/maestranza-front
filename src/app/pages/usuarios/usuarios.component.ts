@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import { UsuarioService } from '../../services/usuario/usuario.service';
 import { RolService } from '../../services/rol/rol.service';
 import { forkJoin } from 'rxjs';
+import { AgregarUsuarioComponent } from '../../components/forms/agregar-usuario/agregar-usuario.component';
 
 @Component({
   selector: 'app-usuarios',
@@ -33,7 +34,8 @@ import { forkJoin } from 'rxjs';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatTooltipModule
+    MatTooltipModule,
+    AgregarUsuarioComponent
   ]
 })
 export class UsuariosComponent implements AfterViewInit, OnInit {
@@ -385,6 +387,31 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
         return `${startIndex + 1} - ${endIndex} de ${length}`;
       };
       this.paginator._intl.changes.next();
+    }
+  }
+
+  onUsuarioCreado(usuario: Usuario) {
+    // Recargar la lista de usuarios
+    this.cargarDatos();
+
+    // Cerrar el modal
+    const modalElement = document.getElementById('modalUsuario');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      }
+    }
+  }
+
+  onCancelarModal() {
+    // Cerrar el modal
+    const modalElement = document.getElementById('modalUsuario');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      }
     }
   }
 }

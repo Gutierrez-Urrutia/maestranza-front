@@ -169,12 +169,17 @@
 
 <!-- Modal de Usuario -->
 <app-modal modalId="modalUsuario" [title]="modalConfig.title" [icon]="modalConfig.icon"
-    [iconColor]="modalConfig.iconColor" size="lg">
+    [iconColor]="modalConfig.iconColor" size="xl">
 
+    @if (tipoModal === 'agregar') {
+    <app-agregar-usuario (usuarioCreado)="onUsuarioCreado($event)" (cancelar)="onCancelarModal()">
+    </app-agregar-usuario>
+    } @else {
     <div class="text-center p-4">
-        <p class="text-muted">Formulario de {{tipoModal}} usuario pendiente de implementar</p>
+        <p class="text-muted">Formulario de edición usuario pendiente de implementar</p>
         @if (usuarioSeleccionado) {
         <p><strong>Usuario seleccionado:</strong> {{getNombreCompleto(usuarioSeleccionado)}}</p>
         }
     </div>
+    }
 </app-modal>

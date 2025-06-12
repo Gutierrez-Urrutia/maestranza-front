@@ -1,0 +1,73 @@
+::ng-deep .mat-mdc-header-cell .mat-sort-header-container {
+  display: flex !important;
+  justify-content: center !important;
+  margin-left: 1rem !important;
+}
+
+/* Fondo blanco para la tabla */
+::ng-deep .mat-mdc-table,
+.mat-mdc-row,
+.mat-mdc-header.mat-mdc-row,
+.mat-mdc-cell,
+.mat-mdc-header-cell,
+.mat-elevation-4,
+.mat-mdc-paginator {
+  background-color: white !important;
+}
+
+/* Badges de usuario con mismo ancho y centrado perfecto */
+::ng-deep .mat-mdc-cell .badge {
+  min-width: 80px !important;
+  width: 80px !important;
+  text-align: center !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  height: 24px !important;
+  line-height: 1 !important;
+  padding: 4px 8px !important;
+  vertical-align: middle !important;
+}
+
+/* Estilos para botones mat-warning y mat-danger */
+::ng-deep .mat-mdc-icon-button.mat-warning {
+  color: #f0c674 !important;
+}
+
+::ng-deep .mat-mdc-icon-button.mat-warning:hover {
+  color: #ddb347 !important;
+  background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-icon-button.mat-danger {
+  color: #d9534f !important;
+}
+
+::ng-deep .mat-mdc-icon-button.mat-danger:hover {
+  color: #e00000 !important;
+  background-color: rgba(220, 53, 69, 0.1) !important;
+}
+
+/* Hover effects para botones de acción */
+::ng-deep .mat-mdc-icon-button.text-warning:hover {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-icon-button.text-success:hover {
+  background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+::ng-deep .custom-table .mat-mdc-cell,
+::ng-deep .custom-table .mat-mdc-header-cell {
+  padding: 12px 8px !important;
+}
+
+/* Estilos para el avatar circle */
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 16px;
+}
