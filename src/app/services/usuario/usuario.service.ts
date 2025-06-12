@@ -29,7 +29,7 @@ export class UsuarioService {
   }
 
   actualizar(id: number, usuario: Usuario): Observable<Usuario> {
-    return this.http.put<Usuario>(`${this.apiUrl}/${id}`, usuario);
+    return this.http.patch<Usuario>(`${this.apiUrl}/${id}`, usuario);
   }
 
   eliminar(id: number): Observable<any> {

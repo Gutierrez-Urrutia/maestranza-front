@@ -174,12 +174,13 @@
     @if (tipoModal === 'agregar') {
     <app-agregar-usuario (usuarioCreado)="onUsuarioCreado($event)" (cancelar)="onCancelarModal()">
     </app-agregar-usuario>
+    } @else if (tipoModal === 'editar') {
+    <app-editar-usuario [usuario]="usuarioSeleccionado" (usuarioActualizado)="onUsuarioActualizado($event)"
+        (cancelar)="onCancelarModal()">
+    </app-editar-usuario>
     } @else {
     <div class="text-center p-4">
-        <p class="text-muted">Formulario de edición usuario pendiente de implementar</p>
-        @if (usuarioSeleccionado) {
-        <p><strong>Usuario seleccionado:</strong> {{getNombreCompleto(usuarioSeleccionado)}}</p>
-        }
+        <p class="text-muted">Tipo de formulario no reconocido</p>
     </div>
     }
 </app-modal>

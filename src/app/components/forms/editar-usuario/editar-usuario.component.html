@@ -1,1 +1,108 @@
-<p>editar-usuario works!</p>
+@if (usuario) {
+<form (ngSubmit)="onSubmit()">
+    <!-- Información del usuario no editable -->
+    <div class="alert alert-info mb-4">
+        <h6 class="mb-2">
+            <i class="bi bi-person-circle me-2"></i>
+            Editando usuario: <strong>{{usuario.username}}</strong>
+        </h6>
+        <small class="text-muted">
+            ID: {{usuario.id}} | Estado:
+            <span [class]="usuario.activo ? 'text-success' : 'text-danger'">
+                {{usuario.activo ? 'Activo' : 'Inactivo'}}
+            </span>
+        </small>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" [(ngModel)]="formData.nombre" name="nombre"
+                    placeholder="Ej: Juan" required>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input type="text" class="form-control" id="apellido" [(ngModel)]="formData.apellido" name="apellido"
+                    placeholder="Ej: Pérez" required>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" [(ngModel)]="formData.email" name="email"
+                    placeholder="Ej: juan.perez@empresa.com" required>
+            </div>
+        </div>
+    </div>
+    <!-- Selección de Roles -->
+    <div class="mb-3">
+        <label class="form-label">Roles</label>
+        <div class="row">
+            @for (rol of roles; track rol.id) {
+            <div class="col-md-4 mb-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" [id]="'rol-' + rol.id"
+                        [checked]="isRoleSelected(rol.nombre)" (change)="onRoleChange(rol.nombre, $event)">
+                    <label class="form-check-label" [for]="'rol-' + rol.id">
+                        {{getRolDisplayName(rol.nombre)}}
+                    </label>
+                </div>
+            </div>
+            }
+        </div>
+        @if (formData.roles.length === 0) {
+        <div class="text-danger small">Debe seleccionar al menos un rol</div>
+        }
+    </div>
+
+    <!-- Mostrar roles seleccionados -->
+    @if (formData.roles.length > 0) {
+    <div class="mb-3">
+        <small class="text-muted">Roles seleccionados:</small>
+        <div class="mt-1">
+            @for (rolSeleccionado of formData.roles; track rolSeleccionado) {
+            <span class="badge bg-primary me-1 mb-1">
+                {{getRolDisplayName(rolSeleccionado)}}
+            </span>
+            }
+        </div>
+    </div>
+    }
+
+    <!-- Mostrar indicador de cambios -->
+    @if (hasChanges()) {
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <strong>Hay cambios sin guardar</strong>
+    </div>
+    }
+
+    <!-- Botones del formulario -->
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+            <i class="bi bi-x-circle me-2"></i>Cancelar
+        </button>
+        <button type="submit" class="btn btn-outline-primary"
+            [disabled]="!isFormValid() || !hasChanges() || isSubmitting">
+            @if (isSubmitting) {
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Actualizando...
+            } @else {
+            <i class="bi bi-check-circle me-2"></i>Actualizar
+            }
+        </button>
+    </div>
+</form>
+} @else {
+<div class="text-center p-4">
+    <i class="bi bi-exclamation-triangle text-warning fs-1"></i>
+    <h5 class="mt-3">No se ha seleccionado un usuario</h5>
+    <p class="text-muted">Por favor seleccione un usuario para editar</p>
+</div>
+}

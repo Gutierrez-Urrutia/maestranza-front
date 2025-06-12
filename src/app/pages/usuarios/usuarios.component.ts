@@ -17,6 +17,7 @@ import { UsuarioService } from '../../services/usuario/usuario.service';
 import { RolService } from '../../services/rol/rol.service';
 import { forkJoin } from 'rxjs';
 import { AgregarUsuarioComponent } from '../../components/forms/agregar-usuario/agregar-usuario.component';
+import { EditarUsuarioComponent } from '../../components/forms/editar-usuario/editar-usuario.component';
 
 @Component({
   selector: 'app-usuarios',
@@ -35,7 +36,8 @@ import { AgregarUsuarioComponent } from '../../components/forms/agregar-usuario/
     MatFormFieldModule,
     MatInputModule,
     MatTooltipModule,
-    AgregarUsuarioComponent
+    AgregarUsuarioComponent,
+    EditarUsuarioComponent
   ]
 })
 export class UsuariosComponent implements AfterViewInit, OnInit {
@@ -405,6 +407,20 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
   }
 
   onCancelarModal() {
+    // Cerrar el modal
+    const modalElement = document.getElementById('modalUsuario');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      }
+    }
+  }
+
+  onUsuarioActualizado(usuario: Usuario) {
+    // Recargar la lista de usuarios
+    this.cargarDatos();
+
     // Cerrar el modal
     const modalElement = document.getElementById('modalUsuario');
     if (modalElement) {
