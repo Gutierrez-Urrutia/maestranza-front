@@ -102,11 +102,25 @@
                             <ng-container matColumnDef="roles">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Roles</th>
                                 <td mat-cell *matCellDef="let usuario" class="text-center">
-                                    <div class="d-flex flex-wrap justify-content-center gap-1">
-                                        @for (rol of usuario.roles; track rol) {
-                                        <span class="badge mx-auto" [ngClass]="getRolBadgeClass(rol)">
-                                            {{getRolDisplayName(rol)}}
-                                        </span>
+                                    <div class="roles-container">
+                                        <!-- Primera fila (siempre visible) -->
+                                        <div class="d-flex justify-content-center gap-1 mb-1">
+                                            @for (rol of getRolesEnFilas(usuario.roles)[0]; track rol) {
+                                            <span class="badge mx-auto" [ngClass]="getRolBadgeClass(rol)">
+                                                {{getRolDisplayName(rol)}}
+                                            </span>
+                                            }
+                                        </div>
+
+                                        <!-- Segunda fila (si hay más de 4 roles) -->
+                                        @if (usuario.roles.length > 4) {
+                                        <div class="d-flex justify-content-center gap-1">
+                                            @for (rol of getRolesEnFilas(usuario.roles)[1]; track rol) {
+                                            <span class="badge mx-auto" [ngClass]="getRolBadgeClass(rol)">
+                                                {{getRolDisplayName(rol)}}
+                                            </span>
+                                            }
+                                        </div>
                                         }
                                     </div>
                                 </td>

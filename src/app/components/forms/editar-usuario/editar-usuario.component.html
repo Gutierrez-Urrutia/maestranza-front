@@ -40,6 +40,17 @@
             </div>
         </div>
     </div>
+
+    <!-- Información no editable -->
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="mb-3">
+                <label class="form-label text-muted">Nombre de Usuario (No editable)</label>
+                <input type="text" class="form-control" [value]="usuario.username" readonly disabled>
+            </div>
+        </div>
+    </div>
+
     <!-- Selección de Roles -->
     <div class="mb-3">
         <label class="form-label">Roles</label>
@@ -67,7 +78,7 @@
         <small class="text-muted">Roles seleccionados:</small>
         <div class="mt-1">
             @for (rolSeleccionado of formData.roles; track rolSeleccionado) {
-            <span class="badge bg-primary me-1 mb-1">
+            <span class="badge mx-auto" [ngClass]="'badge ' + getRolBadgeClass(rolSeleccionado)">
                 {{getRolDisplayName(rolSeleccionado)}}
             </span>
             }
@@ -85,10 +96,10 @@
 
     <!-- Botones del formulario -->
     <div class="d-flex justify-content-end gap-2 mt-4">
-        <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+        <button type="button" class="btn btn-outline-danger" (click)="onCancel()">
             <i class="bi bi-x-circle me-2"></i>Cancelar
         </button>
-        <button type="submit" class="btn btn-outline-primary"
+        <button type="submit" class="btn btn-outline-success"
             [disabled]="!isFormValid() || !hasChanges() || isSubmitting">
             @if (isSubmitting) {
             <span class="spinner-border spinner-border-sm me-2" role="status"></span>

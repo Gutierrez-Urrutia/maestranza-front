@@ -140,21 +140,21 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
   getRolBadgeClass(rol: string): string {
     switch (rol) {
       case 'ROLE_ADMINISTRADOR':
-        return 'bg-danger';
+        return 'admin';
       case 'ROLE_GERENCIA':
-        return 'bg-dark';
+        return 'gerencia';
       case 'ROLE_AUDITOR':
-        return 'bg-warning text-dark';
+        return 'auditor';
       case 'ROLE_INVENTARIO':
-        return 'bg-primary';
+        return 'inventario';
       case 'ROLE_COMPRAS':
-        return 'bg-success';
+        return 'compras';
       case 'ROLE_LOGISTICA':
-        return 'bg-info';
+        return 'logistica';
       case 'ROLE_PRODUCCION':
-        return 'bg-secondary';
+        return 'prod';
       case 'ROLE_TRABAJADOR':
-        return 'bg-light text-dark';
+        return 'work';
       default:
         return 'bg-secondary';
     }
@@ -429,5 +429,19 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
         modal.hide();
       }
     }
+  }
+
+  // Agregar en usuarios.component.ts
+  getRolesEnFilas(roles: string[]): string[][] {
+    const resultado: string[][] = [];
+    // Crear primera fila con máximo 4 roles
+    resultado.push(roles.slice(0, 4));
+
+    // Si hay más de 4 roles, crear segunda fila
+    if (roles.length > 4) {
+      resultado.push(roles.slice(4));
+    }
+
+    return resultado;
   }
 }

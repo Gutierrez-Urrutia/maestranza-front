@@ -32,6 +32,7 @@
   line-height: 1 !important;
   padding: 4px 8px !important;
   vertical-align: middle !important;
+  font-weight:500;
 }
 
 /* Estilos específicos para badges de estado y rol */
@@ -84,3 +85,78 @@
   color: #e00000 !important;
 }
 
+/* Administrador - Rojo pastel */
+.admin {
+  background-color: #fbd0d4;
+  color: #842029;
+}
+
+/* Gerencia - Morado pastel */
+.gerencia {
+  background-color: #e2d9f3;
+  color: #5a3a8a;
+}
+
+/* Auditor - Amarillo pastel */
+.auditor {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+/* Inventario - Azul pastel */
+.inventario {
+  background-color: #cfe2ff;
+  color: #084298;
+}
+
+/* Compras - Verde pastel */
+.compras {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+/* Logística - Turquesa pastel */
+.logistica {
+  background-color: #d0f1ea;
+  color: #0c6b58;
+}
+
+/* Producción - Naranja pastel */
+.prod {
+  background-color: #ffe5d0;
+  color: #9c4704;
+}
+
+/* Trabajador - Rosa pastel */
+.work {
+  background-color: #f8d7e9;
+  color: #871b77;
+}
+
+/* Default (para casos no manejados) */
+.bg-secondary {
+  background-color: #e9ecef;
+}
+
+/* Efectos hover para todas las badges */
+/* .admin:hover,
+.gerencia:hover,
+.auditor:hover,
+.inventario:hover,
+.compras:hover,
+.logistica:hover,
+.prod:hover,
+.work:hover,
+.bg-secondary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+} */
+
+/* Estilos para el contenedor de roles */
+.roles-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

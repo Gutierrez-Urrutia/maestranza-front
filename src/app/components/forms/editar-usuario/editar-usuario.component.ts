@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Usuario } from '../../../interfaces/Usuario';
@@ -96,6 +96,30 @@ export class EditarUsuarioComponent implements OnInit {
     }
   }
 
+  // Añadir este método al editar-usuario.component.ts
+  getRolBadgeClass(rol: string): string {
+    switch (rol) {
+      case 'ROLE_ADMINISTRADOR':
+        return 'admin';
+      case 'ROLE_GERENCIA':
+        return 'gerencia';
+      case 'ROLE_AUDITOR':
+        return 'auditor';
+      case 'ROLE_INVENTARIO':
+        return 'inventario';
+      case 'ROLE_COMPRAS':
+        return 'compras';
+      case 'ROLE_LOGISTICA':
+        return 'logistica';
+      case 'ROLE_PRODUCCION':
+        return 'prod';
+      case 'ROLE_TRABAJADOR':
+        return 'work';
+      default:
+        return 'bg-secondary';
+    }
+  }
+
   // Validaciones
   isFormValid(): boolean {
     return !!(
@@ -183,5 +207,12 @@ export class EditarUsuarioComponent implements OnInit {
   getNombreCompleto(): string {
     if (!this.usuario) return '';
     return `${this.usuario.nombre} ${this.usuario.apellido}`.trim();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Si el usuario cambia, actualizar los datos
+    if (changes['usuario'] && this.usuario) {
+      this.cargarDatosUsuario();
+    }
   }
 }
