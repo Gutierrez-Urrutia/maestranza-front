@@ -17,12 +17,30 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label for="username" class="form-label">Nombre de Usuario</label>
-                <input type="text" class="form-control" id="username" [(ngModel)]="formData.username" name="username"
-                    placeholder="Ej: jperez" required>
+        <!-- Username con mensaje de error -->
+        <div class="mb-3">
+            <label for="username" class="form-label">Nombre de Usuario</label>
+            <input type="text" class="form-control" id="username" [(ngModel)]="formData.username" name="username"
+                (ngModelChange)="onUsernameChange()" [ngClass]="{'is-invalid': usernameError}" placeholder="Ej: jperez"
+                required>
+            @if (usernameError) {
+            <div class="invalid-feedback d-block">
+                {{usernameError}}
             </div>
+            }
+        </div>
+
+        <!-- Email con mensaje de error -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Correo Electrónico</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="formData.email" name="email"
+                (ngModelChange)="onEmailChange()" [ngClass]="{'is-invalid': emailError}"
+                placeholder="Ej: juan.perez@empresa.com" required>
+            @if (emailError) {
+            <div class="invalid-feedback d-block">
+                {{emailError}}
+            </div>
+            }
         </div>
         <div class="col-md-6">
             <div class="mb-3">

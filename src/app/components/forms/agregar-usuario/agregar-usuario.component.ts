@@ -6,8 +6,6 @@ import { Rol } from '../../../interfaces/Rol';
 import { RolService } from '../../../services/rol/rol.service';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../services/login/auth.service';
-import { RegistroUsuario } from '../../../interfaces/RegistroUsuario';
-
 
 @Component({
   selector: 'app-agregar-usuario',
@@ -24,6 +22,10 @@ export class AgregarUsuarioComponent implements OnInit {
   isSubmitting = false;
   mostrarPassword = false;
   mostrarConfirmPassword = false;
+
+  // Errores de validación específicos
+  usernameError: string | null = null;
+  emailError: string | null = null;
 
   // Modelo del formulario
   formData = {
@@ -70,6 +72,15 @@ export class AgregarUsuarioComponent implements OnInit {
     }
   }
 
+  // Limpiar errores cuando se modifica un campo
+  onUsernameChange() {
+    this.usernameError = null;
+  }
+
+  onEmailChange() {
+    this.emailError = null;
+  }
+
   // Manejar selección de roles
   onRoleChange(rolNombre: string, event: any) {
     if (event.target.checked) {
@@ -88,14 +99,29 @@ export class AgregarUsuarioComponent implements OnInit {
   getRolDisplayName(rolNombre: string): string {
     switch (rolNombre) {
       case 'ROLE_ADMINISTRADOR': return 'Administrador';
+      case 'ROLE_GERENCIA': return 'Gerencia';
+      case 'ROLE_AUDITOR': return 'Auditor';
       case 'ROLE_INVENTARIO': return 'Inventario';
       case 'ROLE_COMPRAS': return 'Compras';
       case 'ROLE_LOGISTICA': return 'Logística';
       case 'ROLE_PRODUCCION': return 'Producción';
-      case 'ROLE_AUDITOR': return 'Auditor';
-      case 'ROLE_GERENCIA': return 'Gerencia';
       case 'ROLE_TRABAJADOR': return 'Trabajador';
       default: return rolNombre.replace('ROLE_', '');
+    }
+  }
+
+  // Obtener clase de badge para el rol
+  getRolBadgeClass(rol: string): string {
+    switch (rol) {
+      case 'ROLE_ADMINISTRADOR': return 'admin';
+      case 'ROLE_GERENCIA': return 'gerencia';
+      case 'ROLE_AUDITOR': return 'auditor';
+      case 'ROLE_INVENTARIO': return 'inventario';
+      case 'ROLE_COMPRAS': return 'compras';
+      case 'ROLE_LOGISTICA': return 'logistica';
+      case 'ROLE_PRODUCCION': return 'prod';
+      case 'ROLE_TRABAJADOR': return 'work';
+      default: return 'bg-secondary';
     }
   }
 
@@ -103,7 +129,9 @@ export class AgregarUsuarioComponent implements OnInit {
   isFormValid(): boolean {
     return !!(
       this.formData.username.trim() &&
+      !this.usernameError &&
       this.formData.email.trim() &&
+      !this.emailError &&
       this.formData.nombre.trim() &&
       this.formData.apellido.trim() &&
       this.formData.password &&
@@ -118,11 +146,13 @@ export class AgregarUsuarioComponent implements OnInit {
   }
 
   onSubmit() {
-    // Validar que los campos requeridos estén llenos
     if (this.isFormValid()) {
       this.isSubmitting = true;
+      // Limpiar errores previos
+      this.usernameError = null;
+      this.emailError = null;
 
-      const nuevoUsuario: RegistroUsuario = {
+      const nuevoUsuario = {
         username: this.formData.username.trim(),
         email: this.formData.email.trim().toLowerCase(),
         nombre: this.formData.nombre.trim(),
@@ -152,23 +182,32 @@ export class AgregarUsuarioComponent implements OnInit {
           this.isSubmitting = false;
           console.error('Error al crear usuario:', error);
 
-          let errorMessage = 'No se pudo crear el usuario';
+          // Manejar errores específicos de validación
+          if (error.error && error.error.message) {
+            const errorMsg = error.error.message;
 
-          if (error.error?.message) {
-            errorMessage = error.error.message;
-          } else if (error.message) {
-            errorMessage = error.message;
+            if (errorMsg.includes('nombre de usuario ya está en uso')) {
+              this.usernameError = 'El nombre de usuario ya existe';
+            } else if (errorMsg.includes('correo electrónico ya está en uso')) {
+              this.emailError = 'El correo electrónico ya está registrado';
+            } else {
+              // Error genérico
+              Swal.fire({
+                icon: 'error',
+                title: 'Error al crear usuario',
+                text: errorMsg
+              });
+            }
+          } else {
+            // Error general
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al crear usuario',
+              text: 'No se pudo crear el usuario'
+            });
           }
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Error al crear usuario',
-            text: errorMessage
-          });
         }
       });
-    } else {
-      console.error('Por favor complete todos los campos requeridos correctamente');
     }
   }
 
@@ -187,5 +226,7 @@ export class AgregarUsuarioComponent implements OnInit {
       confirmPassword: '',
       roles: []
     };
+    this.usernameError = null;
+    this.emailError = null;
   }
 }
