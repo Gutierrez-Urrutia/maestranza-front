@@ -22,6 +22,9 @@ export class EditarUsuarioComponent implements OnInit {
   roles: Rol[] = [];
   isSubmitting = false;
 
+  // Error específico para el email
+  emailError: string | null = null;
+
   // Modelo del formulario
   formData = {
     nombre: '',
@@ -64,7 +67,14 @@ export class EditarUsuarioComponent implements OnInit {
         email: this.usuario.email,
         roles: [...this.usuario.roles] // Copia del array
       };
+      // Limpiar cualquier error previo
+      this.emailError = null;
     }
+  }
+
+  // Método para limpiar el error de email cuando se modifica el campo
+  onEmailChange() {
+    this.emailError = null;
   }
 
   // Manejar selección de roles
@@ -120,13 +130,14 @@ export class EditarUsuarioComponent implements OnInit {
     }
   }
 
-  // Validaciones
+  // Validaciones - Actualizado para verificar también emailError
   isFormValid(): boolean {
     return !!(
       this.formData.nombre.trim() &&
       this.formData.apellido.trim() &&
       this.formData.email.trim() &&
-      this.formData.roles.length > 0
+      this.formData.roles.length > 0 &&
+      !this.emailError
     );
   }
 
@@ -152,6 +163,8 @@ export class EditarUsuarioComponent implements OnInit {
 
     if (this.isFormValid()) {
       this.isSubmitting = true;
+      // Limpiar errores previos
+      this.emailError = null;
 
       const usuarioActualizado = {
         ...this.usuario,
@@ -179,19 +192,28 @@ export class EditarUsuarioComponent implements OnInit {
           this.isSubmitting = false;
           console.error('Error al actualizar usuario:', error);
 
-          let errorMessage = 'No se pudo actualizar el usuario';
+          // Manejar error específico de email duplicado
+          if (error.error && error.error.message) {
+            const errorMsg = error.error.message;
 
-          if (error.error?.message) {
-            errorMessage = error.error.message;
-          } else if (error.message) {
-            errorMessage = error.message;
+            if (errorMsg.includes('correo electrónico ya está en uso')) {
+              this.emailError = 'El correo electrónico ya está registrado';
+            } else {
+              // Otros errores
+              Swal.fire({
+                icon: 'error',
+                title: 'Error al actualizar usuario',
+                text: errorMsg
+              });
+            }
+          } else {
+            // Error genérico
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al actualizar usuario',
+              text: 'No se pudo actualizar el usuario'
+            });
           }
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Error al actualizar usuario',
-            text: errorMessage
-          });
         }
       });
     } else {

@@ -31,12 +31,19 @@
         </div>
     </div>
 
+    <!-- Reemplazar el campo de email existente con este -->
     <div class="row">
         <div class="col-md-12">
             <div class="mb-3">
                 <label for="email" class="form-label">Correo Electrónico</label>
                 <input type="email" class="form-control" id="email" [(ngModel)]="formData.email" name="email"
+                    (ngModelChange)="onEmailChange()" [ngClass]="{'is-invalid': emailError}"
                     placeholder="Ej: juan.perez@empresa.com" required>
+                @if (emailError) {
+                <div class="invalid-feedback d-block">
+                    {{emailError}}
+                </div>
+                }
             </div>
         </div>
     </div>
