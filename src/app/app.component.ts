@@ -1,9 +1,10 @@
 import { Component, AfterViewInit, HostListener } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet, NavigationStart } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { NavbarComponent } from "./components/navbar/navbar.component";
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
+import { SessionService } from './services/session/session.service';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +16,12 @@ import { filter } from 'rxjs/operators';
 export class AppComponent implements AfterViewInit {
   title = 'maestranza-front';
   sidebarVisible = false;
-  isLoginPage = true; // Siempre inicializar como true
+  isLoginPage = true;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private sessionService: SessionService // ← Inyectar SessionService
+  ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
@@ -26,10 +30,8 @@ export class AppComponent implements AfterViewInit {
   }
 
   private checkLoginPage(url: string): void {
-    // Remover query params y fragments para obtener solo la ruta
     const cleanUrl = url.split('?')[0].split('#')[0];
 
-    // Solo mostrar navbar/sidebar en rutas protegidas específicas
     this.isLoginPage = !(cleanUrl === '/inventario' ||
       cleanUrl === '/movimientos' ||
       cleanUrl === '/usuarios' ||

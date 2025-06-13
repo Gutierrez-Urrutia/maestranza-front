@@ -43,7 +43,7 @@ export class InventarioComponent implements AfterViewInit, OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  displayedColumns: string[] = ['imagen', 'codigo', 'nombre', 'categoria', 'stock', 'precio', 'acciones'];
+  displayedColumns: string[] = ['codigo', 'nombre', 'categoria', 'stock', 'precio', 'acciones'];
   dataSource = new MatTableDataSource<any>();
   productoParaImagen: any = null;
 

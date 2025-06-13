@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of } from 'rxjs';
+import { tap, catchError, map } from 'rxjs/operators';
 import { LoginRequest } from '../../interfaces/LoginRequest';
 import { LoginResponse } from '../../interfaces/LoginResponse';
-import { of } from 'rxjs';
 import { RegistroUsuario } from '../../interfaces/RegistroUsuario';
 
 @Injectable({
@@ -19,8 +18,9 @@ export class AuthService {
   public user$ = this.userSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    const savedToken = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('user');
+    // Cambiar localStorage por sessionStorage
+    const savedToken = sessionStorage.getItem('token');
+    const savedUser = sessionStorage.getItem('user');
 
     if (savedToken) {
       this.tokenSubject.next(savedToken);
@@ -45,8 +45,10 @@ export class AuthService {
           console.log('Respuesta del servidor:', response);
           if (response.token) {
             const fullToken = `${response.type} ${response.token}`;
-            localStorage.setItem('token', fullToken);
-            localStorage.setItem('user', JSON.stringify({
+
+            // Usar sessionStorage en lugar de localStorage
+            sessionStorage.setItem('token', fullToken);
+            sessionStorage.setItem('user', JSON.stringify({
               id: response.id,
               username: response.username,
               email: response.email,
@@ -65,15 +67,64 @@ export class AuthService {
       );
   }
 
+  isTokenValid(): Observable<boolean> {
+    const token = this.getToken();
+
+    if (!token) {
+      console.log('❌ No hay token para validar');
+      return of(false);
+    }
+
+    console.log('🔍 Validando token con el servidor...');
+
+    const headers = new HttpHeaders({
+      'Authorization': token,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.baseUrl}/verify`, { headers }).pipe(
+      map((response: any) => {
+        console.log('✅ Token válido:', response);
+        return true;
+      }),
+      catchError((error) => {
+        console.error('❌ Token inválido:', error.status, error.message);
+
+        if (error.status === 401 || error.status === 403) {
+          console.log('🧹 Limpiando sesión por token inválido...');
+          this.logout();
+        }
+
+        return of(false);
+      })
+    );
+  }
+
+  isAuthenticated(validateWithServer: boolean = false): Observable<boolean> | boolean {
+    const hasToken = !!this.tokenSubject.value;
+
+    if (!hasToken) {
+      console.log('❌ No hay token local');
+      return false;
+    }
+
+    if (!validateWithServer) {
+      console.log('✅ Token local encontrado (sin validación de servidor)');
+      return true;
+    }
+
+    console.log('🔍 Validando token con servidor...');
+    return this.isTokenValid();
+  }
+
   registro(usuario: RegistroUsuario): Observable<any> {
     return this.http.post(`${this.baseUrl}/registro`, usuario);
   }
-  // Logout con petición HTTP al servidor
+
   logoutFromServer(): Observable<any> {
     const token = this.getToken();
 
     if (!token) {
-      // Si no hay token, hacer logout local
       this.logout();
       return of(null);
     }
@@ -94,24 +145,19 @@ export class AuthService {
         }),
         catchError(error => {
           console.error('Error en logout del servidor:', error);
-          // Aunque falle el logout en el servidor, limpiar sesión local
           this.logout();
           return of(null);
         })
       );
   }
 
-  // Logout solo local (sin petición al servidor)
+  // Cambiar localStorage por sessionStorage
   logout(): void {
     console.log('Limpiando sesión local...');
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
     this.tokenSubject.next(null);
     this.userSubject.next(null);
-  }
-
-  isAuthenticated(): boolean {
-    return !!this.tokenSubject.value;
   }
 
   getToken(): string | null {
