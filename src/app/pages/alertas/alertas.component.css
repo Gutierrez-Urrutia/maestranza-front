@@ -1,0 +1,127 @@
+::ng-deep .mat-mdc-header-cell .mat-sort-header-container {
+  display: flex !important;
+  justify-content: center !important;
+  margin-left: 1rem !important;
+}
+
+/* Fondo blanco para la tabla */
+::ng-deep .mat-mdc-table,
+.mat-mdc-row,
+.mat-mdc-header.mat-mdc-row,
+.mat-mdc-cell,
+.mat-mdc-header-cell,
+.mat-elevation-4,
+.mat-mdc-paginator {
+  background-color: white !important;
+}
+
+/* Estilos para badges de urgencia */
+::ng-deep .mat-mdc-cell .badge {
+  min-width: 100px !important;
+  width: 100px !important;
+  text-align: center !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  height: 32px !important;
+  line-height: 1 !important;
+  padding: 6px 12px !important;
+  vertical-align: middle !important;
+  font-weight: 500;
+  border-radius: 6px !important;
+}
+
+/* Estilos específicos para niveles de urgencia */
+.urgencia-critica {
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+}
+
+.urgencia-alta {
+  background-color: #ffe5d0;
+  color: #9c4704;
+  border: 1px solid #ffc8a6;
+}
+
+.urgencia-media {
+  background-color: #fff3cd;
+  color: #664d03;
+  border: 1px solid #ffe69c;
+}
+
+.urgencia-baja {
+  background-color: #cfe2ff;
+  color: #084298;
+  border: 1px solid #9ec5fe;
+}
+
+/* Estilos para filas según urgencia */
+::ng-deep .mat-mdc-row.table-danger {
+  background-color: rgba(248, 215, 218, 0.2) !important;
+}
+
+::ng-deep .mat-mdc-row.table-danger:hover {
+  background-color: rgba(248, 215, 218, 0.4) !important;
+}
+
+::ng-deep .mat-mdc-row.table-warning {
+  background-color: rgba(255, 243, 205, 0.2) !important;
+}
+
+::ng-deep .mat-mdc-row.table-warning:hover {
+  background-color: rgba(255, 243, 205, 0.4) !important;
+}
+
+::ng-deep .mat-mdc-row.table-secondary {
+  background-color: rgba(108, 117, 125, 0.1) !important;
+  opacity: 0.7;
+}
+
+/* Ajustes específicos para la tabla */
+::ng-deep .custom-table .mat-mdc-cell,
+::ng-deep .custom-table .mat-mdc-header-cell {
+  padding: 12px 8px !important;
+}
+
+/* Contenedor de descripción */
+.description-container {
+  max-width: 300px;
+}
+
+/* Hover effects para botones de acción */
+::ng-deep .mat-mdc-icon-button.text-success:hover {
+  background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-icon-button.text-warning:hover {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-icon-button.mat-danger {
+  color: #d9534f !important;
+}
+
+::ng-deep .mat-mdc-icon-button.mat-danger:hover {
+  color: #e00000 !important;
+  background-color: rgba(220, 53, 69, 0.1) !important;
+}
+
+/* Truncar texto largo */
+.text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Estilos para las tarjetas de estadísticas */
+.card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
