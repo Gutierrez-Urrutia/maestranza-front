@@ -18,15 +18,18 @@ export class AuthService {
   public user$ = this.userSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    // Cambiar localStorage por sessionStorage
+    // Solo cargar desde sessionStorage, sin eventos adicionales
+    this.loadFromSessionStorage();
+  }
+
+  private loadFromSessionStorage() {
     const savedToken = sessionStorage.getItem('token');
     const savedUser = sessionStorage.getItem('user');
 
-    if (savedToken) {
+    if (savedToken && savedUser) {
       this.tokenSubject.next(savedToken);
-    }
-    if (savedUser) {
       this.userSubject.next(JSON.parse(savedUser));
+      console.log('✅ Sesión cargada desde sessionStorage');
     }
   }
 
@@ -46,7 +49,7 @@ export class AuthService {
           if (response.token) {
             const fullToken = `${response.type} ${response.token}`;
 
-            // Usar sessionStorage en lugar de localStorage
+            // Guardar en sessionStorage
             sessionStorage.setItem('token', fullToken);
             sessionStorage.setItem('user', JSON.stringify({
               id: response.id,
@@ -151,7 +154,6 @@ export class AuthService {
       );
   }
 
-  // Cambiar localStorage por sessionStorage
   logout(): void {
     console.log('Limpiando sesión local...');
     sessionStorage.removeItem('token');

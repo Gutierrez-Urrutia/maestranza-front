@@ -1,55 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '../login/auth.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
 
   constructor(private authService: AuthService) {
-    this.initializeSessionHandlers();
-  }
-
-  private initializeSessionHandlers(): void {
-    // Generar ID único de sesión
-    const sessionId = this.generateSessionId();
-    sessionStorage.setItem('sessionId', sessionId);
-
-    // Detectar cuando se cierra la pestaña/navegador
-    window.addEventListener('beforeunload', () => {
-      console.log('🚪 Cerrando pestaña/navegador - Invalidando sesión');
-      this.invalidateSession();
-    });
-
-    // Detectar cuando se recarga la página
-    window.addEventListener('load', () => {
-      this.checkSessionValidity();
-    });
-
-    // Opcional: Detectar inactividad prolongada
+    // Solo configurar timer de inactividad, sin eventos de cierre
     this.setupInactivityTimer();
-  }
-
-  private generateSessionId(): string {
-    return Date.now().toString() + '-' + Math.random().toString(36).substr(2, 9);
-  }
-
-  private invalidateSession(): void {
-    // Marcar sesión como cerrada
-    localStorage.setItem('sessionClosed', 'true');
-    sessionStorage.clear();
-  }
-
-  private checkSessionValidity(): void {
-    const sessionClosed = localStorage.getItem('sessionClosed');
-    const sessionId = sessionStorage.getItem('sessionId');
-
-    if (sessionClosed === 'true' || !sessionId) {
-      console.log('🚫 Sesión inválida detectada - Cerrando sesión');
-      this.authService.logout();
-      localStorage.removeItem('sessionClosed');
-    }
   }
 
   private setupInactivityTimer(): void {
@@ -61,14 +20,30 @@ export class SessionService {
       inactivityTimer = setTimeout(() => {
         console.log('⏰ Sesión expirada por inactividad');
         this.authService.logout();
+        // Redirigir al login si es necesario
+        window.location.href = '/login';
       }, INACTIVITY_TIME);
     };
 
     // Eventos que resetean el timer
-    ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+    ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(event => {
       document.addEventListener(event, resetTimer, true);
     });
 
     resetTimer(); // Iniciar timer
+  }
+
+  // Método público para limpiar la sesión manualmente
+  public clearSession(): void {
+    console.log('🧹 Limpiando sesión manualmente');
+    this.authService.logout();
+  }
+
+  // Método para obtener información de la sesión
+  public getSessionInfo(): any {
+    return {
+      hasToken: !!sessionStorage.getItem('token'),
+      user: sessionStorage.getItem('user')
+    };
   }
 }

@@ -21,31 +21,30 @@ export class AuthGuard implements CanActivate {
 
     console.log('🛡️ AuthGuard: Verificando acceso a:', state.url);
 
-    // SIEMPRE validar con el servidor - no confiar solo en el token local
+    // Primero verificar si hay token local
+    const hasLocalToken = this.authService.isAuthenticated(false);
+
+    if (!hasLocalToken) {
+      console.log('❌ No hay token local');
+      this.router.navigate(['/login']);
+      return false;
+    }
+
+    // Validar con el servidor
     return this.authService.isTokenValid().pipe(
       map((isValid: boolean) => {
         if (isValid) {
           console.log('✅ Token válido. Permitiendo acceso a:', state.url);
           return true;
         } else {
-          console.log('❌ Token inválido o expirado. Redirigiendo al login desde:', state.url);
-          this.router.navigate(['/login'], {
-            queryParams: {
-              reason: 'session_expired',
-              redirectUrl: state.url
-            }
-          });
+          console.log('❌ Token inválido. Redirigiendo al login');
+          this.router.navigate(['/login']);
           return false;
         }
       }),
       catchError((error) => {
         console.error('❌ Error validando token:', error);
-        this.router.navigate(['/login'], {
-          queryParams: {
-            reason: 'validation_error',
-            redirectUrl: state.url
-          }
-        });
+        this.router.navigate(['/login']);
         return of(false);
       })
     );
