@@ -1,0 +1,178 @@
+/* Estilos para el mensaje de bienvenida */
+.welcome-message {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+/* Estilos para el contenedor de notificaciones */
+.notification-container {
+  margin-left: 1rem;
+}
+
+.notification-btn {
+  border: none;
+  background: transparent;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+  color: #6c757d;
+}
+
+.notification-btn:hover {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  color: #495057;
+  transform: scale(1.05);
+}
+
+.notification-btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+  border-radius: 4px;
+}
+
+/* Estilos para el icono de campana */
+.notification-btn .bi-bell {
+  font-size: 1.4rem;
+}
+
+/* Estilos responsivos para el título */
+.navbar h1 {
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 600;
+  color: #2fa4e7;
+  white-space: nowrap;
+}
+
+/* Estilos para la burbuja de notificación */
+.notification-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  z-index: 10;
+  top: -4px;
+  right: -4px;
+  transform: none;
+  animation: pulse 2s infinite;
+  /* Mejorar nitidez del texto */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Animación de pulso para la burbuja */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Responsive - Tablet grande (hasta 992px) */
+@media (max-width: 992px) {
+  .navbar h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Responsive - Tablet (hasta 768px) */
+@media (max-width: 768px) {
+  .navbar h1 {
+    font-size: 1.2rem;
+  }
+
+  .welcome-message {
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+  }
+
+  .notification-container {
+    margin-left: 0.5rem;
+  }
+
+  .notification-btn {
+    padding: 6px;
+  }
+
+  .notification-btn .bi-bell {
+    font-size: 1.2rem;
+  }
+
+  .notification-badge {
+    font-size: 0.6rem;
+    font-weight: 600;
+    min-width: 16px;
+    height: 16px;
+    top: -3px;
+    right: -3px;
+  }
+}
+
+/* Responsive - Móvil (hasta 576px) */
+@media (max-width: 576px) {
+  .navbar h1 {
+    font-size: 1rem;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.2;
+  }
+
+  .welcome-message {
+    font-size: 0.8rem;
+    margin-right: 0.25rem;
+  }
+
+  .notification-container {
+    margin-left: 0.25rem;
+  }
+
+  .notification-btn {
+    padding: 5px;
+  }
+
+  .notification-btn .bi-bell {
+    font-size: 1.1rem;
+  }
+
+  .notification-badge {
+    font-size: 0.55rem;
+    font-weight: 600;
+    min-width: 14px;
+    height: 14px;
+    top: -2px;
+    right: -2px;
+  }
+}
+
+/* Móvil muy pequeño (hasta 400px) */
+@media (max-width: 400px) {
+  .navbar h1 {
+    font-size: 0.9rem;
+  }
+
+  .welcome-message {
+    font-size: 0.75rem;
+  }
+}
+
+/* Efecto hover para la burbuja */
+.notification-btn:hover .notification-badge {
+  animation-duration: 1s;
+}

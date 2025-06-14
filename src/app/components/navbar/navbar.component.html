@@ -4,12 +4,44 @@
         <button class="btn me-2" (click)="toggleSidebar.emit()" aria-label="Abrir menú lateral">
             <i class="bi bi-list fs-2"></i>
         </button>
+
         <ul class="navbar-nav ms-2 me-auto">
             <li class="nav-item">
-                <h1>Sistema de Gestión Maestranza Unidos
+                <!-- Título completo en pantallas grandes -->
+                <h1 class="d-none d-md-block">Sistema de Gestión Maestranza Unidos
+                    <span class="visually-hidden">(current)</span>
+                </h1>
+                <!-- Título corto en pantallas pequeñas -->
+                <h1 class="d-md-none">SGM Unidos
                     <span class="visually-hidden">(current)</span>
                 </h1>
             </li>
         </ul>
+
+        <!-- Sección de usuario y notificaciones -->
+        @if (currentUser) {
+        <div class="d-flex align-items-center">
+            <!-- Mensaje de bienvenida -->
+            <div class="navbar-text welcome-message me-3">
+                {{getMensajeBienvenida()}}
+            </div>
+
+            <!-- Icono de notificaciones -->
+            <div class="notification-container position-relative">
+                <button class="notification-btn" (click)="onNotificacionesClick()"
+                    [attr.aria-label]="'Notificaciones: ' + numeroNotificaciones">
+                    <i class="bi bi-bell"></i>
+
+                    <!-- Burbuja de notificación -->
+                    @if (numeroNotificaciones > 0) {
+                    <span class="notification-badge position-absolute badge rounded-pill bg-danger">
+                        {{numeroNotificaciones > 99 ? '99+' : numeroNotificaciones}}
+                        <span class="visually-hidden">notificaciones no leídas</span>
+                    </span>
+                    }
+                </button>
+            </div>
+        </div>
+        }
     </div>
 </nav>
