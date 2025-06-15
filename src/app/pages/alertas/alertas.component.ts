@@ -346,4 +346,74 @@ export class AlertasComponent implements AfterViewInit, OnInit {
       this.paginator._intl.changes.next();
     }
   }
+
+  cambiarEstado(alerta: Alerta) {
+    const accion = alerta.activo ? 'desactivar' : 'activar';
+    const titulo = alerta.activo ? '¿Desactivar alerta?' : '¿Activar alerta?';
+    const texto = `¿Está seguro que desea ${accion} la alerta "${alerta.nombre}"?`;
+    const color = alerta.activo ? '#ffc107' : '#28a745';
+
+    Swal.fire({
+      title: titulo,
+      text: texto,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: color,
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: `Sí, ${accion}`,
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        this.alertaService.cambiarEstado(alerta.id).subscribe({
+          next: (response) => {
+            // Cambiar el estado local
+            alerta.activo = !alerta.activo;
+
+            // Aplicar filtros nuevamente para reflejar cambios
+            this.aplicarFiltros();
+
+            Swal.fire({
+              icon: 'success',
+              title: 'Estado cambiado',
+              text: response.message,
+              timer: 1500,
+              showConfirmButton: false
+            });
+          },
+          error: (error) => {
+            console.error('Error al cambiar estado:', error);
+
+            let mensajeError = 'No se pudo cambiar el estado de la alerta';
+            if (error.error?.message) {
+              mensajeError = error.error.message;
+            }
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: mensajeError
+            });
+          },
+          complete: () => {
+            this.isLoading = false;
+          }
+        });
+      }
+    });
+  }
+
+  // MÉTODOS AUXILIARES para el botón dinámico
+  getTextoBotonEstado(alerta: Alerta): string {
+    return alerta.activo ? 'Desactivar' : 'Activar';
+  }
+
+  getClaseBotonEstado(alerta: Alerta): string {
+    return alerta.activo ? 'warn' : 'primary';
+  }
+
+  getIconoBotonEstado(alerta: Alerta): string {
+    return alerta.activo ? 'pause' : 'play_arrow';
+  }
 }

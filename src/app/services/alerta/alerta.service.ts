@@ -43,4 +43,8 @@ export class AlertaService {
   eliminar(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  cambiarEstado(id: number): Observable<{ message: string }> {
+    return this.http.patch<{ message: string }>(`${this.apiUrl}/cambiar-estado/${id}`, {});
+  }
 }
