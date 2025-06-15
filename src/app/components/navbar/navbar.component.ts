@@ -26,7 +26,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Suscribirse a los cambios del usuario
     this.userSubscription = this.authService.user$.subscribe(user => {
-      console.log('🔍 NAVBAR - Usuario recibido del BehaviorSubject:', user);
       this.currentUser = user;
 
       // Cargar notificaciones cuando el usuario esté autenticado
@@ -46,10 +45,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.notificacionesSubscription = this.alertaService.obtenerActivas().subscribe({
       next: (alertas) => {
         this.numeroNotificaciones = alertas.length;
-        console.log('🔔 Número de notificaciones:', this.numeroNotificaciones);
+
       },
       error: (error) => {
-        console.error('❌ Error al cargar notificaciones:', error);
+       
         this.numeroNotificaciones = 0;
       }
     });
@@ -58,18 +57,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
   // Método para obtener el mensaje de bienvenida
   getMensajeBienvenida(): string {
     if (!this.currentUser) {
-      console.log('No hay usuario actual');
+     
       return '';
     }
 
-    console.log('Datos del usuario:', this.currentUser);
-    console.log('Nombre:', this.currentUser.nombre);
-    console.log('Apellido:', this.currentUser.apellido);
+   
 
     // Verificar si tiene nombre y apellido
     if (this.currentUser.nombre && this.currentUser.apellido) {
       const nombreCompleto = `${this.currentUser.nombre} ${this.currentUser.apellido}`;
-      console.log('Nombre completo:', nombreCompleto);
+    
       return `Bienvenido/a ${nombreCompleto}`;
     }
 
@@ -84,7 +81,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   // Método para manejar click en notificaciones
   onNotificacionesClick() {
-    console.log('🔔 Click en notificaciones');
+    
     // Aquí puedes agregar lógica para mostrar un dropdown de notificaciones
     // o navegar a la página de alertas
   }

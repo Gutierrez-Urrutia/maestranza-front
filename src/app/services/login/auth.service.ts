@@ -62,6 +62,11 @@ export class AuthService {
           if (response.token) {
             const fullToken = `${response.type} ${response.token}`;
 
+            if (!fullToken.startsWith('Bearer ')) {
+              console.error('❌ Token no tiene formato Bearer:', fullToken);
+            } else {
+              console.log('✅ Token válido:', fullToken);
+            }
             // Crear objeto de usuario verificando cada campo
             const userData = {
               id: response.id,

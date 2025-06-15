@@ -1,6 +1,6 @@
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection, LOCALE_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { AuthInterceptor } from './interceptors/auth/auth.interceptor';
+import { authInterceptor } from './interceptors/auth/auth.interceptor';
 
 // Crear clase personalizada para español
 export class SpanishPaginatorIntl extends MatPaginatorIntl {
@@ -36,9 +36,8 @@ export class SpanishPaginatorIntl extends MatPaginatorIntl {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideRouter(routes),
-    // AGREGAR ESTAS DOS LÍNEAS:
     { provide: LOCALE_ID, useValue: 'es' },
     { provide: MatPaginatorIntl, useClass: SpanishPaginatorIntl },
     importProvidersFrom(
@@ -50,12 +49,6 @@ export const appConfig: ApplicationConfig = {
       MatFormFieldModule,
       MatButtonModule,
       MatIconModule
-    ),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    }
-
+    )
   ]
 };
