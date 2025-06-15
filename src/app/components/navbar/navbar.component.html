@@ -22,21 +22,23 @@
         @if (currentUser) {
         <div class="d-flex align-items-center">
             <!-- Mensaje de bienvenida -->
-            <div class="navbar-text welcome-message me-3">
+            <div class="navbar-text welcome-message me-3 d-none d-md-block">
                 {{getMensajeBienvenida()}}
             </div>
 
-            <!-- Icono de notificaciones -->
-            <div class="notification-container position-relative">
-                <button class="notification-btn" (click)="onNotificacionesClick()"
-                    [attr.aria-label]="'Notificaciones: ' + numeroNotificaciones">
-                    <i class="bi bi-bell"></i>
+            <!-- Icono de notificaciones con navegación -->
+            <div class="notification-container position-relative me-2">
+                <button class="notification-btn btn btn-outline-warning border-0" routerLink="/alertas"
+                    [title]="getTooltipNotificaciones()" [attr.aria-label]="getTooltipNotificaciones()">
 
-                    <!-- Burbuja de notificación -->
+                    <i class="bi bi-bell" [class.text-warning]="numeroNotificaciones > 0"
+                        [class.text-muted]="numeroNotificaciones === 0"></i>
+
+                    <!-- Burbuja de notificación - ELIMINAR clases de Bootstrap positioning -->
                     @if (numeroNotificaciones > 0) {
                     <span class="notification-badge position-absolute badge rounded-pill bg-danger">
                         {{numeroNotificaciones > 99 ? '99+' : numeroNotificaciones}}
-                        <span class="visually-hidden">notificaciones no leídas</span>
+                        <span class="visually-hidden">alertas activas</span>
                     </span>
                     }
                 </button>

@@ -50,6 +50,7 @@
 }
 
 /* Estilos para la burbuja de notificación */
+/* Estilos para la burbuja de notificación - ACTUALIZADO */
 .notification-badge {
   font-size: 0.65rem;
   font-weight: 600;
@@ -60,10 +61,14 @@
   justify-content: center;
   line-height: 1;
   z-index: 10;
-  top: -4px;
-  right: -4px;
-  transform: none;
+
+  /* CAMBIOS PRINCIPALES - Posición más cerca del ícono */
+  top: 0px !important; /* Cambiar de -4px a 0px */
+  right: 0px !important; /* Cambiar de -4px a 0px */
+
+  transform: none !important; /* Eliminar cualquier transform de Bootstrap */
   animation: pulse 2s infinite;
+
   /* Mejorar nitidez del texto */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -120,8 +125,8 @@
     font-weight: 600;
     min-width: 16px;
     height: 16px;
-    top: -3px;
-    right: -3px;
+    top: 1px !important; /* Cambiar de -3px a 1px */
+    right: 1px !important; /* Cambiar de -3px a 1px */
   }
 }
 
@@ -156,8 +161,8 @@
     font-weight: 600;
     min-width: 14px;
     height: 14px;
-    top: -2px;
-    right: -2px;
+    top: 2px !important; /* Cambiar de -2px a 2px */
+    right: 2px !important; /* Cambiar de -2px a 2px */
   }
 }
 

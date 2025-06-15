@@ -73,6 +73,10 @@ export class AlertasComponent implements AfterViewInit, OnInit {
         console.log('Alertas cargadas:', alertas);
         this.alertas = alertas;
         this.dataSource.data = alertas;
+
+        // Actualizar contador automáticamente después de cargar
+        this.alertaService.actualizarContadorAlertas();
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -186,167 +190,7 @@ export class AlertasComponent implements AfterViewInit, OnInit {
     }
   }
 
-  desactivarAlerta(alerta: Alerta) {
-    if (!alerta.activo) return;
-
-    Swal.fire({
-      title: '¿Desactivar alerta?',
-      text: `¿Quieres desactivar la alerta "${alerta.nombre}"?`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#ffc107',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Sí, desactivar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.alertaService.desactivar(alerta.id).subscribe({
-          next: (alertaActualizada) => {
-            alerta.activo = false;
-
-            Swal.fire({
-              icon: 'success',
-              title: 'Alerta desactivada',
-              timer: 1500,
-              showConfirmButton: false
-            });
-          },
-          error: (error) => {
-            console.error('Error al desactivar alerta:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo desactivar la alerta'
-            });
-          }
-        });
-      }
-    });
-  }
-
-  activarAlerta(alerta: Alerta) {
-    if (alerta.activo) return;
-
-    this.alertaService.activar(alerta.id).subscribe({
-      next: (alertaActualizada) => {
-        alerta.activo = true;
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Alerta activada',
-          timer: 1500,
-          showConfirmButton: false
-        });
-      },
-      error: (error) => {
-        console.error('Error al activar alerta:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo activar la alerta'
-        });
-      }
-    });
-  }
-
-  eliminarAlerta(alerta: Alerta) {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: `¿Quieres eliminar la alerta "${alerta.nombre}"? Esta acción no se puede deshacer.`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.alertaService.eliminar(alerta.id).subscribe({
-          next: () => {
-            this.alertas = this.alertas.filter(a => a.id !== alerta.id);
-            this.dataSource.data = this.alertas;
-
-            Swal.fire({
-              icon: 'success',
-              title: '¡Eliminada!',
-              text: 'La alerta ha sido eliminada',
-              timer: 2000,
-              showConfirmButton: false
-            });
-          },
-          error: (error) => {
-            console.error('Error al eliminar alerta:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo eliminar la alerta'
-            });
-          }
-        });
-      }
-    });
-  }
-
-  formatearFecha(fecha: string): string {
-    if (!fecha) return 'N/A';
-
-    const fechaObj = new Date(fecha);
-    return fechaObj.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
-
-  // Método para obtener estadísticas rápidas
-  getEstadisticas() {
-    const total = this.alertas.length;
-    const activas = this.alertas.filter(a => a.activo).length;
-    const criticas = this.alertas.filter(a => a.nivelUrgencia === NivelUrgencia.CRITICA && a.activo).length;
-
-    return { total, activas, criticas };
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-
-    // Personalizar la función de filtro
-    this.dataSource.filterPredicate = (data: Alerta, filter: string) => {
-      const searchTerm = filter.toLowerCase();
-
-      const searchableFields = [
-        data.nombre?.toString().toLowerCase() || '',
-        data.descripcion?.toString().toLowerCase() || '',
-        data.productoCodigo?.toString().toLowerCase() || '',
-        data.productoNombre?.toString().toLowerCase() || '',
-        data.categoriaNombre?.toString().toLowerCase() || '',
-        data.productoUbicacion?.toString().toLowerCase() || ''
-      ];
-
-      return searchableFields.some(field => field.includes(searchTerm));
-    };
-
-    // Configurar textos del paginador en español
-    if (this.paginator) {
-      this.paginator._intl.itemsPerPageLabel = 'Elementos por página:';
-      this.paginator._intl.nextPageLabel = 'Página siguiente';
-      this.paginator._intl.previousPageLabel = 'Página anterior';
-      this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
-        if (length === 0 || pageSize === 0) {
-          return `0 de ${length}`;
-        }
-        const startIndex = page * pageSize;
-        const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
-        return `${startIndex + 1} - ${endIndex} de ${length}`;
-      };
-      this.paginator._intl.changes.next();
-    }
-  }
-
+  // MÉTODO UNIFICADO para cambiar estado (reemplaza activarAlerta y desactivarAlerta)
   cambiarEstado(alerta: Alerta) {
     const accion = alerta.activo ? 'desactivar' : 'activar';
     const titulo = alerta.activo ? '¿Desactivar alerta?' : '¿Activar alerta?';
@@ -373,6 +217,8 @@ export class AlertasComponent implements AfterViewInit, OnInit {
 
             // Aplicar filtros nuevamente para reflejar cambios
             this.aplicarFiltros();
+
+            // El contador se actualiza automáticamente gracias al tap() en el servicio
 
             Swal.fire({
               icon: 'success',
@@ -415,5 +261,130 @@ export class AlertasComponent implements AfterViewInit, OnInit {
 
   getIconoBotonEstado(alerta: Alerta): string {
     return alerta.activo ? 'pause' : 'play_arrow';
+  }
+
+  // MÉTODOS LEGACY - Mantener para compatibilidad (ahora usan cambiarEstado)
+  desactivarAlerta(alerta: Alerta) {
+    if (!alerta.activo) return;
+    this.cambiarEstado(alerta);
+  }
+
+  activarAlerta(alerta: Alerta) {
+    if (alerta.activo) return;
+    this.cambiarEstado(alerta);
+  }
+
+  eliminarAlerta(alerta: Alerta) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: `¿Quieres eliminar la alerta "${alerta.nombre}"? Esta acción no se puede deshacer.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        this.alertaService.eliminar(alerta.id).subscribe({
+          next: () => {
+            // Remover de la lista local
+            this.alertas = this.alertas.filter(a => a.id !== alerta.id);
+            this.dataSource.data = this.alertas;
+
+            // Aplicar filtros para actualizar la vista
+            this.aplicarFiltros();
+
+            // El contador se actualiza automáticamente gracias al tap() en el servicio
+
+            Swal.fire({
+              icon: 'success',
+              title: '¡Eliminada!',
+              text: 'La alerta ha sido eliminada',
+              timer: 2000,
+              showConfirmButton: false
+            });
+          },
+          error: (error) => {
+            console.error('Error al eliminar alerta:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo eliminar la alerta'
+            });
+          },
+          complete: () => {
+            this.isLoading = false;
+          }
+        });
+      }
+    });
+  }
+
+  formatearFecha(fecha: string): string {
+    if (!fecha) return 'N/A';
+
+    const fechaObj = new Date(fecha);
+    return fechaObj.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  // Método para obtener estadísticas rápidas
+  getEstadisticas() {
+    const total = this.alertas.length;
+    const activas = this.alertas.filter(a => a.activo).length;
+    const criticas = this.alertas.filter(a => a.nivelUrgencia === NivelUrgencia.CRITICA && a.activo).length;
+
+    return { total, activas, criticas };
+  }
+
+  // Método para refrescar la lista completa
+  refrescarAlertas() {
+    this.cargarAlertas();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    // Personalizar la función de filtro
+    this.dataSource.filterPredicate = (data: Alerta, filter: string) => {
+      const searchTerm = filter.toLowerCase();
+
+      const searchableFields = [
+        data.nombre?.toString().toLowerCase() || '',
+        data.descripcion?.toString().toLowerCase() || '',
+        data.productoCodigo?.toString().toLowerCase() || '',
+        data.productoNombre?.toString().toLowerCase() || '',
+        data.categoriaNombre?.toString().toLowerCase() || '',
+        data.productoUbicacion?.toString().toLowerCase() || ''
+      ];
+
+      return searchableFields.some(field => field.includes(searchTerm));
+    };
+
+    // Configurar textos del paginador en español
+    if (this.paginator) {
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página:';
+      this.paginator._intl.nextPageLabel = 'Página siguiente';
+      this.paginator._intl.previousPageLabel = 'Página anterior';
+      this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+        if (length === 0 || pageSize === 0) {
+          return `0 de ${length}`;
+        }
+        const startIndex = page * pageSize;
+        const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+        return `${startIndex + 1} - ${endIndex} de ${length}`;
+      };
+      this.paginator._intl.changes.next();
+    }
   }
 }

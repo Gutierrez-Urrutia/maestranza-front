@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/login/auth.service';
-import { AlertaService } from '../../services/alerta/alerta.service'; // ← Importar AlertaService
+import { AlertaService } from '../../services/alerta/alerta.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -14,13 +15,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
 
   currentUser: any = null;
-  numeroNotificaciones: number = 0; // ← Nueva propiedad
+  numeroNotificaciones: number = 0;
   private userSubscription: Subscription = new Subscription();
-  private notificacionesSubscription: Subscription = new Subscription(); // ← Nueva suscripción
+  private notificacionesSubscription: Subscription = new Subscription();
 
   constructor(
     private authService: AuthService,
-    private alertaService: AlertaService // ← Inyectar AlertaService
+    private alertaService: AlertaService
   ) { }
 
   ngOnInit() {
@@ -28,9 +29,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authService.user$.subscribe(user => {
       this.currentUser = user;
 
-      // Cargar notificaciones cuando el usuario esté autenticado
       if (user) {
-        this.cargarNotificaciones();
+        this.inicializarNotificaciones();
+      } else {
+        this.numeroNotificaciones = 0;
       }
     });
   }
@@ -40,33 +42,33 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.notificacionesSubscription.unsubscribe();
   }
 
-  // Método para cargar el número de notificaciones
-  private cargarNotificaciones() {
-    this.notificacionesSubscription = this.alertaService.obtenerActivas().subscribe({
-      next: (alertas) => {
-        this.numeroNotificaciones = alertas.length;
-
+  // Método para inicializar el sistema de notificaciones
+  private inicializarNotificaciones() {
+    // Suscribirse al contador reactivo de alertas activas
+    this.notificacionesSubscription = this.alertaService.alertasActivasCount$.subscribe({
+      next: (count) => {
+        this.numeroNotificaciones = count;
+        console.log('🔔 Notificaciones actualizadas:', count);
       },
       error: (error) => {
-       
+        console.error('❌ Error en notificaciones:', error);
         this.numeroNotificaciones = 0;
       }
     });
+
+    // Cargar contador inicial
+    this.alertaService.actualizarContadorAlertas();
   }
 
   // Método para obtener el mensaje de bienvenida
   getMensajeBienvenida(): string {
     if (!this.currentUser) {
-     
       return '';
     }
-
-   
 
     // Verificar si tiene nombre y apellido
     if (this.currentUser.nombre && this.currentUser.apellido) {
       const nombreCompleto = `${this.currentUser.nombre} ${this.currentUser.apellido}`;
-    
       return `Bienvenido/a ${nombreCompleto}`;
     }
 
@@ -81,15 +83,26 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   // Método para manejar click en notificaciones
   onNotificacionesClick() {
-    
-    // Aquí puedes agregar lógica para mostrar un dropdown de notificaciones
-    // o navegar a la página de alertas
+    console.log('🔔 Click en notificaciones:', this.numeroNotificaciones);
+    // Aquí puedes agregar navegación a alertas
+    // this.router.navigate(['/alertas']);
   }
 
-  // Método para refrescar notificaciones
+  // Método para refrescar notificaciones manualmente
   refrescarNotificaciones() {
     if (this.currentUser) {
-      this.cargarNotificaciones();
+      this.alertaService.actualizarContadorAlertas();
+    }
+  }
+
+  // Método para obtener el texto del tooltip
+  getTooltipNotificaciones(): string {
+    if (this.numeroNotificaciones === 0) {
+      return 'No hay alertas activas';
+    } else if (this.numeroNotificaciones === 1) {
+      return '1 alerta activa';
+    } else {
+      return `${this.numeroNotificaciones} alertas activas`;
     }
   }
 }
