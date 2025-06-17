@@ -164,6 +164,11 @@
     top: 2px !important; /* Cambiar de -2px a 2px */
     right: 2px !important; /* Cambiar de -2px a 2px */
   }
+
+  /* Estilos para el dropdown de notificaciones */
+  .notification-dropdown {
+    width: 300px;
+  }
 }
 
 /* Móvil muy pequeño (hasta 400px) */
@@ -180,4 +185,44 @@
 /* Efecto hover para la burbuja */
 .notification-btn:hover .notification-badge {
   animation-duration: 1s;
+}
+
+/* Estilos para el dropdown de notificaciones */
+.notification-badge {
+  top: 0;
+  right: 0;
+  transform: translate(30%, -30%);
+  font-size: 0.65rem;
+}
+
+.notification-dropdown {
+  width: 350px;
+  max-width: 90vw; /* Limitar al 90% del ancho de la ventana */
+  position: absolute;
+  right: 0;
+  left: auto;
+  transform: translateX(0); /* Asegurar que no se desplace */
+}
+
+/* En pantallas muy pequeñas, reducir más el tamaño */
+@media (max-width: 400px) {
+  .notification-dropdown {
+    width: 280px;
+    right: -10px; /* Ajustar posición para evitar desbordamiento */
+  }
+}
+
+.notification-item {
+  transition: background-color 0.2s;
+}
+
+.notification-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Ajustes para móviles */
+@media (max-width: 576px) {
+  .notification-dropdown {
+    width: 300px;
+  }
 }

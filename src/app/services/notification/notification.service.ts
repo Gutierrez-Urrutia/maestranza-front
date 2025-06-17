@@ -173,42 +173,6 @@ export class NotificationService {
       // No procesamos aquí las alertas porque ya las capturamos en el listener específico
     };
   }
-
-  /**
-   * Procesar notificación recibida
-   */
-  private procesarNotificacion(data: any): void {
-    console.log('🔍 Procesando datos:', data);
-
-    // Si es directamente una alerta
-    if (data && data.id && data.nombre) {
-      const alerta = data as NotificacionAlerta;
-      console.log('🚨 Alerta recibida:', alerta);
-
-      this.nuevaAlertaSubject.next(alerta);
-      this.mostrarToastAlerta(alerta);
-
-      // Incrementar contador
-      const nuevoContador = (this.contadorSubject.value || 0) + 1;
-      this.actualizarContador(nuevoContador);
-    }
-    // Si es un evento de notificación
-    else if (data && data.tipo) {
-      const notificacion = data as NotificacionEvento;
-
-      // Actualizar contador si viene en la notificación
-      if (notificacion.contadorTotal !== undefined) {
-        this.actualizarContador(notificacion.contadorTotal);
-      }
-
-      // Si hay alerta incluida, procesarla
-      if (notificacion.alerta) {
-        this.nuevaAlertaSubject.next(notificacion.alerta);
-        this.mostrarToastAlerta(notificacion.alerta);
-      }
-    }
-  }
-
   /**
    * Actualizar contador de alertas
    */
@@ -389,39 +353,5 @@ export class NotificationService {
    */
   get isConectado(): boolean {
     return this.eventSource !== null && this.eventSource.readyState === EventSource.OPEN;
-  }
-
-  /**
-   * Simular una nueva alerta (para testing)
-   */
-  simularNuevaAlerta(customData?: any): void {
-    // Si se proporciona un objeto con título y mensaje, lo usamos para crear la alerta
-    let alertaSimulada: NotificacionAlerta;
-
-    if (customData && customData.titulo) {
-      alertaSimulada = {
-        id: Math.floor(Math.random() * 1000),
-        nombre: customData.titulo || 'Alerta Simulada',
-        nivelUrgencia: customData.nivelUrgencia || 'MEDIA',
-        productoNombre: customData.titulo || 'Producto de Prueba',
-        descripcion: customData.mensaje || 'Esta es una alerta simulada para pruebas',
-        fecha: new Date().toISOString()
-      };
-    } else {
-      // Alerta predeterminada si no se proporcionan datos personalizados
-      alertaSimulada = {
-        id: Math.floor(Math.random() * 1000),
-        nombre: 'Alerta Simulada',
-        nivelUrgencia: 'MEDIA',
-        productoNombre: 'Producto de Prueba',
-        descripcion: 'Esta es una alerta simulada para pruebas',
-        fecha: new Date().toISOString()
-      };
-    }
-
-    console.log('🧪 Simulando alerta:', alertaSimulada);
-    this.nuevaAlertaSubject.next(alertaSimulada);
-    this.contadorSubject.next((this.contadorSubject.value || 0) + 1);
-    this.mostrarToastAlerta(alertaSimulada);
   }
 }

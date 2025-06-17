@@ -1,14 +1,17 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy, isDevMode } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, isDevMode, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/login/auth.service';
 import { AlertaService } from '../../services/alerta/alerta.service';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../services/notification/notification.service';
+import { Alerta } from '../../interfaces/Alerta';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule, RouterModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule, DatePipe],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -17,15 +20,18 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   currentUser: any = null;
   numeroNotificaciones: number = 0;
+  notificacionesAbiertas: boolean = false;
+  alertasRecientes: Alerta[] = [];
+  cargandoAlertas: boolean = false;
+  
   private userSubscription: Subscription = new Subscription();
   private notificacionesSubscription: Subscription = new Subscription();
-  // Para el botón de prueba en modo desarrollo
   isDevMode = isDevMode();
 
   constructor(
     private authService: AuthService,
     private alertaService: AlertaService,
-    private notificationService: NotificationService 
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit() {
@@ -39,6 +45,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.notificationService.conectar();
       } else {
         this.numeroNotificaciones = 0;
+        this.alertasRecientes = [];
         // Desconectar SSE cuando el usuario cierra sesión
         this.notificationService.desconectar();
       }
@@ -50,6 +57,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.notificacionesSubscription.unsubscribe();
     // Desconectar SSE cuando se destruye el componente
     this.notificationService.desconectar();
+  }
+
+  // Cerrar notificaciones al hacer clic fuera
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.notification-container')) {
+      this.notificacionesAbiertas = false;
+    }
   }
 
   // Método para inicializar el sistema de notificaciones
@@ -68,6 +84,66 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     // Cargar contador inicial
     this.alertaService.actualizarContadorAlertas();
+  }
+
+  // Toggle para mostrar/ocultar el panel de notificaciones
+  toggleNotificaciones(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    this.notificacionesAbiertas = !this.notificacionesAbiertas;
+    
+    if (this.notificacionesAbiertas) {
+      this.cargarAlertasRecientes();
+    }
+  }
+
+  // Cargar alertas recientes
+  cargarAlertasRecientes() {
+    this.cargandoAlertas = true;
+    this.alertaService.obtenerActivas().subscribe({
+      next: (alertas) => {
+        this.alertasRecientes = alertas.slice(0, 5); // Mostrar máximo 5 alertas
+        this.cargandoAlertas = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar alertas recientes:', error);
+        this.alertasRecientes = [];
+        this.cargandoAlertas = false;
+      }
+    });
+  }
+
+  // Marcar alerta como leída
+  marcarComoLeida(id: number) {
+    this.alertaService.desactivar(id).subscribe({
+      next: () => {
+        // Eliminar la alerta de la lista local
+        this.alertasRecientes = this.alertasRecientes.filter(a => a.id !== id);
+        // Actualizar el contador
+        this.alertaService.actualizarContadorAlertas();
+      },
+      error: (error) => console.error('Error al marcar alerta como leída:', error)
+    });
+  }
+
+  // Refrescar notificaciones manualmente
+  refrescarNotificaciones() {
+    if (this.currentUser) {
+      this.cargarAlertasRecientes();
+      this.alertaService.actualizarContadorAlertas();
+    }
+  }
+
+  // Método para obtener el texto del tooltip
+  getTooltipNotificaciones(): string {
+    if (this.numeroNotificaciones === 0) {
+      return 'No hay alertas activas';
+    } else if (this.numeroNotificaciones === 1) {
+      return '1 alerta activa';
+    } else {
+      return `${this.numeroNotificaciones} alertas activas`;
+    }
   }
 
   // Método para obtener el mensaje de bienvenida
@@ -91,28 +167,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
     return `Bienvenido/a ${this.currentUser.username}`;
   }
 
-  // Método para refrescar notificaciones manualmente
-  refrescarNotificaciones() {
-    if (this.currentUser) {
-      this.alertaService.actualizarContadorAlertas();
+  // Método para obtener clase CSS según nivel de urgencia
+  getNivelUrgenciaClass(nivel: string): string {
+    switch (nivel?.toUpperCase()) {
+      case 'ALTA': 
+      case 'CRITICA': return 'danger';
+      case 'MEDIA': return 'warning';
+      case 'BAJA': return 'info';
+      default: return 'secondary';
     }
   }
-
-  // Método para obtener el texto del tooltip
-  getTooltipNotificaciones(): string {
-    if (this.numeroNotificaciones === 0) {
-      return 'No hay alertas activas';
-    } else if (this.numeroNotificaciones === 1) {
-      return '1 alerta activa';
-    } else {
-      return `${this.numeroNotificaciones} alertas activas`;
-    }
-  }
-
-  // Método para probar notificaciones
-  // probarNotificacion() {
-  //   console.log('Probando notificación toast...');
-  //   const mensaje = {titulo: 'Esta es una notificación de prueba', mensaje: "hola"};
-  //   this.notificationService.simularNuevaAlerta(mensaje);
-  // }
 }
