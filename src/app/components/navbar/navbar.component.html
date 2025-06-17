@@ -34,7 +34,7 @@
                     <i class="bi bi-bell" [class.text-warning]="numeroNotificaciones > 0"
                         [class.text-muted]="numeroNotificaciones === 0"></i>
 
-                    <!-- Burbuja de notificación - ELIMINAR clases de Bootstrap positioning -->
+                    <!-- Burbuja de notificación -->
                     @if (numeroNotificaciones > 0) {
                     <span class="notification-badge position-absolute badge rounded-pill bg-danger">
                         {{numeroNotificaciones > 99 ? '99+' : numeroNotificaciones}}
@@ -43,6 +43,16 @@
                     }
                 </button>
             </div>
+
+            <!-- Botón de prueba de notificaciones (solo en modo desarrollo) -->
+            <!-- @if (isDevMode) {
+            <button class="btn btn-sm btn-outline-secondary ms-2"
+                    (click)="probarNotificacion()"
+                    title="Probar notificación toast">
+                <i class="bi bi-bell-fill"></i>
+                <span class="d-none d-md-inline ms-1">Test</span>
+            </button>
+            } -->
         </div>
         }
     </div>

@@ -11,7 +11,7 @@ import { NotificationService, NotificacionAlerta } from '../../services/notifica
   imports: [CommonModule, FooterComponent]
 })
 export class MovimientosComponent {
-  
+
   movimientos: any[] = [
     {
       id: 1,

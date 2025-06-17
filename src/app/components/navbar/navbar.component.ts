@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, isDevMode } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/login/auth.service';
 import { AlertaService } from '../../services/alerta/alerta.service';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../services/notification/notification.service';
 
 @Component({
   selector: 'app-navbar',
@@ -18,10 +19,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   numeroNotificaciones: number = 0;
   private userSubscription: Subscription = new Subscription();
   private notificacionesSubscription: Subscription = new Subscription();
+  // Para el botón de prueba en modo desarrollo
+  isDevMode = isDevMode();
 
   constructor(
     private authService: AuthService,
-    private alertaService: AlertaService
+    private alertaService: AlertaService,
+    private notificationService: NotificationService 
   ) { }
 
   ngOnInit() {
@@ -31,8 +35,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
       if (user) {
         this.inicializarNotificaciones();
+        // Iniciar conexión SSE cuando el usuario está autenticado
+        this.notificationService.conectar();
       } else {
         this.numeroNotificaciones = 0;
+        // Desconectar SSE cuando el usuario cierra sesión
+        this.notificationService.desconectar();
       }
     });
   }
@@ -40,6 +48,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.userSubscription.unsubscribe();
     this.notificacionesSubscription.unsubscribe();
+    // Desconectar SSE cuando se destruye el componente
+    this.notificationService.desconectar();
   }
 
   // Método para inicializar el sistema de notificaciones
@@ -81,13 +91,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     return `Bienvenido/a ${this.currentUser.username}`;
   }
 
-  // Método para manejar click en notificaciones
-  onNotificacionesClick() {
-    console.log('🔔 Click en notificaciones:', this.numeroNotificaciones);
-    // Aquí puedes agregar navegación a alertas
-    // this.router.navigate(['/alertas']);
-  }
-
   // Método para refrescar notificaciones manualmente
   refrescarNotificaciones() {
     if (this.currentUser) {
@@ -105,4 +108,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return `${this.numeroNotificaciones} alertas activas`;
     }
   }
+
+  // Método para probar notificaciones
+  // probarNotificacion() {
+  //   console.log('Probando notificación toast...');
+  //   const mensaje = {titulo: 'Esta es una notificación de prueba', mensaje: "hola"};
+  //   this.notificationService.simularNuevaAlerta(mensaje);
+  // }
 }

@@ -25,6 +25,18 @@ export class AlertaService {
     return this.http.get<Alerta>(`${this.apiUrl}/${id}`);
   }
 
+  obtenerAlertasActivasCount(): Observable<number> {
+    return this.http.get<any>(`${this.apiUrl}/count`).pipe(
+      map(response => {
+        // Maneja ambos casos: si es un objeto con propiedad count o un número directo
+        if (typeof response === 'object' && response !== null) {
+          return response.count || response.total || 0;
+        }
+        return response || 0;
+      })
+    );
+  }
+  
   obtenerActivas(): Observable<Alerta[]> {
     return this.http.get<Alerta[]>(`${this.apiUrl}/activas`).pipe(
       tap(alertas => {
@@ -68,9 +80,12 @@ export class AlertaService {
 
   // Método para actualizar el contador manualmente
   actualizarContadorAlertas(): void {
-    this.obtenerActivas().subscribe({
-      next: () => {
-        console.log('✅ Contador de alertas actualizado');
+    this.obtenerAlertasActivasCount().subscribe({
+      next: (count) => {
+        console.log('✅ Contador de alertas actualizado:', count);
+        // Asegurarnos de que count es un número
+        const numericCount = typeof count === 'number' ? count : 0;
+        this.alertasActivasCountSubject.next(numericCount);
       },
       error: (error) => {
         console.error('❌ Error al actualizar contador:', error);

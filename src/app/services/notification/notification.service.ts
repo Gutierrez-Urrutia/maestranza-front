@@ -11,8 +11,6 @@ export interface NotificacionAlerta {
   productoNombre: string;
   descripcion: string;
   fecha: string;
-  
-  // Agregar estas propiedades que están en los datos recibidos
   productoId?: number;
   productoCodigo?: string;
   productoStock?: number;
@@ -22,8 +20,6 @@ export interface NotificacionAlerta {
   tiempoTranscurrido?: string;
   resumenCorto?: string;
   activo?: boolean;
-  
-  // Mantener las propiedades antiguas para compatibilidad (si se usaban en algún lado)
   stockActual?: number;
   umbralMinimo?: number;
 }
@@ -81,16 +77,16 @@ export class NotificationService {
       try {
         // CORREGIR URL - Eliminar el v1 duplicado
         const sseUrl = `${this.apiUrl}/alertas/subscribe`;
-        
+
         // IMPORTANTE: Incluir token de autenticación como parámetro de URL
         // Obtener token del localStorage (ajustar según cómo guardas tu token)
         const token = localStorage.getItem('auth_token');
-        
+
         // Añadir token como parámetro de consulta
         const urlConToken = `${sseUrl}?token=${token}`;
-        
+
         console.log('📡 Conectando a:', urlConToken);
-        
+
         // Crear conexión con la URL que incluye el token
         this.eventSource = new EventSource(urlConToken);
 
@@ -147,11 +143,11 @@ export class NotificationService {
           console.log('🚨 Evento de alerta recibido:', event.data);
           const alerta = JSON.parse(event.data);
           console.log('✅ Alerta parseada:', alerta);
-          
+
           // Procesar la alerta
           this.nuevaAlertaSubject.next(alerta);
           this.mostrarToastAlerta(alerta);
-          
+
           // Incrementar contador
           const nuevoContador = (this.contadorSubject.value || 0) + 1;
           this.actualizarContador(nuevoContador);
@@ -173,15 +169,15 @@ export class NotificationService {
    */
   private procesarNotificacion(data: any): void {
     console.log('🔍 Procesando datos:', data);
-    
+
     // Si es directamente una alerta
     if (data && data.id && data.nombre) {
       const alerta = data as NotificacionAlerta;
       console.log('🚨 Alerta recibida:', alerta);
-      
+
       this.nuevaAlertaSubject.next(alerta);
       this.mostrarToastAlerta(alerta);
-      
+
       // Incrementar contador
       const nuevoContador = (this.contadorSubject.value || 0) + 1;
       this.actualizarContador(nuevoContador);
@@ -189,12 +185,12 @@ export class NotificationService {
     // Si es un evento de notificación
     else if (data && data.tipo) {
       const notificacion = data as NotificacionEvento;
-      
+
       // Actualizar contador si viene en la notificación
       if (notificacion.contadorTotal !== undefined) {
         this.actualizarContador(notificacion.contadorTotal);
       }
-      
+
       // Si hay alerta incluida, procesarla
       if (notificacion.alerta) {
         this.nuevaAlertaSubject.next(notificacion.alerta);
@@ -234,26 +230,26 @@ export class NotificationService {
 
     // Crear mensaje conciso
     let mensaje = alerta.productoNombre || 'Producto';
-    
+
     const stock = alerta.productoStock || alerta.stockActual;
     const umbral = alerta.productoUmbralStock || alerta.umbralMinimo;
-    
+
     if (stock !== undefined && umbral !== undefined) {
       mensaje += ` (${stock}/${umbral})`;
     }
-    
+
     if (alerta.descripcion) {
       // Acortar la descripción si es muy larga
-      const descCorta = alerta.descripcion.length > 100 
-        ? alerta.descripcion.substring(0, 100) + '...' 
+      const descCorta = alerta.descripcion.length > 100
+        ? alerta.descripcion.substring(0, 100) + '...'
         : alerta.descripcion;
       mensaje += ` - ${descCorta}`;
     }
-    
+
     // Determinar tipo de toast según la urgencia
     const tipo = this.determinarTipoToast(alerta.nivelUrgencia);
     const titulo = this.obtenerTituloPorUrgencia(alerta.nivelUrgencia);
-    
+
     // Mostrar toast usando directamente ToastrService
     switch (tipo) {
       case 'error':
@@ -386,7 +382,7 @@ export class NotificationService {
   /**
    * Simular una nueva alerta (para testing)
    */
-  simularNuevaAlerta(): void {
+  simularNuevaAlerta(notificacion: { titulo: string; mensaje: string; }): void {
     const alertaSimulada: NotificacionAlerta = {
       id: Math.floor(Math.random() * 1000),
       nombre: 'Alerta Simulada',

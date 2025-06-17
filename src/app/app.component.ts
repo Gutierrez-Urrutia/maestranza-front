@@ -20,7 +20,7 @@ export class AppComponent implements AfterViewInit {
 
   constructor(
     private router: Router,
-    private sessionService: SessionService // ← Inyectar SessionService
+    private sessionService: SessionService 
   ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
