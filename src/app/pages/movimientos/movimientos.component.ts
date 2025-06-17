@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { NotificationService, NotificacionAlerta } from '../../services/notification/notification.service';
 
 @Component({
   selector: 'app-movimientos',
@@ -10,7 +11,7 @@ import { FooterComponent } from '../../components/footer/footer.component';
   imports: [CommonModule, FooterComponent]
 })
 export class MovimientosComponent {
-
+  
   movimientos: any[] = [
     {
       id: 1,

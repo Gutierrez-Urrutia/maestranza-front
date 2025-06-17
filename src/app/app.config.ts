@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideToastr } from 'ngx-toastr';
 
 // Importar módulos de Angular Material
 import { MatTableModule } from '@angular/material/table';
@@ -49,6 +50,16 @@ export const appConfig: ApplicationConfig = {
       MatFormFieldModule,
       MatButtonModule,
       MatIconModule
-    )
+    ),
+    provideToastr({
+      timeOut: 5000,
+      positionClass: 'toast-top-right', // ⬅️ IMPORTANTE: Posición en esquina superior derecha
+      preventDuplicates: true,
+      progressBar: true,
+      closeButton: true,
+      tapToDismiss: true,
+      newestOnTop: true, 
+      maxOpened: 5
+    })
   ]
 };
