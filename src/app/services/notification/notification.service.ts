@@ -1,7 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ToastrService } from 'ngx-toastr'; // Cambiado: importar ToastrService directamente
+import { ToastrService, IndividualConfig } from 'ngx-toastr';
+import { AlertaService } from '../alerta/alerta.service';
 
 // Actualiza la interfaz para que coincida con los datos que realmente llegan del servidor
 export interface NotificacionAlerta {
@@ -31,6 +32,10 @@ export interface NotificacionEvento {
   timestamp: string;
 }
 
+export interface ToastOptions extends Partial<IndividualConfig> {
+  onHidden?: () => void;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -56,7 +61,8 @@ export class NotificationService {
 
   constructor(
     private ngZone: NgZone,
-    private toastr: ToastrService // Cambiado: usar ToastrService directamente
+    private toastr: ToastrService,
+    private alertaService: AlertaService // Añadido: Inyectar AlertaService
   ) {
     console.log('🔔 Servicio de notificaciones SSE creado');
   }
@@ -148,9 +154,13 @@ export class NotificationService {
           this.nuevaAlertaSubject.next(alerta);
           this.mostrarToastAlerta(alerta);
 
-          // Incrementar contador
-          const nuevoContador = (this.contadorSubject.value || 0) + 1;
-          this.actualizarContador(nuevoContador);
+          // Actualizar el contador inmediatamente cuando llega una alerta nueva
+          this.alertaService.actualizarContadorAlertas();
+
+          // No es necesario incrementar manualmente el contador local
+          // ya que actualizarContadorAlertas() obtiene el valor real del servidor
+          // const nuevoContador = (this.contadorSubject.value || 0) + 1;
+          // this.actualizarContador(nuevoContador);
         } catch (error) {
           console.error('❌ Error procesando alerta:', error);
         }
@@ -208,6 +218,14 @@ export class NotificationService {
   }
 
   /**
+   * Método para actualizar el contador después de cerrar el toast
+   */
+  private actualizarContadorDespuesDeToast(): void {
+    console.log('🔄 Actualizando contador después de toast...');
+    this.alertaService.actualizarContadorAlertas();
+  }
+
+  /**
    * Cargar contador inicial de alertas
    */
   private cargarContadorAlertas(): void {
@@ -250,36 +268,30 @@ export class NotificationService {
     const tipo = this.determinarTipoToast(alerta.nivelUrgencia);
     const titulo = this.obtenerTituloPorUrgencia(alerta.nivelUrgencia);
 
-    // Mostrar toast usando directamente ToastrService
-    switch (tipo) {
-      case 'error':
-        this.toastr.error(mensaje, titulo, {
-          timeOut: 7000,
-          closeButton: true,
-          progressBar: true
-        });
-        break;
-      case 'warning':
-        this.toastr.warning(mensaje, titulo, {
-          timeOut: 6000,
-          closeButton: true,
-          progressBar: true
-        });
-        break;
-      case 'info':
-        this.toastr.info(mensaje, titulo, {
-          timeOut: 5000,
-          closeButton: true,
-          progressBar: true
-        });
-        break;
-      default:
-        this.toastr.warning(mensaje, titulo, {
-          timeOut: 6000,
-          closeButton: true,
-          progressBar: true
-        });
-    }
+    // Crear opciones con la interfaz personalizada
+    const toastOptions: ToastOptions = {
+      timeOut: tipo === 'error' ? 7000 : tipo === 'warning' ? 6000 : 5000,
+      closeButton: true,
+      progressBar: true,
+      onHidden: () => this.actualizarContadorDespuesDeToast()
+    };
+
+    // Usar ngZone para asegurar que Angular detecta los cambios
+    this.ngZone.run(() => {
+      switch (tipo) {
+        case 'error':
+          this.toastr.error(mensaje, titulo, toastOptions);
+          break;
+        case 'warning':
+          this.toastr.warning(mensaje, titulo, toastOptions);
+          break;
+        case 'info':
+          this.toastr.info(mensaje, titulo, toastOptions);
+          break;
+        default:
+          this.toastr.warning(mensaje, titulo, toastOptions);
+      }
+    });
   }
 
   /**
@@ -382,15 +394,30 @@ export class NotificationService {
   /**
    * Simular una nueva alerta (para testing)
    */
-  simularNuevaAlerta(notificacion: { titulo: string; mensaje: string; }): void {
-    const alertaSimulada: NotificacionAlerta = {
-      id: Math.floor(Math.random() * 1000),
-      nombre: 'Alerta Simulada',
-      nivelUrgencia: 'MEDIA',
-      productoNombre: 'Producto de Prueba',
-      descripcion: 'Esta es una alerta simulada para pruebas',
-      fecha: new Date().toISOString()
-    };
+  simularNuevaAlerta(customData?: any): void {
+    // Si se proporciona un objeto con título y mensaje, lo usamos para crear la alerta
+    let alertaSimulada: NotificacionAlerta;
+
+    if (customData && customData.titulo) {
+      alertaSimulada = {
+        id: Math.floor(Math.random() * 1000),
+        nombre: customData.titulo || 'Alerta Simulada',
+        nivelUrgencia: customData.nivelUrgencia || 'MEDIA',
+        productoNombre: customData.titulo || 'Producto de Prueba',
+        descripcion: customData.mensaje || 'Esta es una alerta simulada para pruebas',
+        fecha: new Date().toISOString()
+      };
+    } else {
+      // Alerta predeterminada si no se proporcionan datos personalizados
+      alertaSimulada = {
+        id: Math.floor(Math.random() * 1000),
+        nombre: 'Alerta Simulada',
+        nivelUrgencia: 'MEDIA',
+        productoNombre: 'Producto de Prueba',
+        descripcion: 'Esta es una alerta simulada para pruebas',
+        fecha: new Date().toISOString()
+      };
+    }
 
     console.log('🧪 Simulando alerta:', alertaSimulada);
     this.nuevaAlertaSubject.next(alertaSimulada);
