@@ -107,12 +107,10 @@
                                         <span>{{movimiento.usuario.nombre}} {{movimiento.usuario.apellido}}</span>
                                     </div>
                                 </td>
-                            </ng-container>
-
-                            <!-- Columna Código Producto -->                            <ng-container matColumnDef="codigoProducto">
+                            </ng-container>                            <!-- Columna Código Producto -->                            <ng-container matColumnDef="codigoProducto">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
                                 <td mat-cell *matCellDef="let movimiento" class="text-center">
-                                    <code class="bg-secondary text-dark p-1 rounded">{{movimiento.productoCodigo}}</code>
+                                    <span class="badge bg-secondary text-dark">{{movimiento.productoCodigo}}</span>
                                 </td>
                             </ng-container><!-- Columna Nombre Producto -->
                             <ng-container matColumnDef="nombreProducto">
