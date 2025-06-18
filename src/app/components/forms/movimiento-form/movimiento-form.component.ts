@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ModalComponent } from '../../modal/modal.component';
 import { Producto } from '../../../interfaces/Producto';
@@ -26,12 +26,21 @@ export class MovimientoFormComponent implements OnInit, OnDestroy {
   @Input() modalId: string = 'modalMovimiento';
   @Output() movimientoCreado = new EventEmitter<void>();
 
+  // ViewChild para acceder a elementos del DOM
+  @ViewChild('video') videoElement!: ElementRef<HTMLVideoElement>;
+  @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('fileInput') fileInputElement!: ElementRef<HTMLInputElement>;
+
   // Propiedades para el formulario
   isSubmitting = false;
   imagenPreview: string | null = null;
   archivoSeleccionado: File | null = null;
   productosDisponibles: Producto[] = [];
   productoSeleccionado: Producto | null = null;
+
+  // Propiedades para la cámara
+  mostrarCamara = false;
+  stream: MediaStream | null = null;
 
   // Subject para manejar la limpieza de subscripciones
   private destroy$ = new Subject<void>();
@@ -46,10 +55,11 @@ export class MovimientoFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.cargarProductos();
   }
-
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    // Cerrar cámara si está abierta
+    this.cerrarCamara();
   }
   private cargarProductos() {
     this.productoService.obtenerProductos()
@@ -136,12 +146,160 @@ export class MovimientoFormComponent implements OnInit, OnDestroy {
     this.archivoSeleccionado = null;
     this.imagenPreview = null;
     
+    // Cerrar cámara si está abierta
+    this.cerrarCamara();
+    
     // Limpiar el input file
-    const fileInput = document.getElementById('comprobante') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';
+    if (this.fileInputElement?.nativeElement) {
+      this.fileInputElement.nativeElement.value = '';
     }
   }
+
+  // ========== MÉTODOS PARA CÁMARA ==========
+
+  // Método para abrir selector de archivo
+  abrirSelectorArchivo() {
+    this.cerrarCamara(); // Cerrar cámara si está abierta
+    if (this.fileInputElement?.nativeElement) {
+      this.fileInputElement.nativeElement.click();
+    }
+  }
+
+  // Método para abrir la cámara
+  async abrirCamara() {
+    try {
+      // Verificar si el navegador soporta getUserMedia
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Cámara no soportada',
+          text: 'Su navegador no soporta el acceso a la cámara'
+        });
+        return;
+      }
+
+      // Solicitar acceso a la cámara
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          facingMode: 'environment' // Preferir cámara trasera en móviles
+        },
+        audio: false
+      });
+
+      // Mostrar el video
+      this.mostrarCamara = true;
+      this.cdr.detectChanges();
+
+      // Asignar stream al elemento video
+      if (this.videoElement?.nativeElement) {
+        this.videoElement.nativeElement.srcObject = this.stream;
+      }
+
+    } catch (error) {
+      console.error('Error al acceder a la cámara:', error);
+      
+      let mensaje = 'No se pudo acceder a la cámara';
+      if (error instanceof Error) {
+        if (error.name === 'NotAllowedError') {
+          mensaje = 'Acceso a la cámara denegado. Por favor, permite el acceso en tu navegador.';
+        } else if (error.name === 'NotFoundError') {
+          mensaje = 'No se encontró ninguna cámara en el dispositivo.';
+        } else if (error.name === 'NotReadableError') {
+          mensaje = 'La cámara está siendo usada por otra aplicación.';
+        }
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de cámara',
+        text: mensaje
+      });
+    }
+  }
+
+  // Método para capturar foto
+  capturarFoto() {
+    if (!this.videoElement?.nativeElement || !this.canvasElement?.nativeElement) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se puede acceder a los elementos de video o canvas'
+      });
+      return;
+    }
+
+    const video = this.videoElement.nativeElement;
+    const canvas = this.canvasElement.nativeElement;
+    const context = canvas.getContext('2d');
+
+    if (!context) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se puede obtener el contexto del canvas'
+      });
+      return;
+    }
+
+    // Configurar tamaño del canvas
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    // Dibujar frame actual del video en el canvas
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Convertir canvas a blob
+    canvas.toBlob((blob) => {
+      if (blob) {
+        // Crear archivo desde blob
+        const timestamp = new Date().getTime();
+        const file = new File([blob], `camera-photo-${timestamp}.jpg`, {
+          type: 'image/jpeg',
+          lastModified: timestamp
+        });
+
+        // Asignar archivo y crear preview
+        this.archivoSeleccionado = file;
+        this.imagenPreview = canvas.toDataURL('image/jpeg', 0.8);
+
+        // Cerrar cámara
+        this.cerrarCamara();
+
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Foto capturada!',
+          text: 'La foto se ha capturado correctamente',
+          timer: 1500,
+          showConfirmButton: false
+        });
+
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo procesar la imagen capturada'
+        });
+      }
+    }, 'image/jpeg', 0.8); // Calidad del 80%
+  }
+
+  // Método para cerrar la cámara
+  cerrarCamara() {
+    if (this.stream) {
+      // Detener todos los tracks del stream
+      this.stream.getTracks().forEach(track => {
+        track.stop();
+      });
+      this.stream = null;
+    }
+
+    this.mostrarCamara = false;
+    this.cdr.detectChanges();
+  }
+
   // Método para crear nuevo movimiento
   async onCrearMovimiento(form: NgForm) {
     if (form.invalid) {

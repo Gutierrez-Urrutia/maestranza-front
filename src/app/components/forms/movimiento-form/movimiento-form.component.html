@@ -63,16 +63,41 @@
                 <label for="descripcion" class="form-label">Descripción</label>
                 <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
                     placeholder="Ingrese una descripción del movimiento (opcional)" ngModel></textarea>
-            </div>
-
-            <!-- Comprobante -->
+            </div>            <!-- Comprobante -->
             <div class="col-12 mb-3">
                 <label for="comprobante" class="form-label">Comprobante</label>
-                <div class="mb-2">
-                    <input type="file" class="form-control" id="comprobante" name="comprobante" accept="image/*"
-                        (change)="onFileSelected($event)" #fileInput>
-                    <div class="form-text">Seleccione una imagen como comprobante (JPG, PNG, etc.)</div>
+                
+                <!-- Botones para elegir método -->
+                <div class="btn-group w-100 mb-3" role="group">
+                    <button type="button" class="btn btn-outline-primary" (click)="abrirSelectorArchivo()">
+                        <i class="bi bi-folder2-open me-2"></i>Seleccionar archivo
+                    </button>
+                    <button type="button" class="btn btn-outline-success" (click)="abrirCamara()">
+                        <i class="bi bi-camera me-2"></i>Usar cámara
+                    </button>
                 </div>
+
+                <!-- Input file oculto -->
+                <input type="file" class="d-none" id="comprobante" name="comprobante" accept="image/*"
+                    (change)="onFileSelected($event)" #fileInput>
+                
+                <!-- Canvas oculto para capturar foto -->
+                <canvas #canvas class="d-none"></canvas>
+                
+                <!-- Video para mostrar cámara -->
+                <div class="camera-container text-center mb-3" [style.display]="mostrarCamara ? 'block' : 'none'">
+                    <video #video width="100%" height="300" autoplay class="rounded border"></video>
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-success me-2" (click)="capturarFoto()">
+                            <i class="bi bi-camera me-2"></i>Capturar foto
+                        </button>
+                        <button type="button" class="btn btn-secondary" (click)="cerrarCamara()">
+                            <i class="bi bi-x-circle me-2"></i>Cancelar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-text mb-2">Seleccione una imagen desde archivo o capture una foto con la cámara</div>
 
                 <!-- Vista previa de la imagen -->
                 @if (imagenPreview) {
@@ -82,7 +107,8 @@
                         <button type="button" class="btn btn-sm btn-outline-danger" (click)="eliminarImagen()">
                             <i class="bi bi-trash"></i> Eliminar imagen
                         </button>
-                    </div>                </div>
+                    </div>
+                </div>
                 }
             </div>
         </div>

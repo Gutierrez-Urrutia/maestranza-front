@@ -151,12 +151,10 @@
                                 <th mat-header-cell *matHeaderCellDef>Comprobante</th>
                                 <td mat-cell *matCellDef="let movimiento" class="text-center">
                                     <button mat-icon-button 
-                                        [class]="movimiento.imagePath && movimiento.imagePath.trim() !== '' ? 'text-success' : 'text-muted'"
+                                        class="text-primary"
                                         [matTooltip]="movimiento.imagePath && movimiento.imagePath.trim() !== '' ? 'Ver comprobante con imagen' : 'Ver detalles del movimiento'"
                                         (click)="verDetalles(movimiento)">
-                                        <mat-icon>
-                                            {{movimiento.imagePath && movimiento.imagePath.trim() !== '' ? 'image' : 'receipt'}}
-                                        </mat-icon>
+                                        <mat-icon class="comprobante-icon">assignment</mat-icon>
                                     </button>
                                 </td>
                             </ng-container>

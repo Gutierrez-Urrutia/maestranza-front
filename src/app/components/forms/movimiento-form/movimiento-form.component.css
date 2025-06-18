@@ -85,3 +85,68 @@
     width: 100%;
   }
 }
+
+/* Estilos para la funcionalidad de cámara */
+.camera-container {
+  background-color: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 15px 0;
+}
+
+.camera-container video {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para los botones de método de captura */
+.btn-group .btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-group .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-group .btn i {
+  font-size: 16px;
+}
+
+/* Animación para la vista previa de imagen */
+.img-thumbnail {
+  transition: all 0.3s ease;
+}
+
+.img-thumbnail:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive para cámara */
+@media (max-width: 768px) {
+  .camera-container video {
+    height: 250px;
+    object-fit: cover;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .btn-group .btn {
+    margin-bottom: 8px;
+  }
+  
+  .btn-group .btn:last-child {
+    margin-bottom: 0;
+  }
+}

@@ -15,6 +15,14 @@
   background-color: white !important;
 }
 
+/* Estilo para el icono de comprobante más grande */
+.comprobante-icon {
+  font-size: 26px !important;
+  width: 26px !important;
+  height: 26px !important;
+  opacity: 0.8 !important;
+}
+
 /* Estilos para badges de tipo de movimiento */
 ::ng-deep .mat-mdc-cell .badge {
   min-width: 100px !important;
