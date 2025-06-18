@@ -1,0 +1,155 @@
+::ng-deep .mat-mdc-header-cell .mat-sort-header-container {
+  display: flex !important;
+  justify-content: center !important;
+  margin-left: 1rem !important;
+}
+
+/* Fondo blanco para la tabla */
+::ng-deep .mat-mdc-table,
+.mat-mdc-row,
+.mat-mdc-header.mat-mdc-row,
+.mat-mdc-cell,
+.mat-mdc-header-cell,
+.mat-elevation-4,
+.mat-mdc-paginator {
+  background-color: white !important;
+}
+
+/* Estilos para badges de tipo de movimiento */
+::ng-deep .mat-mdc-cell .badge {
+  min-width: 100px !important;
+  width: 100px !important;
+  text-align: center !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  height: 32px !important;
+  line-height: 1 !important;
+  padding: 6px 12px !important;
+  vertical-align: middle !important;
+  font-weight: 500;
+  border-radius: 6px !important;
+}
+
+/* Estilos específicos para tipos de movimiento */
+.bg-success {
+  background-color: #d1e7dd !important;
+  color: #0f5132 !important;
+  border: 1px solid #a3cfbb !important;
+}
+
+.bg-danger {
+  background-color: #f8d7da !important;
+  color: #842029 !important;
+  border: 1px solid #f5c2c7 !important;
+}
+
+/* Estilos para filas según tipo de movimiento */
+::ng-deep .mat-mdc-row.table-success {
+  background-color: rgba(209, 231, 221, 0.2) !important;
+}
+
+::ng-deep .mat-mdc-row.table-success:hover {
+  background-color: rgba(209, 231, 221, 0.4) !important;
+}
+
+::ng-deep .mat-mdc-row.table-danger {
+  background-color: rgba(248, 215, 218, 0.2) !important;
+}
+
+::ng-deep .mat-mdc-row.table-danger:hover {
+  background-color: rgba(248, 215, 218, 0.4) !important;
+}
+
+/* Ajustes específicos para la tabla */
+::ng-deep .custom-table .mat-mdc-cell,
+::ng-deep .custom-table .mat-mdc-header-cell {
+  padding: 12px 8px !important;
+  text-align: center !important;
+}
+
+/* Contenedor de información del producto */
+.product-info {
+  max-width: 200px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* Hover effects para botones de acción */
+::ng-deep .mat-mdc-icon-button.text-primary:hover {
+  background-color: rgba(13, 110, 253, 0.1) !important;
+}
+
+/* Estilos para código de producto */
+code.bg-light {
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Badge para cantidad */
+::ng-deep .mat-mdc-cell .badge.bg-info {
+  background-color: #cff4fc !important;
+  color: #055160 !important;
+  border: 1px solid #9eeaf9 !important;
+  font-weight: 600;
+  min-width: 60px !important;
+  width: 60px !important;
+}
+
+/* Truncar texto largo */
+.text-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Estilos para las tarjetas de estadísticas */
+.card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para iconos en celdas */
+::ng-deep .mat-mdc-cell mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Responsive: Ocultar columnas en pantallas pequeñas */
+@media (max-width: 768px) {
+  ::ng-deep .mat-mdc-header-cell:nth-child(1),
+  ::ng-deep .mat-mdc-cell:nth-child(1) {
+    display: none !important;
+  }
+  
+  .product-info {
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  ::ng-deep .mat-mdc-header-cell:nth-child(2),
+  ::ng-deep .mat-mdc-cell:nth-child(2),
+  ::ng-deep .mat-mdc-header-cell:nth-child(3),
+  ::ng-deep .mat-mdc-cell:nth-child(3) {
+    display: none !important;
+  }
+}
+
+/* Animación suave para cambios de estado */
+::ng-deep .mat-mdc-row {
+  transition: background-color 0.2s ease !important;
+}
+
+/* Estilo para mostrar mejor la información del usuario */
+.d-flex.align-items-center mat-icon {
+  color: #6c757d !important;
+}
