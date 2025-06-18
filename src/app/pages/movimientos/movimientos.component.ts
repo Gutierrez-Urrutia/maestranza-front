@@ -309,12 +309,11 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
 
     // Crear objeto para enviar al backend (solo los datos necesarios)
     const movimientoData = {
+      usuarioId: usuarioLogueado.id, // Agregar el usuarioId
       productoId: this.productoSeleccionado.id,
       cantidad: formData.cantidad,
       tipo: formData.tipo as TipoMovimiento,
-      descripcion: formData.descripcion || '',
-      // Nota: El usuario se determina en el backend a partir del token JWT
-      // La imagen se puede manejar en una implementación futura
+      descripcion: formData.descripcion || ''
     };
 
     // Llamar al servicio para crear el movimiento
