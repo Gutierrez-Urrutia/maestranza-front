@@ -54,8 +54,8 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
   // Opciones de filtro
   opcionesTipo: string[] = [
     'Todos',
-    'Entrada',
-    'Salida'
+    'ENTRADA',
+    'SALIDA'
   ];
   tipoSeleccionado: string = 'Todos';
   constructor(
@@ -86,14 +86,19 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
         });
       }
     });
-  }
-  private cargarMovimientos() {
+  }  private cargarMovimientos() {
     this.isLoading = true;
 
     this.movimientoService.obtenerTodos().subscribe({
       next: (movimientos) => {
-        this.movimientos = movimientos;
-        this.dataSource.data = movimientos;
+        // Ordenar movimientos por fecha desde el más nuevo al más antiguo
+        this.movimientos = movimientos.sort((a, b) => {
+          const fechaA = new Date(a.fecha);
+          const fechaB = new Date(b.fecha);
+          return fechaB.getTime() - fechaA.getTime(); // Orden descendente (más nuevo primero)
+        });
+        
+        this.dataSource.data = this.movimientos;
         this.isLoading = false;
       },
       error: (error) => {
@@ -370,10 +375,14 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    // Configurar ordenamiento por defecto por fecha (más nuevo primero)
+    if (this.sort) {
+      this.sort.sort({ id: 'fecha', start: 'desc', disableClear: false });
+    }
 
     // Personalizar la función de filtro
     this.dataSource.filterPredicate = (data: Movimiento, filter: string) => {
@@ -402,5 +411,11 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
         return `${startIndex + 1} - ${endIndex} de ${length}`;
       };
     }
+  }
+
+  // Método para formatear el texto de los tipos
+  formatearTipoTexto(tipo: string): string {
+    if (tipo === 'Todos') return 'Todos';
+    return tipo.charAt(0).toUpperCase() + tipo.slice(1).toLowerCase();
   }
 }

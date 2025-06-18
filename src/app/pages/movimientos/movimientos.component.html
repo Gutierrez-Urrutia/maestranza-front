@@ -45,7 +45,7 @@
                     @for (tipo of opcionesTipo; track tipo) {
                     <button type="button" class="btn btn-outline-secondary me-2 mb-2"
                         [class.active]="tipoSeleccionado === tipo" (click)="seleccionarTipo(tipo)">
-                        {{tipo === 'Todos' ? 'Todos' : tipo}}
+                        {{formatearTipoTexto(tipo)}}
                     </button>
                     }
                 </div>

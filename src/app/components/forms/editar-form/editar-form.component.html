@@ -15,12 +15,6 @@
             </div>
         </div>
     </div>
-    <!-- Campo de descripción añadido -->
-    <div class="mb-3">
-        <label for="descripcion" class="form-label">Descripción</label>
-        <textarea class="form-control" id="descripcion" [(ngModel)]="formData.descripcion" name="descripcion"
-            placeholder="Describe las características del producto, parte o pieza..." rows="3"></textarea>
-    </div>
     <div class="row">
         <div class="col-md-6">
             <div class="mb-3">
@@ -38,16 +32,17 @@
         </div>
         <div class="col-md-6">
             <div class="mb-3">
-                <label for="stock-edit" class="form-label">Stock</label>
-                <input type="number" class="form-control" id="stock-edit" [(ngModel)]="formData.stock" name="stock"
-                    min="0" required>
+                <label for="precio-edit" class="form-label">Precio</label>
+                <input type="number" class="form-control" id="precio-edit" [(ngModel)]="formData.precio" name="precio"
+                    step="0.01" min="0" required>
             </div>
         </div>
     </div>
+    <!-- Campo de descripción movido aquí -->
     <div class="mb-3">
-        <label for="precio-edit" class="form-label">Precio</label>
-        <input type="number" class="form-control" id="precio-edit" [(ngModel)]="formData.precio" name="precio"
-            step="0.01" min="0" required>
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea class="form-control" id="descripcion" [(ngModel)]="formData.descripcion" name="descripcion"
+            placeholder="Describe las características del producto, parte o pieza..." rows="3"></textarea>
     </div>
     <!-- Botones del formulario -->
     <div class="d-flex justify-content-end gap-2 mt-4">

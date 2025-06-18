@@ -14,6 +14,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ProductoService } from '../../services/producto/producto.service';
 import { CategoriaService } from '../../services/categoria/categoria.service';
+import { MovimientoService } from '../../services/movimiento/movimiento.service';
+import { AuthService } from '../../services/login/auth.service';
+import { TipoMovimiento } from '../../interfaces/Movimiento';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -36,10 +39,10 @@ import Swal from 'sweetalert2';
     MatInputModule,
   ]
 })
-export class InventarioComponent implements AfterViewInit, OnInit {
-
-  private productoService = inject(ProductoService);
+export class InventarioComponent implements AfterViewInit, OnInit {  private productoService = inject(ProductoService);
   private categoriaService = inject(CategoriaService);
+  private movimientoService = inject(MovimientoService);
+  private authService = inject(AuthService);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -249,29 +252,15 @@ export class InventarioComponent implements AfterViewInit, OnInit {
       // El precio se maneja como parte del historial de precios
       precio: formData.precio || 0 // Convertir a centavos si es necesario
     };
-
-
     this.productoService.crearProducto(productoData).subscribe({
       next: (productoCreado) => {
-        this.cargarProductos(); // Recargar la lista
-
-        // Cerrar modal programáticamente
-        const modalElement = document.getElementById('modalProducto');
-        if (modalElement) {
-          const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
-          if (modal) {
-            modal.hide();
-          }
+        // Si el producto tiene stock inicial, registrar movimiento de entrada
+        if (productoCreado.stock > 0) {
+          this.registrarMovimientoInicialProducto(productoCreado);
+        } else {
+          // Si no tiene stock inicial, solo mostrar éxito y recargar
+          this.finalizarCreacionProducto(productoCreado);
         }
-
-        // Opcional: mostrar mensaje de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Producto agregado!',
-          text: `El producto "${productoCreado.nombre}" se agregó exitosamente`,
-          timer: 2000,
-          showConfirmButton: false
-        });
       },
       error: (error) => {
         // console.error('Error completo:', error);
@@ -283,15 +272,80 @@ export class InventarioComponent implements AfterViewInit, OnInit {
           errorMessage = error.error.message;
         } else if (error.message) {
           errorMessage = error.message;
-        }
-
-        Swal.fire({
+        }        Swal.fire({
           icon: 'error',
           title: 'Error al agregar producto',
           text: errorMessage,
           confirmButtonText: 'Intentar de nuevo'
         });
       }
+    });
+  }  // Método auxiliar para registrar movimiento inicial del producto
+  private registrarMovimientoInicialProducto(producto: any) {
+    const currentUser = this.authService.getUser();
+    
+    if (!currentUser) {
+      console.error('No se pudo obtener el usuario logueado');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Producto creado con advertencia',
+        text: `El producto "${producto.nombre}" se creó correctamente, pero no se pudo registrar el movimiento inicial porque no se encontró el usuario logueado.`,
+        confirmButtonText: 'Entendido'
+      });
+      this.finalizarCreacionProducto(producto);
+      return;
+    }    // Crear el objeto de movimiento con los campos necesarios
+    const movimientoData = {
+      usuarioId: currentUser.id,
+      productoId: producto.id,
+      cantidad: producto.stock,
+      tipo: TipoMovimiento.ENTRADA,
+      descripcion: `Stock inicial del producto ${producto.codigo} - ${producto.nombre}`
+    };
+
+    console.log('Enviando movimiento:', movimientoData);
+
+    this.movimientoService.registrarMovimiento(movimientoData).subscribe({
+      next: (movimiento) => {
+        console.log('Movimiento inicial registrado:', movimiento);
+        this.finalizarCreacionProducto(producto);
+      },
+      error: (error) => {
+        console.error('Error al registrar movimiento inicial:', error);
+        console.error('Detalles del error:', error.error);
+        
+        // Aun así, completamos la creación del producto y mostramos un warning
+        Swal.fire({
+          icon: 'warning',
+          title: 'Producto creado con advertencia',
+          text: `El producto "${producto.nombre}" se creó correctamente, pero no se pudo registrar el movimiento inicial de stock. Error: ${error.error?.message || error.message || 'Error desconocido'}`,
+          confirmButtonText: 'Entendido'
+        });
+        this.finalizarCreacionProducto(producto);
+      }
+    });
+  }
+
+  // Método auxiliar para finalizar la creación del producto
+  private finalizarCreacionProducto(productoCreado: any) {
+    this.cargarProductos(); // Recargar la lista
+
+    // Cerrar modal programáticamente
+    const modalElement = document.getElementById('modalProducto');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      }
+    }
+
+    // Mostrar mensaje de éxito
+    Swal.fire({
+      icon: 'success',
+      title: '¡Producto agregado!',
+      text: `El producto "${productoCreado.nombre}" se agregó exitosamente${productoCreado.stock > 0 ? ' y se registró su stock inicial' : ''}`,
+      timer: 3000,
+      showConfirmButton: false
     });
   }
 
@@ -494,8 +548,6 @@ export class InventarioComponent implements AfterViewInit, OnInit {
         const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
         return `${startIndex + 1} - ${endIndex} de ${length}`;
       };
-      this.paginator._intl.changes.next();
-    }
+      this.paginator._intl.changes.next();    }
   }
-
 }
