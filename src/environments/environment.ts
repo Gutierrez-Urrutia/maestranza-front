@@ -1,4 +1,3 @@
-
 export const environment = {
   production: true,
   apiUrl: 'http://localhost:8090/api/v1', // URL de producción
@@ -12,6 +11,11 @@ export const environment = {
     logoutUrl: '/logout',
     validateTokenUrl: '/validate-token',
     registerUrl: '/registro'
+  },  // Configuración de Cloudinary
+  cloudinary: {
+    cloudName: 'dedwqhiki',
+    apiKey: '656696618124312',
+    uploadPreset: 'maestranza_uploads' // Preset personalizado
   },
 
   // Configuración de sesión y timeouts (más restrictivo en producción)

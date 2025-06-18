@@ -81,6 +81,15 @@
   background-color: rgba(13, 110, 253, 0.1) !important;
 }
 
+/* Estilos para botones de comprobante */
+::ng-deep .mat-mdc-icon-button.text-success:hover {
+  background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-icon-button.text-muted:hover {
+  background-color: rgba(108, 117, 125, 0.1) !important;
+}
+
 /* Badge para cantidad */
 ::ng-deep .mat-mdc-cell .badge.bg-info {
   background-color: #cff4fc !important;
@@ -126,6 +135,15 @@
   font-size: 18px !important;
   width: 18px !important;
   height: 18px !important;
+}
+
+/* Animación suave para los iconos */
+::ng-deep .mat-mdc-icon-button mat-icon {
+  transition: all 0.2s ease-in-out !important;
+}
+
+::ng-deep .mat-mdc-icon-button:hover mat-icon {
+  transform: scale(1.1) !important;
 }
 
 /* Responsive: Ocultar columnas en pantallas pequeñas */

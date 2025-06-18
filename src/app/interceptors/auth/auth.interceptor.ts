@@ -30,7 +30,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 };
 
 function isPublicRoute(url: string): boolean {
-  const publicRoutes = ['/api/auth/login', '/api/auth/registro'];
+  const publicRoutes = [
+    '/api/auth/login', 
+    '/api/auth/registro',
+    'cloudinary.com' // Excluir todas las URLs de Cloudinary
+  ];
   return publicRoutes.some(route => url.includes(route));
 }
 

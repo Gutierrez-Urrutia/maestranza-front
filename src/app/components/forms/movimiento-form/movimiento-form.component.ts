@@ -7,6 +7,7 @@ import { TipoMovimiento } from '../../../interfaces/Movimiento';
 import { ProductoService } from '../../../services/producto/producto.service';
 import { AuthService } from '../../../services/login/auth.service';
 import { MovimientoService } from '../../../services/movimiento/movimiento.service';
+import { CloudinaryServiceSimple } from '../../../services/cloudinary/cloudinary-simple.service';
 import { Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -34,11 +35,11 @@ export class MovimientoFormComponent implements OnInit, OnDestroy {
 
   // Subject para manejar la limpieza de subscripciones
   private destroy$ = new Subject<void>();
-
   constructor(
     private productoService: ProductoService,
     private authService: AuthService,
     private movimientoService: MovimientoService,
+    private cloudinaryService: CloudinaryServiceSimple,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -141,9 +142,8 @@ export class MovimientoFormComponent implements OnInit, OnDestroy {
       fileInput.value = '';
     }
   }
-
   // Método para crear nuevo movimiento
-  onCrearMovimiento(form: NgForm) {
+  async onCrearMovimiento(form: NgForm) {
     if (form.invalid) {
       Object.keys(form.controls).forEach(key => {
         form.controls[key].markAsTouched();
@@ -178,62 +178,127 @@ export class MovimientoFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Crear objeto para enviar al backend (solo los datos necesarios)
-    const movimientoData = {
-      usuarioId: usuarioLogueado.id,
-      productoId: this.productoSeleccionado.id,
-      cantidad: formData.cantidad,
-      tipo: formData.tipo as TipoMovimiento,
-      descripcion: formData.descripcion || ''
-    };    // Llamar al servicio para crear el movimiento
-    this.movimientoService.registrarMovimiento(movimientoData)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (movimientoCreado) => {
-          // Limpiar formulario
-          form.resetForm();
-          this.eliminarImagen();
-          this.productoSeleccionado = null;
-          this.isSubmitting = false;
-
-          // Cerrar modal
-          this.cerrarModal();
-
-          // Emitir evento para notificar al componente padre
-          this.movimientoCreado.emit();
-
-          // Mostrar mensaje de éxito
-          Swal.fire({
-            icon: 'success',
-            title: '¡Movimiento creado!',
-            text: `El movimiento de ${formData.tipo.toLowerCase()} se registró exitosamente`,
-            timer: 2000,
-            showConfirmButton: false
-          });
-        },
-        error: (error) => {
-          console.error('Error al crear movimiento:', error);
-          this.isSubmitting = false;
-          
-          let mensajeError = 'Ocurrió un error al crear el movimiento';
-          if (error.error && error.error.message) {
-            mensajeError = error.error.message;
-          } else if (error.status === 401) {
-            mensajeError = 'Su sesión ha expirado. Por favor, inicie sesión nuevamente.';
-          } else if (error.status === 403) {
-            mensajeError = 'No tiene permisos para realizar esta acción.';
-          } else if (error.status === 400) {
-            mensajeError = 'Los datos enviados no son válidos.';
+    try {
+      // 1. Subir imagen a Cloudinary si hay una seleccionada
+      let imagePath: string | undefined = undefined;
+      
+      if (this.archivoSeleccionado) {
+        console.log('📤 Subiendo imagen de comprobante...');
+        
+        // Mostrar progreso de subida
+        Swal.fire({
+          title: 'Subiendo imagen...',
+          text: 'Por favor espere mientras se procesa el comprobante',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
           }
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Error al crear movimiento',
-            text: mensajeError,
-            confirmButtonText: 'Entendido'
+        });        try {
+          imagePath = await this.cloudinaryService.uploadImageOptimized(this.archivoSeleccionado);
+          console.log('✅ Imagen subida exitosamente a Cloudinary:', imagePath);
+          console.log('🔗 URL que se enviará en image_path:', imagePath);
+          Swal.close(); // Cerrar el loading
+        } catch (imageError) {
+          console.error('❌ Error al subir imagen:', imageError);
+          Swal.close();
+          
+          // Preguntar si continuar sin imagen
+          const result = await Swal.fire({
+            icon: 'warning',
+            title: 'Error al subir imagen',
+            text: 'No se pudo subir la imagen del comprobante. ¿Desea continuar sin imagen?',
+            showCancelButton: true,
+            confirmButtonText: 'Continuar sin imagen',
+            cancelButtonText: 'Cancelar'
           });
+
+          if (!result.isConfirmed) {
+            this.isSubmitting = false;
+            return;
+          }
         }
+      }      // 2. Crear objeto para enviar al backend
+      const movimientoData = {
+        usuarioId: usuarioLogueado.id,
+        productoId: this.productoSeleccionado.id,
+        cantidad: formData.cantidad,
+        tipo: formData.tipo as TipoMovimiento,
+        descripcion: formData.descripcion || '',
+        imagePath: imagePath // Usar camelCase que espera el DTO
+      };      console.log('📝 Creando movimiento con datos:', movimientoData);
+      console.log('🖼️ imagePath que se enviará:', imagePath);
+      console.log('📦 Datos completos del movimiento:', JSON.stringify(movimientoData, null, 2));
+      
+      // Verificar que la URL no sea undefined
+      if (!imagePath) {
+        console.warn('⚠️ imagePath es undefined, se creará movimiento sin imagen');
+      } else {
+        console.log('✅ imagePath válido - URL de Cloudinary confirmada');
+      }
+
+      // 3. Llamar al servicio para crear el movimiento
+      this.movimientoService.registrarMovimiento(movimientoData)
+        .pipe(takeUntil(this.destroy$))        .subscribe({
+          next: (movimientoCreado) => {
+            console.log('✅ Respuesta del backend:', movimientoCreado);
+            console.log('🔍 imagePath en la respuesta:', (movimientoCreado as any).imagePath);
+            
+            // Limpiar formulario
+            form.resetForm();
+            this.eliminarImagen();
+            this.productoSeleccionado = null;
+            this.isSubmitting = false;
+
+            // Cerrar modal
+            this.cerrarModal();
+
+            // Emitir evento para notificar al componente padre
+            this.movimientoCreado.emit();
+
+            // Mostrar mensaje de éxito
+            Swal.fire({
+              icon: 'success',
+              title: '¡Movimiento creado!',
+              text: `El movimiento de ${formData.tipo.toLowerCase()} se registró exitosamente${imagePath ? ' con comprobante' : ''}`,
+              timer: 2000,
+              showConfirmButton: false
+            });
+          },
+          error: (error) => {
+            console.error('Error al crear movimiento:', error);
+            this.isSubmitting = false;
+            
+            let mensajeError = 'Ocurrió un error al crear el movimiento';
+            if (error.error && error.error.message) {
+              mensajeError = error.error.message;
+            } else if (error.status === 401) {
+              mensajeError = 'Su sesión ha expirado. Por favor, inicie sesión nuevamente.';
+            } else if (error.status === 403) {
+              mensajeError = 'No tiene permisos para realizar esta acción.';
+            } else if (error.status === 400) {
+              mensajeError = 'Los datos enviados no son válidos.';
+            }
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al crear movimiento',
+              text: mensajeError,
+              confirmButtonText: 'Entendido'
+            });
+          }
+        });
+
+    } catch (error) {
+      console.error('Error general:', error);
+      this.isSubmitting = false;
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error inesperado',
+        confirmButtonText: 'Entendido'
       });
+    }
   }
 
   // Método helper para cerrar el modal

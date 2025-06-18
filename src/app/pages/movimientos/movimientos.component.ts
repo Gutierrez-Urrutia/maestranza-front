@@ -177,10 +177,69 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
   refrescarMovimientos() {
     this.cargarMovimientos();
   }
-
   // Método para ver detalles del movimiento
   verDetalles(movimiento: Movimiento) {
-    // Aquí se podría abrir un modal con más detalles
+    // Verificar si hay imagen de comprobante
+    if (movimiento.imagePath && movimiento.imagePath.trim() !== '') {      // Mostrar modal con la imagen
+      Swal.fire({
+        title: `Comprobante del Movimiento`,
+        html: `
+          <div class="comprobante-details">
+            <div class="mb-3">
+              <p><strong>Fecha:</strong> ${this.formatearFecha(movimiento.fecha)}</p>
+              <p><strong>Tipo:</strong> ${movimiento.tipo}</p>
+              <p><strong>Producto:</strong> ${movimiento.productoNombre} (${movimiento.productoCodigo})</p>
+              <p><strong>Cantidad:</strong> ${movimiento.cantidad}</p>
+              <p><strong>Usuario:</strong> ${movimiento.usuario.nombre} ${movimiento.usuario.apellido}</p>
+              ${movimiento.descripcion ? `<p><strong>Descripción:</strong> ${movimiento.descripcion}</p>` : ''}
+            </div>
+            <div class="text-center">
+              <img src="${movimiento.imagePath}" 
+                   alt="Comprobante del movimiento" 
+                   class="img-fluid rounded shadow-sm"
+                   style="max-width: 100%; max-height: 60vh; object-fit: contain; border: 2px solid #dee2e6;"
+                   onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYWFhIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2VuIG5vIGRpc3BvbmlibGU8L3RleHQ+PC9zdmc+'; this.alt='Imagen no disponible';">
+            </div>
+          </div>
+        `,
+        width: '80%',
+        showCloseButton: true,
+        showConfirmButton: false,
+        customClass: {
+          htmlContainer: 'text-start'
+        },
+        didOpen: () => {
+          // Agregar estilos adicionales si es necesario
+          const container = document.querySelector('.comprobante-details');
+          if (container) {
+            (container as HTMLElement).style.fontFamily = 'inherit';
+          }
+        }
+      });
+    } else {
+      // No hay imagen de comprobante
+      Swal.fire({
+        title: 'Detalles del Movimiento',
+        html: `
+          <div class="movimiento-details text-start">
+            <p><strong>Fecha:</strong> ${this.formatearFecha(movimiento.fecha)}</p>
+            <p><strong>Tipo:</strong> ${movimiento.tipo}</p>
+            <p><strong>Producto:</strong> ${movimiento.productoNombre} (${movimiento.productoCodigo})</p>
+            <p><strong>Cantidad:</strong> ${movimiento.cantidad}</p>
+            <p><strong>Usuario:</strong> ${movimiento.usuario.nombre} ${movimiento.usuario.apellido}</p>
+            ${movimiento.descripcion ? `<p><strong>Descripción:</strong> ${movimiento.descripcion}</p>` : ''}
+            <div class="alert alert-info mt-3">
+              <i class="bi bi-info-circle me-2"></i>
+              Este movimiento no tiene comprobante de imagen adjunto.
+            </div>
+          </div>
+        `,
+        icon: 'info',
+        width: '500px',
+        showCloseButton: true,
+        confirmButtonText: 'Cerrar'
+      });
+    }
   }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;

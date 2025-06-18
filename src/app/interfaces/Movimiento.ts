@@ -16,6 +16,6 @@ export interface Movimiento {
   descripcion?: string;
   productoCodigo?: string;
   productoNombre?: string;
-  image_path?: string;
+  imagePath?: string; // Cambiar a camelCase para coincidir con el backend
 }
 
