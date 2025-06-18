@@ -192,27 +192,96 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
               <p><strong>Cantidad:</strong> ${movimiento.cantidad}</p>
               <p><strong>Usuario:</strong> ${movimiento.usuario.nombre} ${movimiento.usuario.apellido}</p>
               ${movimiento.descripcion ? `<p><strong>Descripción:</strong> ${movimiento.descripcion}</p>` : ''}
-            </div>
-            <div class="text-center">
+            </div>            <div class="text-center">
               <img src="${movimiento.imagePath}" 
                    alt="Comprobante del movimiento" 
-                   class="img-fluid rounded shadow-sm"
-                   style="max-width: 100%; max-height: 60vh; object-fit: contain; border: 2px solid #dee2e6;"
+                   class="img-fluid rounded shadow-sm comprobante-image"
+                   style="max-width: 85vw; max-height: 65vh; width: auto; height: auto; object-fit: contain; border: 2px solid #dee2e6;"
                    onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjE4IiBmaWxsPSIjYWFhIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2VuIG5vIGRpc3BvbmlibGU8L3RleHQ+PC9zdmc+'; this.alt='Imagen no disponible';">
             </div>
-          </div>
-        `,
-        width: '80%',
+          </div>        `,
+        width: '85%',
+        padding: '15px',
         showCloseButton: true,
         showConfirmButton: false,
         customClass: {
-          htmlContainer: 'text-start'
+          htmlContainer: 'text-start',
+          popup: 'comprobante-modal'
         },
         didOpen: () => {
-          // Agregar estilos adicionales si es necesario
+          // Agregar estilos adicionales para el modal
           const container = document.querySelector('.comprobante-details');
           if (container) {
             (container as HTMLElement).style.fontFamily = 'inherit';
+          }
+            // Limitar el ancho máximo del modal
+          const popup = document.querySelector('.comprobante-modal');
+          if (popup) {
+            (popup as HTMLElement).style.maxWidth = '90vw';
+            (popup as HTMLElement).style.maxHeight = '90vh';
+            (popup as HTMLElement).style.margin = '2vh auto';
+          }
+          
+          // Agregar estilos CSS para el modal de comprobante
+          const style = document.createElement('style');
+          style.textContent = `
+            .comprobante-modal {
+              border-radius: 12px !important;
+              max-width: 90vw !important;
+              max-height: 90vh !important;
+              margin: 2vh auto !important;
+              overflow: auto !important;
+            }
+            .comprobante-image {
+              cursor: pointer;
+              transition: transform 0.2s ease-in-out;
+              max-width: 85vw !important;
+              max-height: 65vh !important;
+            }
+            .comprobante-image:hover {
+              transform: scale(1.02);
+            }
+            @media (max-width: 768px) {
+              .comprobante-modal {
+                width: 95vw !important;
+                max-width: 95vw !important;
+                max-height: 85vh !important;
+                margin: 1vh auto !important;
+              }
+              .comprobante-image {
+                max-height: 45vh !important;
+                max-width: 90vw !important;
+              }
+            }
+            @media (max-width: 480px) {
+              .comprobante-modal {
+                width: 98vw !important;
+                max-width: 98vw !important;
+                max-height: 80vh !important;
+                margin: 0.5vh auto !important;
+              }
+              .comprobante-image {
+                max-height: 35vh !important;
+                max-width: 95vw !important;
+              }
+            }
+            @media (max-height: 600px) {
+              .comprobante-modal {
+                max-height: 95vh !important;
+              }
+              .comprobante-image {
+                max-height: 40vh !important;
+              }
+            }
+          `;
+          document.head.appendChild(style);
+          
+          // Agregar funcionalidad de clic para expandir imagen
+          const img = document.querySelector('.comprobante-image') as HTMLImageElement;
+          if (img) {
+            img.addEventListener('click', () => {
+              window.open(img.src, '_blank');
+            });
           }
         }
       });

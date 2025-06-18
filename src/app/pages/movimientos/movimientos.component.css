@@ -184,3 +184,71 @@
 .d-flex.align-items-center mat-icon {
   color: #6c757d !important;
 }
+
+/* Estilos globales para el modal de comprobante */
+::ng-deep .comprobante-modal {
+  border-radius: 12px !important;
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 2vh auto !important;
+}
+
+/* Estilos para la imagen del comprobante */
+::ng-deep .comprobante-image {
+  cursor: pointer !important;
+  transition: transform 0.2s ease-in-out !important;
+  max-width: 85vw !important;
+  max-height: 65vh !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  border: 2px solid #dee2e6 !important;
+  border-radius: 8px !important;
+}
+
+::ng-deep .comprobante-image:hover {
+  transform: scale(1.02) !important;
+  border-color: #007bff !important;
+}
+
+/* Estilos responsivos para el modal de comprobante */
+@media (max-width: 768px) {
+  ::ng-deep .comprobante-modal {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    max-height: 85vh !important;
+    margin: 1vh auto !important;
+  }
+  
+  ::ng-deep .comprobante-image {
+    max-height: 45vh !important;
+    max-width: 90vw !important;
+  }
+}
+
+@media (max-width: 480px) {
+  ::ng-deep .comprobante-modal {
+    width: 98vw !important;
+    max-width: 98vw !important;
+    max-height: 80vh !important;
+    margin: 0.5vh auto !important;
+  }
+  
+  ::ng-deep .comprobante-image {
+    max-height: 35vh !important;
+    max-width: 95vw !important;
+  }
+}
+
+@media (max-height: 600px) {
+  ::ng-deep .comprobante-modal {
+    max-height: 95vh !important;
+    margin: 0.5vh auto !important;
+  }
+  
+  ::ng-deep .comprobante-image {
+    max-height: 40vh !important;
+  }
+}
