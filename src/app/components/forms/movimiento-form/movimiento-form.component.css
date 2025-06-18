@@ -1,0 +1,87 @@
+/* Estilos específicos para el formulario de movimiento */
+
+.form-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.form-select,
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-select:focus,
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.input-group-text {
+  background-color: #f8f9fa;
+  border-color: #ddd;
+  color: #007bff;
+}
+
+.img-thumbnail {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.img-thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.invalid-feedback {
+  font-size: 0.875rem;
+  color: #dc3545;
+}
+
+.form-text {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.modal-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+}
+
+.btn {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Animación del spinner */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Estilos para campos requeridos */
+.form-label .text-danger {
+  font-size: 0.9em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .col-md-6 {
+    margin-bottom: 1rem;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .modal-footer .btn {
+    width: 100%;
+  }
+}

@@ -15,37 +15,53 @@
   background-color: white !important;
 }
 
-/* AGREGAR: Badges de categoría con mismo ancho y centrado perfecto */
+/* Estilos para badges de categoría y stock - ajustados para contenido específico */
 ::ng-deep .mat-mdc-cell .badge {
-  min-width: 120px !important;
-  width: 120px !important;
   text-align: center !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   margin: 0 auto !important;
-  height: 24px !important;
+  height: 32px !important;
   line-height: 1 !important;
-  padding: 4px 8px !important;
+  padding: 6px 12px !important;
   vertical-align: middle !important;
   font-weight: 500;
+  border-radius: 6px !important;
 }
 
-/* Para badges más grandes */
-::ng-deep .mat-mdc-cell .badge {
-  min-width: 140px !important;
-  width: 140px !important;
+/* Estilos específicos para badges de categoría (texto largo) */
+::ng-deep .mat-mdc-cell .badge.bg-secondary {
+  background-color: #d3d3d4 !important;
+  color: #41464b !important;
+  border: 1px solid #b7bcc1 !important;
+  min-width: 100px !important;
+  max-width: 140px !important;
+  width: auto !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 12px !important;
 }
 
-/* AGREGAR: Badges de stock redondos */
+/* Estilos específicos para badges de stock (números) */
 ::ng-deep .mat-mdc-cell .badge.bg-success,
 ::ng-deep .mat-mdc-cell .badge.bg-danger {
-  border-radius: 50% !important;
-  min-width: 30px !important;
-  width: 30px !important;
-  height: 30px !important;
-  padding: 0 !important;
-  font-size: 12px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  width: 60px !important;
+}
+
+::ng-deep .mat-mdc-cell .badge.bg-success {
+  background-color: #d1e7dd !important;
+  color: #0f5132 !important;
+  border: 1px solid #a3cfbb !important;
+}
+
+::ng-deep .mat-mdc-cell .badge.bg-danger {
+  background-color: #f8d7da !important;
+  color: #842029 !important;
+  border: 1px solid #f5c2c7 !important;
 }
 
 /* Crear un color personalizado "warning" equivalente a btn-warning */

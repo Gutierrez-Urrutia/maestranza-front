@@ -1,0 +1,105 @@
+<app-modal [modalId]="modalId" title="Nuevo Movimiento" icon="bi-plus-circle" iconColor="text-primary" size="lg">
+    <form #movimientoForm="ngForm" (ngSubmit)="onCrearMovimiento(movimientoForm)">
+        <div class="row">
+            <!-- Tipo de Movimiento -->
+            <div class="col-md-6 mb-3">
+                <label for="tipo" class="form-label">Tipo de Movimiento <span class="text-danger">*</span></label>
+                <select class="form-select" id="tipo" name="tipo" ngModel required #tipo="ngModel">
+                    <option value="">Seleccione un tipo</option>
+                    <option value="ENTRADA">Entrada</option>
+                    <option value="SALIDA">Salida</option>
+                </select>
+                <div class="invalid-feedback" [style.display]="tipo.invalid && tipo.touched ? 'block' : 'none'">
+                    El tipo de movimiento es requerido
+                </div>
+            </div>
+
+            <!-- Usuario (solo información) -->
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Usuario</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                    <input type="text" class="form-control" [value]="getCurrentUserName()" readonly>
+                </div>
+                
+            </div>
+
+            <!-- Código del Producto -->
+            <div class="col-md-6 mb-3">
+                <label for="productoCodigo" class="form-label">Código del Producto <span
+                        class="text-danger">*</span></label>
+                <select class="form-select" id="productoCodigo" name="productoCodigo" ngModel required
+                    #productoCodigo="ngModel" (change)="onProductoSeleccionado(productoCodigo.value)">
+                    <option value="">Seleccione un producto</option>
+                    @for (producto of productosDisponibles; track producto.id) {
+                    <option [value]="producto.codigo">{{producto.codigo}} - {{producto.nombre}}</option>
+                    }
+                </select>
+                <div class="invalid-feedback"
+                    [style.display]="productoCodigo.invalid && productoCodigo.touched ? 'block' : 'none'">
+                    Debe seleccionar un producto
+                </div>
+            </div>
+
+            <!-- Nombre del Producto (solo lectura) -->
+            <div class="col-md-6 mb-3">
+                <label for="productoNombre" class="form-label">Nombre del Producto</label>
+                <input type="text" class="form-control" id="productoNombre" name="productoNombre"
+                    [value]="productoSeleccionado?.nombre || ''" readonly placeholder="Se completará automáticamente">
+            </div>
+
+            <!-- Cantidad -->
+            <div class="col-md-6 mb-3">
+                <label for="cantidad" class="form-label">Cantidad <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="cantidad" name="cantidad" min="1"
+                    placeholder="Ingrese la cantidad" ngModel required #cantidad="ngModel">
+                <div class="invalid-feedback" [style.display]="cantidad.invalid && cantidad.touched ? 'block' : 'none'">
+                    La cantidad es requerida y debe ser mayor a 0
+                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="col-12 mb-3">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
+                    placeholder="Ingrese una descripción del movimiento (opcional)" ngModel></textarea>
+            </div>
+
+            <!-- Comprobante -->
+            <div class="col-12 mb-3">
+                <label for="comprobante" class="form-label">Comprobante</label>
+                <div class="mb-2">
+                    <input type="file" class="form-control" id="comprobante" name="comprobante" accept="image/*"
+                        (change)="onFileSelected($event)" #fileInput>
+                    <div class="form-text">Seleccione una imagen como comprobante (JPG, PNG, etc.)</div>
+                </div>
+
+                <!-- Vista previa de la imagen -->
+                @if (imagenPreview) {
+                <div class="text-center">
+                    <img [src]="imagenPreview" alt="Vista previa" class="img-thumbnail" style="max-height: 200px;">
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="eliminarImagen()">
+                            <i class="bi bi-trash"></i> Eliminar imagen
+                        </button>
+                    </div>                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Botones del formulario -->
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                <i class="bi bi-x-circle me-2"></i>Cancelar
+            </button>
+            <button type="submit" class="btn btn-outline-success" [disabled]="movimientoForm.invalid || isSubmitting">
+                @if (isSubmitting) {
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Creando...
+                } @else {
+                <i class="bi bi-check-circle me-2"></i>Crear Movimiento
+                }
+            </button>
+        </div>
+    </form>
+</app-modal>

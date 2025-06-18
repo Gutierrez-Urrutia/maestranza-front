@@ -92,13 +92,11 @@
                 <!-- Tabla Material -->
                 <div class="table-responsive">
                     <div class="mat-elevation-4">
-                        <table mat-table [dataSource]="dataSource" matSort class="w-100 custom-table">
-
-                            <!-- Columna Urgencia -->
+                        <table mat-table [dataSource]="dataSource" matSort class="w-100 custom-table">                            <!-- Columna Urgencia -->
                             <ng-container matColumnDef="urgencia">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Urgencia</th>
                                 <td mat-cell *matCellDef="let alerta" class="text-center">
-                                    <span class="badge mx-auto" [ngClass]="getUrgenciaBadgeClass(alerta.nivelUrgencia)">
+                                    <span class="badge" [ngClass]="getUrgenciaBadgeClass(alerta.nivelUrgencia)">
                                         <i [class]="getUrgenciaIcon(alerta.nivelUrgencia)" class="me-1"></i>
                                         {{getUrgenciaDisplayName(alerta.nivelUrgencia)}}
                                     </span>
@@ -132,12 +130,11 @@
                                         <span class="text-muted"> / {{alerta.productoUmbralStock}}</span>
                                         <br>
                                         <small class="text-muted">Actual / Umbral</small>
-                                        <br>
-                                        @if (alerta.productoStock < alerta.productoUmbralStock) { <span
-                                            class="badge bg-warning text-dark small">
+                                        <br>                                        @if (alerta.productoStock < alerta.productoUmbralStock) { 
+                                        <span class="badge bg-warning text-dark">
                                             Faltan {{alerta.productoUmbralStock - alerta.productoStock}} unidades
-                                            </span>
-                                            }
+                                        </span>
+                                        }
                                     </div>
                                 </td>
                             </ng-container>
@@ -168,13 +165,11 @@
                                         </small>
                                     </div>
                                 </td>
-                            </ng-container>
-
-                            <!-- Columna Estado -->
+                            </ng-container>                            <!-- Columna Estado -->
                             <ng-container matColumnDef="estado">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
                                 <td mat-cell *matCellDef="let alerta" class="text-center">
-                                    <span class="badge mx-auto" [class]="alerta.activo ? 'bg-success' : 'bg-secondary'">
+                                    <span class="badge" [class]="alerta.activo ? 'bg-success' : 'bg-secondary'">
                                         <i [class]="alerta.activo ? 'bi bi-check-circle' : 'bi bi-x-circle'"
                                             class="me-1"></i>
                                         {{alerta.activo ? 'Activa' : 'Inactiva'}}

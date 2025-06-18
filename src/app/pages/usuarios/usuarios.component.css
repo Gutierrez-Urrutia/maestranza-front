@@ -19,41 +19,46 @@
   padding: 12px 8px !important;
 }
 
-/* Estilos para badges de rol y estado - igual que categorías en inventario */
+/* Estilos para badges de rol y estado - igual que en movimientos */
 ::ng-deep .mat-mdc-cell .badge {
-  min-width: 80px !important;
-  width: 80px !important;
+  min-width: 100px !important;
+  width: 100px !important;
   text-align: center !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   margin: 0 auto !important;
-  height: 24px !important;
+  height: 32px !important;
   line-height: 1 !important;
-  padding: 4px 8px !important;
+  padding: 6px 12px !important;
   vertical-align: middle !important;
-  font-weight:500;
+  font-weight: 500;
+  border-radius: 6px !important;
 }
 
 /* Estilos específicos para badges de estado y rol */
 ::ng-deep .mat-mdc-cell .badge.bg-danger {
-  background-color: #dc3545 !important;
-  color: white !important;
+  background-color: #f8d7da !important;
+  color: #842029 !important;
+  border: 1px solid #f5c2c7 !important;
 }
 
 ::ng-deep .mat-mdc-cell .badge.bg-primary {
-  background-color: #0d6efd !important;
-  color: white !important;
+  background-color: #cfe2ff !important;
+  color: #052c65 !important;
+  border: 1px solid #9ec5fe !important;
 }
 
 ::ng-deep .mat-mdc-cell .badge.bg-secondary {
-  background-color: #6c757d !important;
-  color: white !important;
+  background-color: #d3d3d4 !important;
+  color: #41464b !important;
+  border: 1px solid #b7bcc1 !important;
 }
 
 ::ng-deep .mat-mdc-cell .badge.bg-success {
-  background-color: #198754 !important;
-  color: white !important;
+  background-color: #d1e7dd !important;
+  color: #0f5132 !important;
+  border: 1px solid #a3cfbb !important;
 }
 
 /* Hover effects para botones de acción */
@@ -89,48 +94,56 @@
 .admin {
   background-color: #fbd0d4;
   color: #842029;
+  border: 1px solid #f5a2aa !important;
 }
 
 /* Gerencia - Morado pastel */
 .gerencia {
   background-color: #e2d9f3;
   color: #5a3a8a;
+  border: 1px solid #c8b5e8 !important;
 }
 
 /* Auditor - Amarillo pastel */
 .auditor {
   background-color: #fff3cd;
   color: #664d03;
+  border: 1px solid #ffdf7e !important;
 }
 
 /* Inventario - Azul pastel */
 .inventario {
   background-color: #cfe2ff;
   color: #084298;
+  border: 1px solid #9ec5fe !important;
 }
 
 /* Compras - Verde pastel */
 .compras {
   background-color: #d1e7dd;
   color: #0f5132;
+  border: 1px solid #a3cfbb !important;
 }
 
 /* Logística - Turquesa pastel */
 .logistica {
   background-color: #d0f1ea;
   color: #0c6b58;
+  border: 1px solid #a6e1d0 !important;
 }
 
 /* Producción - Naranja pastel */
 .prod {
   background-color: #ffe5d0;
   color: #9c4704;
+  border: 1px solid #ffcc9c !important;
 }
 
 /* Trabajador - Rosa pastel */
 .work {
   background-color: #f8d7e9;
   color: #871b77;
+  border: 1px solid #f1a2d1 !important;
 }
 
 /* Default (para casos no manejados) */

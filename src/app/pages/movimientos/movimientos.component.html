@@ -109,13 +109,12 @@
                                 </td>
                             </ng-container>
 
-                            <!-- Columna Código Producto -->
-                            <ng-container matColumnDef="codigoProducto">
+                            <!-- Columna Código Producto -->                            <ng-container matColumnDef="codigoProducto">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
                                 <td mat-cell *matCellDef="let movimiento" class="text-center">
-                                    <code class="bg-light p-1 rounded">{{movimiento.productoCodigo}}</code>
+                                    <code class="bg-secondary text-dark p-1 rounded">{{movimiento.productoCodigo}}</code>
                                 </td>
-                            </ng-container> <!-- Columna Nombre Producto -->
+                            </ng-container><!-- Columna Nombre Producto -->
                             <ng-container matColumnDef="nombreProducto">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Producto</th>
                                 <td mat-cell *matCellDef="let movimiento" class="text-center">
@@ -196,103 +195,8 @@
     <app-footer></app-footer>
 </div>
 
-<!-- Modal Nuevo Movimiento -->
-<app-modal modalId="modalMovimiento" title="Nuevo Movimiento" icon="bi-plus-circle" iconColor="text-primary" size="lg">
-    <form #movimientoForm="ngForm" (ngSubmit)="onCrearMovimiento(movimientoForm)">
-        <div class="row">
-            <!-- Tipo de Movimiento -->
-            <div class="col-md-6 mb-3">
-                <label for="tipo" class="form-label">Tipo de Movimiento <span class="text-danger">*</span></label>
-                <select class="form-select" id="tipo" name="tipo" ngModel required #tipo="ngModel">
-                    <option value="">Seleccione un tipo</option>
-                    <option value="ENTRADA">Entrada</option>
-                    <option value="SALIDA">Salida</option>
-                </select>                <div class="invalid-feedback" [style.display]="tipo.invalid && tipo.touched ? 'block' : 'none'">
-                    El tipo de movimiento es requerido
-                </div>
-            </div>
-
-            <!-- Usuario (solo información) -->
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Usuario</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                    <input type="text" class="form-control" [value]="getCurrentUserName()" readonly>
-                </div>
-                <small class="form-text text-muted">Usuario que está registrando el movimiento</small>
-            </div><!-- Código del Producto -->
-            <div class="col-md-6 mb-3">
-                <label for="productoCodigo" class="form-label">Código del Producto <span
-                        class="text-danger">*</span></label>
-                <select class="form-select" id="productoCodigo" name="productoCodigo" ngModel required
-                    #productoCodigo="ngModel" (change)="onProductoSeleccionado(productoCodigo.value)">
-                    <option value="">Seleccione un producto</option>
-                    @for (producto of productosDisponibles; track producto.id) {
-                    <option [value]="producto.codigo">{{producto.codigo}} - {{producto.nombre}}</option>
-                    }
-                </select>
-                <div class="invalid-feedback"
-                    [style.display]="productoCodigo.invalid && productoCodigo.touched ? 'block' : 'none'">
-                    Debe seleccionar un producto
-                </div>
-            </div>
-
-            <!-- Nombre del Producto (solo lectura) -->
-            <div class="col-md-6 mb-3">
-                <label for="productoNombre" class="form-label">Nombre del Producto</label>
-                <input type="text" class="form-control" id="productoNombre" name="productoNombre"
-                    [value]="productoSeleccionado?.nombre || ''" readonly placeholder="Se completará automáticamente">
-            </div>
-
-            <!-- Cantidad -->
-            <div class="col-md-6 mb-3">
-                <label for="cantidad" class="form-label">Cantidad <span class="text-danger">*</span></label>
-                <input type="number" class="form-control" id="cantidad" name="cantidad" min="1"
-                    placeholder="Ingrese la cantidad" ngModel required #cantidad="ngModel">
-                <div class="invalid-feedback" [style.display]="cantidad.invalid && cantidad.touched ? 'block' : 'none'">
-                    La cantidad es requerida y debe ser mayor a 0
-                </div>
-            </div>
-
-            <!-- Descripción -->
-            <div class="col-12 mb-3">
-                <label for="descripcion" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
-                    placeholder="Ingrese una descripción del movimiento (opcional)" ngModel></textarea>
-            </div>
-
-            <!-- Comprobante -->
-            <div class="col-12 mb-3">
-                <label for="comprobante" class="form-label">Comprobante</label>
-                <div class="mb-2">
-                    <input type="file" class="form-control" id="comprobante" name="comprobante" accept="image/*"
-                        (change)="onFileSelected($event)" #fileInput>
-                    <div class="form-text">Seleccione una imagen como comprobante (JPG, PNG, etc.)</div>
-                </div>
-
-                <!-- Vista previa de la imagen -->
-                @if (imagenPreview) {
-                <div class="text-center">
-                    <img [src]="imagenPreview" alt="Vista previa" class="img-thumbnail" style="max-height: 200px;">
-                    <div class="mt-2">
-                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="eliminarImagen()">
-                            <i class="bi bi-trash"></i> Eliminar imagen
-                        </button>
-                    </div>
-                </div>
-                }
-            </div>
-        </div>
-
-        <!-- Botones del modal -->
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary" [disabled]="movimientoForm.invalid || isSubmitting">
-                @if (isSubmitting) {
-                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-                }
-                Crear Movimiento
-            </button>
-        </div>
-    </form>
-</app-modal>
+<!-- Formulario de Nuevo Movimiento -->
+<app-movimiento-form 
+    modalId="modalMovimiento" 
+    (movimientoCreado)="onMovimientoCreado()">
+</app-movimiento-form>

@@ -101,12 +101,10 @@
                             <!-- Columna Roles -->
                             <ng-container matColumnDef="roles">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Roles</th>
-                                <td mat-cell *matCellDef="let usuario" class="text-center">
-                                    <div class="roles-container">
-                                        <!-- Primera fila (siempre visible) -->
+                                <td mat-cell *matCellDef="let usuario" class="text-center">                                    <div class="roles-container">                                        <!-- Primera fila (siempre visible) -->
                                         <div class="d-flex justify-content-center gap-1 mb-1">
                                             @for (rol of getRolesEnFilas(usuario.roles)[0]; track rol) {
-                                            <span class="badge mx-auto" [ngClass]="getRolBadgeClass(rol)">
+                                            <span class="badge" [ngClass]="getRolBadgeClass(rol)">
                                                 {{getRolDisplayName(rol)}}
                                             </span>
                                             }
@@ -116,7 +114,7 @@
                                         @if (usuario.roles.length > 4) {
                                         <div class="d-flex justify-content-center gap-1">
                                             @for (rol of getRolesEnFilas(usuario.roles)[1]; track rol) {
-                                            <span class="badge mx-auto" [ngClass]="getRolBadgeClass(rol)">
+                                            <span class="badge" [ngClass]="getRolBadgeClass(rol)">
                                                 {{getRolDisplayName(rol)}}
                                             </span>
                                             }
@@ -124,13 +122,11 @@
                                         }
                                     </div>
                                 </td>
-                            </ng-container>
-
-                            <!-- Columna Estado -->
+                            </ng-container>                            <!-- Columna Estado -->
                             <ng-container matColumnDef="estado">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
                                 <td mat-cell *matCellDef="let usuario" class="text-center">
-                                    <span class="badge mx-auto"
+                                    <span class="badge"
                                         [class]="usuario.activo ? 'bg-success' : 'bg-secondary'">
                                         {{usuario.activo ? 'Activo' : 'Inactivo'}}
                                     </span>

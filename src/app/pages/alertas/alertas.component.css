@@ -57,6 +57,25 @@
   border: 1px solid #9ec5fe;
 }
 
+/* Estilos específicos para badges de estado */
+::ng-deep .mat-mdc-cell .badge.bg-success {
+  background-color: #d1e7dd !important;
+  color: #0f5132 !important;
+  border: 1px solid #a3cfbb !important;
+}
+
+::ng-deep .mat-mdc-cell .badge.bg-secondary {
+  background-color: #d3d3d4 !important;
+  color: #41464b !important;
+  border: 1px solid #b7bcc1 !important;
+}
+
+::ng-deep .mat-mdc-cell .badge.bg-warning {
+  background-color: #fff3cd !important;
+  color: #664d03 !important;
+  border: 1px solid #ffdf7e !important;
+}
+
 /* Estilos para filas según urgencia */
 ::ng-deep .mat-mdc-row.table-danger {
   background-color: rgba(248, 215, 218, 0.2) !important;
