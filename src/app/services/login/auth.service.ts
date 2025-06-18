@@ -5,12 +5,13 @@ import { tap, catchError, map } from 'rxjs/operators';
 import { LoginRequest } from '../../interfaces/LoginRequest';
 import { LoginResponse } from '../../interfaces/LoginResponse';
 import { RegistroUsuario } from '../../interfaces/RegistroUsuario';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8090/api/auth';
+  private baseUrl = environment.auth.baseUrl;
   private tokenSubject = new BehaviorSubject<string | null>(null);
   private userSubject = new BehaviorSubject<any>(null);
 

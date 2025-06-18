@@ -35,7 +35,8 @@
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
           },
-          "configurations": {            "production": {
+          "configurations": {
+            "production": {
               "budgets": [
                 {
                   "type": "initial",
