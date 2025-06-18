@@ -47,7 +47,7 @@ export class NotificationService {
   private reconnectAttempts = 0;
 
   // Endpoint base del servidor
-  private apiUrl = environment.apiUrl || 'http://localhost:8090/api';
+  private apiUrl = environment.apiUrl;
 
   // Subjects para publicar datos
   private nuevaAlertaSubject = new BehaviorSubject<NotificacionAlerta | null>(null);
