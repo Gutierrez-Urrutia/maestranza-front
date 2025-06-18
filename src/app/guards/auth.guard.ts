@@ -19,13 +19,11 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> | boolean {
 
-    console.log('🛡️ AuthGuard: Verificando acceso a:', state.url);
 
     // Primero verificar si hay token local
     const hasLocalToken = this.authService.isAuthenticated(false);
 
     if (!hasLocalToken) {
-      console.log('❌ No hay token local');
       this.router.navigate(['/login']);
       return false;
     }
@@ -34,10 +32,8 @@ export class AuthGuard implements CanActivate {
     return this.authService.isTokenValid().pipe(
       map((isValid: boolean) => {
         if (isValid) {
-          console.log('✅ Token válido. Permitiendo acceso a:', state.url);
           return true;
         } else {
-          console.log('❌ Token inválido. Redirigiendo al login');
           this.router.navigate(['/login']);
           return false;
         }

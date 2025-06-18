@@ -64,17 +64,14 @@ export class NotificationService {
     private toastr: ToastrService,
     private alertaService: AlertaService // Añadido: Inyectar AlertaService
   ) {
-    console.log('🔔 Servicio de notificaciones SSE creado');
   }
 
   /**
    * Conectar a la fuente de eventos SSE
    */
   conectar(): void {
-    console.log('🔌 Intentando conectar al SSE...');
 
     if (this.eventSource) {
-      console.log('⚠️ Ya existe una conexión SSE, desconectando primero');
       this.desconectar();
     }
 
@@ -91,7 +88,6 @@ export class NotificationService {
         // Añadir token como parámetro de consulta
         const urlConToken = `${sseUrl}?token=${token}`;
 
-        console.log('📡 Conectando a:', urlConToken);
 
         // Crear conexión con la URL que incluye el token
         this.eventSource = new EventSource(urlConToken);
@@ -99,7 +95,6 @@ export class NotificationService {
         // Configurar los event listeners
         this.configurarEventHandlers();
 
-        console.log('🔌 Conexión SSE iniciada');
       } catch (error) {
         console.error('❌ Error creando conexión SSE:', error);
         this.manejarErrorConexion();
@@ -119,7 +114,6 @@ export class NotificationService {
     // Evento de conexión abierta (general)
     this.eventSource.onopen = (event) => {
       this.ngZone.run(() => {
-        console.log('✅ Conexión SSE establecida:', event);
         this.conexionSubject.next(true);
         this.reconnectAttempts = 0;
       });
@@ -137,7 +131,6 @@ export class NotificationService {
     // IMPORTANTE: Escuchar evento específico "conexion"
     this.eventSource.addEventListener('conexion', (event: any) => {
       this.ngZone.run(() => {
-        console.log('🔌 Evento de conexión recibido:', event.data);
         // Aquí podemos manejar la confirmación de conexión
       });
     });
@@ -146,9 +139,7 @@ export class NotificationService {
     this.eventSource.addEventListener('alerta', (event: any) => {
       this.ngZone.run(() => {
         try {
-          console.log('🚨 Evento de alerta recibido:', event.data);
           const alerta = JSON.parse(event.data);
-          console.log('✅ Alerta parseada:', alerta);
 
           // Procesar la alerta
           this.nuevaAlertaSubject.next(alerta);
@@ -169,7 +160,6 @@ export class NotificationService {
 
     // Mantener también el handler general para depuración
     this.eventSource.onmessage = (event) => {
-      console.log('📨 Evento general recibido (onmessage):', event);
       // No procesamos aquí las alertas porque ya las capturamos en el listener específico
     };
   }
@@ -177,7 +167,6 @@ export class NotificationService {
    * Actualizar contador de alertas
    */
   private actualizarContador(contador: number): void {
-    console.log('🔢 Actualizando contador a:', contador);
     this.contadorSubject.next(contador);
   }
 
@@ -185,7 +174,6 @@ export class NotificationService {
    * Método para actualizar el contador después de cerrar el toast
    */
   private actualizarContadorDespuesDeToast(): void {
-    console.log('🔄 Actualizando contador después de toast...');
     this.alertaService.actualizarContadorAlertas();
   }
 
@@ -193,10 +181,9 @@ export class NotificationService {
    * Cargar contador inicial de alertas
    */
   private cargarContadorAlertas(): void {
-    fetch(`${this.apiUrl}/v1/alertas/count`)
+    fetch(`${this.apiUrl}/alertas/count`)
       .then(response => response.json())
       .then(data => {
-        console.log('📊 Contador de alertas cargado:', data);
         this.actualizarContador(data.count);
       })
       .catch(error => {
@@ -208,7 +195,6 @@ export class NotificationService {
    * Mostrar toast para una alerta
    */
   private mostrarToastAlerta(alerta: NotificacionAlerta): void {
-    console.log('🚨 Mostrando toast para alerta:', alerta);
 
     // Crear mensaje conciso
     let mensaje = alerta.productoNombre || 'Producto';
@@ -323,7 +309,6 @@ export class NotificationService {
     this.reconnectAttempts++;
     const delay = this.reconnectDelay * this.reconnectAttempts;
 
-    console.log(`🔄 Reintentando conexión en ${delay}ms (intento ${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
 
     this.reconnectTimeout = setTimeout(() => {
       this.conectar();
@@ -342,7 +327,6 @@ export class NotificationService {
     if (this.eventSource) {
       this.eventSource.close();
       this.eventSource = null;
-      console.log('🔌 Conexión SSE cerrada');
     }
 
     this.conexionSubject.next(false);

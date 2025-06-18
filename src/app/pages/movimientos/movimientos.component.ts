@@ -16,6 +16,7 @@ import { Usuario } from '../../interfaces/Usuario';
 import { Producto } from '../../interfaces/Producto';
 import { ProductoService } from '../../services/producto/producto.service';
 import { AuthService } from '../../services/login/auth.service';
+import { MovimientoService } from '../../services/movimiento/movimiento.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -57,10 +58,10 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
     'Salida'
   ];
   tipoSeleccionado: string = 'Todos';
-
   constructor(
     private productoService: ProductoService,
-    private authService: AuthService
+    private authService: AuthService,
+    private movimientoService: MovimientoService
   ) { }
   ngOnInit() {
     this.cargarMovimientos();
@@ -86,74 +87,34 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
   private cargarMovimientos() {
     this.isLoading = true;
 
-    // Datos de prueba mientras no hay endpoint
-    const movimientosPrueba: Movimiento[] = [
-      {
-        id: 1,
-        fecha: '2024-06-17T10:30:00',
-        usuario: {
-          id: 1,
-          username: 'juan.perez',
-          email: 'juan.perez@empresa.com',
-          nombre: 'Juan',
-          apellido: 'Pérez',
-          activo: true,
-          roles: ['USER']
-        },        producto: {
-          id: 1,
-          codigo: 'MART-001',
-          nombre: 'Martillo Profesional',
-          descripcion: 'Martillo de acero profesional 16 oz',
-          categoria: { id: 1, nombre: 'Herramientas' },
-          stock: 25,
-          image_url: '/assets/images/martillo.jpg',
-          historialPrecios: []
-        },
-        cantidad: 50,
-        tipo: TipoMovimiento.ENTRADA,
-        descripcion: 'Compra de inventario inicial',
-        productoCodigo: 'MART-001',
-        productoNombre: 'Martillo Profesional'
+    this.movimientoService.obtenerTodos().subscribe({
+      next: (movimientos) => {
+        this.movimientos = movimientos;
+        this.dataSource.data = movimientos;
+        this.isLoading = false;
       },
-      {
-        id: 2,
-        fecha: '2024-06-17T14:15:00',
-        usuario: {
-          id: 2,
-          username: 'maria.garcia',
-          email: 'maria.garcia@empresa.com',
-          nombre: 'María',
-          apellido: 'García',
-          activo: true,
-          roles: ['USER']
-        },        producto: {
-          id: 2,
-          codigo: 'DEST-002',
-          nombre: 'Destornillador Set',
-          descripcion: 'Set de destornilladores profesionales',
-          categoria: { id: 1, nombre: 'Herramientas' },
-          stock: 15,
-          image_url: '/assets/images/destornillador.jpg',
-          historialPrecios: []
-        },
-        cantidad: 10,
-        tipo: TipoMovimiento.SALIDA,
-        descripcion: 'Venta a cliente regular',
-        productoCodigo: 'DEST-002',
-        productoNombre: 'Destornillador Set'
-      }
-    ];
+      error: (error) => {
+        console.error('Error al cargar movimientos:', error);
+        this.isLoading = false;
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al cargar movimientos',
+          text: 'No se pudieron cargar los movimientos. Verifique que el servidor esté ejecutándose.',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 4000
+        });
 
-    // Simular carga asíncrona
-    setTimeout(() => {
-      this.movimientos = movimientosPrueba;
-      this.dataSource.data = movimientosPrueba;
-      this.isLoading = false;
-    }, 1000);
+        // En caso de error, usar datos vacíos
+        this.movimientos = [];
+        this.dataSource.data = [];
+      }
+    });
   }
 
   // Método helper para obtener la clase CSS del badge según el tipo
@@ -258,7 +219,6 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
   }
   // Método para ver detalles del movimiento
   verDetalles(movimiento: Movimiento) {
-    console.log('Ver detalles del movimiento:', movimiento);
     // Aquí se podría abrir un modal con más detalles
   }
 
@@ -330,7 +290,9 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.isSubmitting = true;    const formData = form.value;
+    this.isSubmitting = true;
+
+    const formData = form.value;
 
     // Obtener el usuario logueado
     const usuarioLogueado = this.authService.getUser();
@@ -345,56 +307,69 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Crear objeto movimiento usando el producto seleccionado
-    const nuevoMovimiento: Movimiento = {
-      id: this.movimientos.length + 1, // ID temporal
-      fecha: new Date().toISOString(),
-      usuario: {
-        id: usuarioLogueado.id,
-        username: usuarioLogueado.username,
-        email: usuarioLogueado.email,
-        nombre: usuarioLogueado.nombre,
-        apellido: usuarioLogueado.apellido,
-        activo: true,
-        roles: usuarioLogueado.roles
-      },
-      producto: this.productoSeleccionado, // Usar el producto seleccionado completo
+    // Crear objeto para enviar al backend (solo los datos necesarios)
+    const movimientoData = {
+      productoId: this.productoSeleccionado.id,
       cantidad: formData.cantidad,
       tipo: formData.tipo as TipoMovimiento,
       descripcion: formData.descripcion || '',
-      productoCodigo: this.productoSeleccionado.codigo,
-      productoNombre: this.productoSeleccionado.nombre,
-      image_path: this.archivoSeleccionado ? this.archivoSeleccionado.name : undefined
+      // Nota: El usuario se determina en el backend a partir del token JWT
+      // La imagen se puede manejar en una implementación futura
     };
 
-    // Simular llamada al backend
-    setTimeout(() => {
-      // Agregar a la lista local
-      this.movimientos.unshift(nuevoMovimiento);
-      this.dataSource.data = [...this.movimientos];      // Limpiar formulario
-      form.resetForm();
-      this.eliminarImagen();
-      this.productoSeleccionado = null; // Limpiar selección de producto
-      this.isSubmitting = false;
+    // Llamar al servicio para crear el movimiento
+    this.movimientoService.registrarMovimiento(movimientoData).subscribe({
+      next: (movimientoCreado) => {
+        // Recargar la lista de movimientos para reflejar el cambio
+        this.cargarMovimientos();
+        
+        // Limpiar formulario
+        form.resetForm();
+        this.eliminarImagen();
+        this.productoSeleccionado = null;
+        this.isSubmitting = false;
 
-      // Cerrar modal
-      const modalElement = document.getElementById('modalMovimiento');
-      if (modalElement) {
-        const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
-        if (modal) {
-          modal.hide();
+        // Cerrar modal
+        const modalElement = document.getElementById('modalMovimiento');
+        if (modalElement) {
+          const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+          if (modal) {
+            modal.hide();
+          }
         }
-      }
 
-      // Mostrar mensaje de éxito
-      Swal.fire({
-        icon: 'success',
-        title: '¡Movimiento creado!',
-        text: `El movimiento de ${formData.tipo.toLowerCase()} se registró exitosamente`,
-        timer: 2000,
-        showConfirmButton: false
-      });
-    }, 1500);
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Movimiento creado!',
+          text: `El movimiento de ${formData.tipo.toLowerCase()} se registró exitosamente`,
+          timer: 2000,
+          showConfirmButton: false
+        });
+      },
+      error: (error) => {
+        console.error('Error al crear movimiento:', error);
+        this.isSubmitting = false;
+        
+        let mensajeError = 'Ocurrió un error al crear el movimiento';
+        if (error.error && error.error.message) {
+          mensajeError = error.error.message;
+        } else if (error.status === 401) {
+          mensajeError = 'Su sesión ha expirado. Por favor, inicie sesión nuevamente.';
+        } else if (error.status === 403) {
+          mensajeError = 'No tiene permisos para realizar esta acción.';
+        } else if (error.status === 400) {
+          mensajeError = 'Los datos enviados no son válidos.';
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al crear movimiento',
+          text: mensajeError,
+          confirmButtonText: 'Entendido'
+        });
+      }
+    });
   }
 
   ngAfterViewInit() {

@@ -90,8 +90,6 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
       roles: this.rolService.obtenerTodos()
     }).subscribe({
       next: ({ usuarios, roles }) => {
-        console.log('Usuarios cargados:', usuarios);
-        console.log('Roles cargados:', roles);
 
         this.usuarios = usuarios;
         this.roles = roles;

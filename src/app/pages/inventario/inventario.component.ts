@@ -214,13 +214,9 @@ export class InventarioComponent implements AfterViewInit, OnInit {
 
     this.dataSource.data = productosFiltrados;
   }
-
   onAgregarProducto(formData: any) {
-    // console.log('Datos recibidos del formulario:', formData); // Debug
-
     // Validar que los datos están completos
     if (!formData || !formData.codigo || !formData.nombre || !formData.categoriaId) {
-      // console.error('Datos del formulario incompletos:', formData);
 
       Swal.fire({
         icon: 'warning',
@@ -254,11 +250,9 @@ export class InventarioComponent implements AfterViewInit, OnInit {
       precio: formData.precio || 0 // Convertir a centavos si es necesario
     };
 
-    // console.log('Datos a enviar al backend:', productoData); // Debug
 
     this.productoService.crearProducto(productoData).subscribe({
       next: (productoCreado) => {
-        // console.log('Producto agregado exitosamente:', productoCreado);
         this.cargarProductos(); // Recargar la lista
 
         // Cerrar modal programáticamente
@@ -302,7 +296,6 @@ export class InventarioComponent implements AfterViewInit, OnInit {
   }
 
   onEditarProducto(formData: any) {
-    // console.log('Datos recibidos del formulario para editar:', formData); // Debug
 
     if (!this.productoSeleccionado) {
       // console.error('No hay producto seleccionado para editar');
@@ -351,11 +344,9 @@ export class InventarioComponent implements AfterViewInit, OnInit {
       precio: formData.precio || 0 // Convertir a centavos si es necesario
     };
 
-    // console.log('Datos a enviar al backend para editar:', productoData); // Debug
 
     this.productoService.actualizarProducto(this.productoSeleccionado.id, productoData).subscribe({
       next: (productoActualizado) => {
-        // console.log('Producto editado exitosamente:', productoActualizado);
         this.cargarProductos(); // Recargar la lista
 
         // Cerrar modal programáticamente
@@ -424,7 +415,6 @@ export class InventarioComponent implements AfterViewInit, OnInit {
 
         this.productoService.eliminarProducto(producto.id).subscribe({
           next: () => {
-            // console.log('Producto eliminado:', producto);
             this.cargarProductos();
 
             Swal.fire({

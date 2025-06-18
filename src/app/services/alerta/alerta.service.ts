@@ -82,7 +82,6 @@ export class AlertaService {
   actualizarContadorAlertas(): void {
     this.obtenerAlertasActivasCount().subscribe({
       next: (count) => {
-        console.log('✅ Contador de alertas actualizado:', count);
         // Asegurarnos de que count es un número
         const numericCount = typeof count === 'number' ? count : 0;
         this.alertasActivasCountSubject.next(numericCount);

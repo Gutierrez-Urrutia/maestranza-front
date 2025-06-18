@@ -18,7 +18,6 @@ export class SessionService {
     const resetTimer = () => {
       clearTimeout(inactivityTimer);
       inactivityTimer = setTimeout(() => {
-        console.log('⏰ Sesión expirada por inactividad');
         this.authService.logout();
         // Redirigir al login si es necesario
         window.location.href = '/login';
@@ -35,7 +34,6 @@ export class SessionService {
 
   // Método público para limpiar la sesión manualmente
   public clearSession(): void {
-    console.log('🧹 Limpiando sesión manualmente');
     this.authService.logout();
   }
 

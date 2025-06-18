@@ -74,7 +74,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.notificacionesSubscription = this.alertaService.alertasActivasCount$.subscribe({
       next: (count) => {
         this.numeroNotificaciones = count;
-        console.log('🔔 Notificaciones actualizadas:', count);
       },
       error: (error) => {
         console.error('❌ Error en notificaciones:', error);

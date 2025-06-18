@@ -85,7 +85,6 @@ export class SidebarComponent {
         // Hacer logout con petición al servidor
         this.authService.logoutFromServer().subscribe({
           next: () => {
-            console.log('Logout completado');
             // Mostrar mensaje de éxito
             Swal.fire({
               title: '¡Sesión cerrada!',

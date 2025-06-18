@@ -70,7 +70,6 @@ export class AlertasComponent implements AfterViewInit, OnInit {
 
     this.alertaService.obtenerTodas().subscribe({
       next: (alertas) => {
-        console.log('Alertas cargadas:', alertas);
         this.alertas = alertas;
         this.dataSource.data = alertas;
 

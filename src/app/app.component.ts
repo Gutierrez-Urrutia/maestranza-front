@@ -37,7 +37,6 @@ export class AppComponent implements AfterViewInit {
       cleanUrl === '/usuarios' ||
       cleanUrl === '/alertas');
 
-    console.log('URL actual:', cleanUrl, 'Es login page:', this.isLoginPage);
   }
 
   toggleSidebar() {

@@ -33,14 +33,12 @@ export class LoginComponent {
       return;
     }
 
-    console.log('Enviando credenciales:', this.credentials);
 
     this.isLoading = true;
     this.errorMessage = '';
 
     this.authService.login(this.credentials).subscribe({
       next: (response) => {
-        console.log('Login exitoso', response);
         // Redirigir a la página principal - ajusta según tu estructura de rutas
         this.router.navigate(['/inventario']); // o la ruta que corresponda
       },
