@@ -39,7 +39,8 @@ import Swal from 'sweetalert2';
     MatInputModule,
   ]
 })
-export class InventarioComponent implements AfterViewInit, OnInit {  private productoService = inject(ProductoService);
+export class InventarioComponent implements AfterViewInit, OnInit {
+  private productoService = inject(ProductoService);
   private categoriaService = inject(CategoriaService);
   private movimientoService = inject(MovimientoService);
   private authService = inject(AuthService);

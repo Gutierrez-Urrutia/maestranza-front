@@ -3,15 +3,30 @@
         <div class="col-md-6">
             <div class="mb-3">
                 <label for="codigo-edit" class="form-label">Código</label>
-                <input type="text" class="form-control" id="codigo-edit" [(ngModel)]="formData.codigo" name="codigo"
-                    required>
+                <input type="text" 
+                       class="form-control" 
+                       id="codigo-edit" 
+                       [(ngModel)]="formData.codigo" 
+                       name="codigo"
+                       (ngModelChange)="onCodigoChange()"
+                       [class.is-invalid]="codigoError"
+                       required>
+                @if (codigoError) {
+                    <div class="invalid-feedback">
+                        {{codigoError}}
+                    </div>
+                }
             </div>
         </div>
         <div class="col-md-6">
             <div class="mb-3">
                 <label for="nombre-edit" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre-edit" [(ngModel)]="formData.nombre" name="nombre"
-                    required>
+                <input type="text" 
+                       class="form-control" 
+                       id="nombre-edit" 
+                       [(ngModel)]="formData.nombre" 
+                       name="nombre"
+                       required>
             </div>
         </div>
     </div>
@@ -19,13 +34,16 @@
         <div class="col-md-6">
             <div class="mb-3">
                 <label for="categoria-edit" class="form-label">Categoría</label>
-                <select class="form-select" id="categoria-edit" [(ngModel)]="formData.categoriaId" name="categoriaId"
-                    required>
+                <select class="form-select" 
+                        id="categoria-edit" 
+                        [(ngModel)]="formData.categoriaId" 
+                        name="categoriaId"
+                        required>
                     <option value="" disabled>Seleccione una categoría</option>
                     @for (categoria of categorias; track categoria.id) {
-                    @if (categoria.id !== 0) {
-                    <option [value]="categoria.id">{{categoria.nombre}}</option>
-                    }
+                        @if (categoria.id !== 0) {
+                            <option [value]="categoria.id">{{categoria.nombre}}</option>
+                        }
                     }
                 </select>
             </div>
@@ -33,24 +51,34 @@
         <div class="col-md-6">
             <div class="mb-3">
                 <label for="precio-edit" class="form-label">Precio</label>
-                <input type="number" class="form-control" id="precio-edit" [(ngModel)]="formData.precio" name="precio"
-                    step="0.01" min="0" required>
+                <input type="number" 
+                       class="form-control" 
+                       id="precio-edit" 
+                       [(ngModel)]="formData.precio" 
+                       name="precio"
+                       step="0.01" 
+                       min="0" 
+                       required>
             </div>
         </div>
     </div>
-    <!-- Campo de descripción movido aquí -->
     <div class="mb-3">
         <label for="descripcion" class="form-label">Descripción</label>
-        <textarea class="form-control" id="descripcion" [(ngModel)]="formData.descripcion" name="descripcion"
-            placeholder="Describe las características del producto, parte o pieza..." rows="3"></textarea>
+        <textarea class="form-control" 
+                  id="descripcion" 
+                  [(ngModel)]="formData.descripcion" 
+                  name="descripcion"
+                  placeholder="Describe las características del producto, parte o pieza..." 
+                  rows="3"></textarea>
     </div>
     <!-- Botones del formulario -->
     <div class="d-flex justify-content-end gap-2 mt-4">
         <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
             <i class="bi bi-x-circle me-2"></i>Cancelar
         </button>
-        <button type="submit" class="btn btn-outline-success"
-            [disabled]="!formData.codigo || !formData.nombre || !formData.categoriaId">
+        <button type="submit" 
+                class="btn btn-outline-success" 
+                [disabled]="!formData.codigo || !formData.nombre || !formData.categoriaId || codigoError">
             <i class="bi bi-check-circle me-2"></i>Editar
         </button>
     </div>

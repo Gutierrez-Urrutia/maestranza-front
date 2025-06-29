@@ -4,7 +4,7 @@
             <!-- Tipo de Movimiento -->
             <div class="col-md-6 mb-3">
                 <label for="tipo" class="form-label">Tipo de Movimiento <span class="text-danger">*</span></label>
-                <select class="form-select" id="tipo" name="tipo" ngModel required #tipo="ngModel">
+                <select class="form-select pe-4" id="tipo" name="tipo" ngModel required #tipo="ngModel">
                     <option value="">Seleccione un tipo</option>
                     <option value="ENTRADA">Entrada</option>
                     <option value="SALIDA">Salida</option>
@@ -32,7 +32,7 @@
                     #productoCodigo="ngModel" (change)="onProductoSeleccionado(productoCodigo.value)">
                     <option value="">Seleccione un producto</option>
                     @for (producto of productosDisponibles; track producto.id) {
-                    <option [value]="producto.codigo">{{producto.codigo}} - {{producto.nombre}}</option>
+                    <option [value]="producto.codigo">{{producto.codigo}}</option>
                     }
                 </select>
                 <div class="invalid-feedback"
@@ -68,11 +68,11 @@
                 <label for="comprobante" class="form-label">Comprobante</label>
                 
                 <!-- Botones para elegir método -->
-                <div class="btn-group w-100 mb-3" role="group">
-                    <button type="button" class="btn btn-outline-primary" (click)="abrirSelectorArchivo()">
+                <div class="d-flex gap-2 w-100 mb-3">
+                    <button type="button" class="btn btn-outline-primary flex-grow-1" (click)="abrirSelectorArchivo()">
                         <i class="bi bi-folder2-open me-2"></i>Seleccionar archivo
                     </button>
-                    <button type="button" class="btn btn-outline-success" (click)="abrirCamara()">
+                    <button type="button" class="btn btn-outline-success flex-grow-1" (click)="abrirCamara()">
                         <i class="bi bi-camera me-2"></i>Usar cámara
                     </button>
                 </div>
