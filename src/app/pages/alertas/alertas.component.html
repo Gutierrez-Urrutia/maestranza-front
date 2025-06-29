@@ -131,7 +131,7 @@
                                         <br>
                                         <small class="text-muted">Actual / Umbral</small>
                                         <br>                                        @if (alerta.productoStock < alerta.productoUmbralStock) { 
-                                        <span class="badge bg-warning text-dark">
+                                        <span class="badge bg-warning text-dark d-inline-block text-wrap" style="max-width: 150px; white-space: normal;">
                                             Faltan {{alerta.productoUmbralStock - alerta.productoStock}} unidades
                                         </span>
                                         }
