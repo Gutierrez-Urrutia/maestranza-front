@@ -83,6 +83,78 @@
   
   .modal-footer .btn {
     width: 100%;
+    min-height: 48px; /* Área de toque más grande */
+  }
+  
+  /* Formulario más espacioso en móviles */
+  .form-control, .form-select {
+    padding: 12px 16px !important;
+    font-size: 16px !important; /* Evita zoom en iOS */
+    border-radius: 8px !important;
+  }
+  
+  .form-label {
+    font-size: 15px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  /* Modal más ancho en tablets */
+  .modal-dialog {
+    margin: 1rem !important;
+    max-width: calc(100% - 2rem) !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* Móviles pequeños */
+  .modal-dialog {
+    margin: 0.5rem !important;
+    max-width: calc(100% - 1rem) !important;
+  }
+  
+  .form-control, .form-select {
+    padding: 14px 16px !important;
+    font-size: 16px !important;
+    min-height: 50px !important;
+  }
+  
+  .btn {
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+    min-height: 50px !important;
+  }
+  
+  /* Cámara responsive */
+  .camera-container {
+    padding: 15px !important;
+    margin: 10px 0 !important;
+  }
+  
+  .camera-container video {
+    height: 200px !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+  
+  /* Botones de método de captura */
+  .btn-group {
+    flex-direction: column !important;
+  }
+  
+  .btn-group .btn {
+    margin-bottom: 8px !important;
+    width: 100% !important;
+    min-height: 50px !important;
+  }
+  
+  .btn-group .btn:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  /* Vista previa de imagen */
+  .img-thumbnail {
+    max-width: 100% !important;
+    max-height: 250px !important;
   }
 }
 

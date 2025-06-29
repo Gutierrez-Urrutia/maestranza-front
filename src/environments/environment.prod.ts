@@ -1,6 +1,16 @@
 export const environment = {
   production: true,
+  name: 'PRODUCTION',
   apiUrl: 'https://maestranza-backend.onrender.com/api/v1',
+  
+  // Base de datos: PostgreSQL en Render
+  // Backend: Spring Boot en Render
+  database: {
+    type: 'PostgreSQL',
+    host: 'render.com',
+    provider: 'Render',
+    name: 'maestranza_production'
+  },
 
   auth: {
     baseUrl: 'https://maestranza-backend.onrender.com/api/auth',

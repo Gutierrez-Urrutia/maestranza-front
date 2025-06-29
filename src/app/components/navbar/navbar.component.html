@@ -1,18 +1,17 @@
 <nav class="navbar navbar-expand-lg bg-white navbar-light border-bottom border-secondary-subtle fixed-top">
     <div class="container-fluid">
         <!-- Botón hamburguesa personalizado para abrir el sidebar -->
-        <button class="btn me-2" (click)="toggleSidebar.emit()" aria-label="Abrir menú lateral">
-            <i class="bi bi-list fs-2"></i>
+        <button class="btn me-2 p-0" (click)="toggleSidebar.emit()" aria-label="Abrir menú lateral">
+            <i class="bi bi-list"></i>
         </button>
 
         <ul class="navbar-nav ms-2 me-auto">
-            <li class="nav-item">
-                <!-- Título completo en pantallas grandes -->
+            <li class="nav-item">                <!-- Título completo en pantallas grandes -->
                 <h1 class="d-none d-md-block">Sistema de Gestión Maestranza Unidos
                     <span class="visually-hidden">(current)</span>
                 </h1>
-                <!-- Título corto en pantallas pequeñas -->
-                <h1 class="d-md-none">SGM Unidos
+                <!-- Título corto en pantallas pequeñas (solo iniciales) -->
+                <h1 class="d-md-none">SGM
                     <span class="visually-hidden">(current)</span>
                 </h1>
             </li>

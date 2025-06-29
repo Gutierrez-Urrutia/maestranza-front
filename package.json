@@ -1,14 +1,17 @@
 {
   "name": "maestranza-front",
-  "version": "0.0.0",
-  "scripts": {
+  "version": "0.0.0",  "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "dev": "ng serve --open --host 0.0.0.0 --port 4200",
+    "dev:local": "ng serve --configuration=development --open --verbose",
+    "dev:prod": "ng serve --configuration=production --open",
     "build": "ng build",
     "build:prod": "ng build --configuration=production",
     "clean": "rimraf dist",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "env:check": "echo 'Checking environment configuration...' && ng build --dry-run"
   },
   "private": true,
   "dependencies": {

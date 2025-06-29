@@ -1,62 +1,125 @@
-<form (ngSubmit)="onSubmit()">
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="modal-responsive">
   <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
-        <label for="codigo" class="form-label">Código</label>
-        <input type="text" class="form-control" id="codigo" [(ngModel)]="formData.codigo" name="codigo"
-          placeholder="Ej: A001" required>
+        <label for="codigo" class="form-label text-responsive">Código</label>
+        <input type="text" 
+               class="form-control" 
+               id="codigo" 
+               formControlName="codigo"
+               [class.is-invalid]="codigoControl?.invalid && (codigoControl?.dirty || codigoControl?.touched)"
+               placeholder="Ej: A001">
+        @if (codigoControl?.invalid && (codigoControl?.dirty || codigoControl?.touched)) {
+          <div class="invalid-feedback">
+            @if (codigoControl?.errors?.['required']) {
+              <span>El código es requerido</span>
+            } @else if (codigoControl?.errors?.['invalidCodigo']) {
+              <span>El código solo puede contener letras, números y guiones</span>
+            }
+          </div>
+        }
       </div>
     </div>
     <div class="col-md-6">
       <div class="mb-3">
-        <label for="nombre" class="form-label">Nombre</label>
-        <input type="text" class="form-control" id="nombre" [(ngModel)]="formData.nombre" name="nombre"
-          placeholder="Ej: Martillo" required>
+        <label for="nombre" class="form-label text-responsive">Nombre</label>
+        <input type="text" 
+               class="form-control" 
+               id="nombre" 
+               formControlName="nombre"
+               [class.is-invalid]="nombreControl?.invalid && (nombreControl?.dirty || nombreControl?.touched)"
+               placeholder="Ej: Martillo">
+        @if (nombreControl?.invalid && (nombreControl?.dirty || nombreControl?.touched)) {
+          <div class="invalid-feedback">
+            <span>El nombre es requerido</span>
+          </div>
+        }
       </div>
     </div>
   </div>
-  <!-- Campo de descripción añadido -->
+  
   <div class="mb-3">
-    <label for="descripcion" class="form-label">Descripción</label>
-    <textarea class="form-control" id="descripcion" [(ngModel)]="formData.descripcion" name="descripcion"
-      placeholder="Describe las características del producto, parte o pieza..." rows="3"></textarea>
+    <label for="descripcion" class="form-label text-responsive">Descripción</label>
+    <textarea class="form-control" 
+              id="descripcion" 
+              formControlName="descripcion"
+              placeholder="Describe las características del producto, parte o pieza..." 
+              rows="3"></textarea>
   </div>
+
   <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
-        <label for="categoria" class="form-label">Categoría</label>
-        <select class="form-select" id="categoria" [(ngModel)]="formData.categoriaId" name="categoriaId" required>
+        <label for="categoria" class="form-label text-responsive">Categoría</label>
+        <select class="form-select" 
+                id="categoria" 
+                formControlName="categoriaId"
+                [class.is-invalid]="categoriaIdControl?.invalid && (categoriaIdControl?.dirty || categoriaIdControl?.touched)">
           <option value="" selected disabled>Seleccione una categoría</option>
           @for (categoria of categorias; track categoria.id) {
-          @if (categoria.id !== 0) {
-          <option [value]="categoria.id">{{categoria.nombre}}</option>
-          }
+            @if (categoria.id !== 0) {
+              <option [value]="categoria.id">{{categoria.nombre}}</option>
+            }
           }
         </select>
+        @if (categoriaIdControl?.invalid && (categoriaIdControl?.dirty || categoriaIdControl?.touched)) {
+          <div class="invalid-feedback">
+            <span>Debe seleccionar una categoría</span>
+          </div>
+        }
       </div>
     </div>
     <div class="col-md-6">
       <div class="mb-3">
-        <label for="stock" class="form-label">Stock</label>
-        <input type="number" class="form-control" id="stock" [(ngModel)]="formData.stock" name="stock" placeholder="0"
-          min="0" required>
+        <label for="stock" class="form-label text-responsive">Stock</label>
+        <input type="number" 
+               class="form-control" 
+               id="stock" 
+               formControlName="stock"
+               [class.is-invalid]="stockControl?.invalid && (stockControl?.dirty || stockControl?.touched)"
+               placeholder="0" 
+               min="0">
+        @if (stockControl?.invalid && (stockControl?.dirty || stockControl?.touched)) {
+          <div class="invalid-feedback">
+            @if (stockControl?.errors?.['required']) {
+              <span>El stock es requerido</span>
+            } @else if (stockControl?.errors?.['min']) {
+              <span>El stock no puede ser negativo</span>
+            }
+          </div>
+        }
       </div>
     </div>
   </div>
+
   <div class="mb-3">
-    <label for="precio" class="form-label">Precio</label>
-    <input type="number" class="form-control" id="precio" [(ngModel)]="formData.precio" name="precio" placeholder="0"
-      step="0.01" min="0" required>
+    <label for="precio" class="form-label text-responsive">Precio</label>
+    <input type="number" 
+           class="form-control" 
+           id="precio" 
+           formControlName="precio"
+           [class.is-invalid]="precioControl?.invalid && (precioControl?.dirty || precioControl?.touched)"
+           placeholder="0" 
+           step="0.01" 
+           min="0">
+    @if (precioControl?.invalid && (precioControl?.dirty || precioControl?.touched)) {
+      <div class="invalid-feedback">
+        @if (precioControl?.errors?.['required']) {
+          <span>El precio es requerido</span>
+        } @else if (precioControl?.errors?.['min']) {
+          <span>El precio no puede ser negativo</span>
+        }
+      </div>
+    }
   </div>
 
   <!-- Botones del formulario -->
-  <div class="d-flex justify-content-end gap-2 mt-4">
-    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
-      <i class="bi bi-x-circle me-2"></i>Cancelar
+  <div class="d-flex justify-content-end gap-2 mt-4 flex-responsive">
+    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" (click)="onCancel()">
+      <i class="bi bi-x-circle me-2"></i><span class="d-none d-sm-inline">Cancelar</span><span class="d-sm-none">×</span>
     </button>
-    <button type="submit" class="btn btn-outline-success"
-      [disabled]="!formData.codigo || !formData.nombre || !formData.categoriaId">
-      <i class="bi bi-check-circle me-2"></i>Agregar
+    <button type="submit" class="btn btn-outline-success" [disabled]="productForm.invalid">
+      <i class="bi bi-check-circle me-2"></i><span class="d-none d-sm-inline">Agregar</span><span class="d-sm-none">+</span>
     </button>
   </div>
 </form>

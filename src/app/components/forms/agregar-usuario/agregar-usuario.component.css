@@ -71,3 +71,104 @@
   font-weight: bold;
   font-size: 16px;
 }
+
+/* Responsive Design para formularios de usuario */
+@media (max-width: 768px) {
+  .modal-dialog {
+    margin: 1rem;
+    max-width: calc(100% - 2rem);
+  }
+  
+  .form-control, .form-select {
+    padding: 12px 16px;
+    font-size: clamp(14px, 2.5vw, 16px); /* Tipografía responsiva */
+    border-radius: 8px;
+    min-height: 48px;
+  }
+  
+  .form-label {
+    font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  
+  .btn {
+    min-height: 48px;
+    padding: 12px 20px;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .modal-footer .btn {
+    width: 100%;
+  }
+  
+  /* Checkboxes más grandes para toque */
+  .form-check-input {
+    width: 20px;
+    height: 20px;
+    margin-top: 0;
+  }
+    .form-check-label {
+    font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+    padding-left: 8px;
+  }
+  
+  /* Contenedor de roles más espacioso */
+  .roles-container {
+    gap: 12px;
+  }
+  
+  .roles-container .form-check {
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+  }
+    .form-control, .form-select {
+    padding: 14px 16px;
+    font-size: clamp(15px, 3vw, 18px); /* Mantiene 16px mínimo para evitar zoom */
+    min-height: 52px;
+  }
+  
+  .btn {
+    min-height: 52px;
+    padding: 14px 20px;
+    font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+  }
+  
+  .modal-header h5 {
+    font-size: clamp(1.1rem, 3vw, 1.3rem);
+  }
+  
+  /* Checkboxes aún más grandes */
+  .form-check-input {
+    width: 24px;
+    height: 24px;
+  }
+    .form-check-label {
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    padding-left: 12px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Avatar más grande en móviles */
+  .avatar-circle {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: clamp(1rem, 2.5vw, 1.2rem) !important;
+  }
+}

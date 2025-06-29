@@ -1,16 +1,18 @@
 .sidebar {
   position: fixed;
   left: 0;
-  top: 72px;
-  width: 250px;
-  height: calc(100vh - 72px);
-  background: #f2f2f2;
+  top: var(--navbar-height, 76px); /* Usar variable del navbar */
+  width: var(--sidebar-width, 250px);
+  height: calc(100vh - var(--navbar-height, 76px)); /* Altura completa del viewport menos navbar */
+  background: #f2f2f2 !important; /* Color gris claro consistente, forzado */
   color: #000000;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
-  z-index: 900;
-  overflow-y: auto;
+  z-index: 1030; /* Menor que el navbar (1050) pero mayor que contenido */
+  overflow-y: hidden; /* Eliminar scroll innecesario */
+  overflow-x: hidden; /* Evitar scroll horizontal */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #dee2e6; /* Separador visual */
 }
 
 .sidebar.open {
@@ -20,19 +22,32 @@
 /* Estilos para todos los nav-link */
 .nav-link {
   transition: all 0.3s ease;
-  border-radius: 6px;
+  border-radius: clamp(4px, 1vw, 8px);
   font-weight: 500;
+  padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 16px);
+  margin: clamp(2px, 1vw, 4px) clamp(4px, 2vw, 8px);
+  display: flex;
+  align-items: center;
+  font-size: clamp(0.85rem, 2.2vw, 1.1rem);
+  line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: calc(100% - 16px); /* Espacio para márgenes */
+  box-sizing: border-box;
+  overflow: hidden; /* Evita desbordamiento de texto */
+  white-space: nowrap; /* Una línea de texto */
+  text-overflow: ellipsis; /* ... si el texto es muy largo */
 }
 
 .nav-link:hover {
   background-color: #2fa4e7;
   color: white !important;
-  transform: translateX(4px);
+  transform: translateX(clamp(2px, 0.5vw, 4px));
+  max-width: calc(100% - 16px); /* Evita que escape del sidebar */
+  box-sizing: border-box;
 }
 
 .nav-link:focus {
-  /* outline: none;
-  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25); */
   font-weight: bold;
   background-color: #2fa4e7bd;
   color: white !important;
@@ -53,16 +68,151 @@
   font-weight: 500;
   transition: all 0.3s ease;
   border-radius: 6px;
+  padding: 12px 16px;
+  margin: 4px 8px;
+  display: flex;
+  align-items: center;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  line-height: 1.4;
+  max-width: calc(100% - 16px); /* Espacio para márgenes */
+  box-sizing: border-box;
+  overflow: hidden; /* Evita desbordamiento de texto */
+  white-space: nowrap; /* Una línea de texto */
+  text-overflow: ellipsis; /* ... si el texto es muy largo */
 }
 
 .logout-btn:hover {
   border: none;
   background-color: #dc3545;
   color: white !important;
-  transform: translateX(4px);
+  transform: translateX(clamp(2px, 0.5vw, 4px));
+  max-width: calc(100% - 16px); /* Evita que escape del sidebar */
+  box-sizing: border-box;
 }
 
 .logout-btn:focus {
   outline: none;
   background-color: #dc3545;
+}
+
+/* Contenedor de navegación optimizado */
+.sidebar .nav {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: clamp(24px, 4vw, 32px) clamp(8px, 2vw, 12px) clamp(16px, 3vw, 20px) clamp(8px, 2vw, 12px); /* Separación adecuada del navbar */
+  margin: 0;
+  box-sizing: border-box;
+  overflow: hidden; /* Eliminar cualquier scroll */
+}
+
+/* Elementos de navegación optimizados */
+.sidebar .nav-item {
+  flex-shrink: 0; /* No reducir el tamaño */
+  margin-bottom: clamp(4px, 1vw, 8px); /* Espaciado uniforme entre todos los elementos */
+}
+
+/* Overlay para móviles cuando el sidebar está abierto */
+@media (max-width: 991.98px) {
+  .sidebar.open::before {
+    content: '';
+    position: fixed;
+    top: var(--navbar-height, 76px); /* Empezar después del navbar */
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - var(--navbar-height, 76px));
+    background: rgba(0, 0, 0, 0.3); /* Overlay más sutil */
+    z-index: -1;
+    backdrop-filter: blur(1px); /* Blur mínimo */
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+  .sidebar {
+    width: 280px; /* Más ancho en tablets para mejor usabilidad */
+    z-index: 1030; /* Menor que navbar (1050) pero mayor que contenido */
+    background: #f2f2f2 !important; /* Mantener color gris claro forzado */
+    top: var(--navbar-height, 76px); /* Respeta el navbar */
+    height: calc(100vh - var(--navbar-height, 76px)); /* Altura completa del viewport */
+    overflow-y: hidden; /* Sin scroll innecesario */
+  }
+}
+
+@media (max-width: 767.98px) {
+  .sidebar {
+    top: var(--navbar-height, 76px); /* Ajuste dinámico - SIEMPRE debajo del navbar */
+    height: calc(100vh - var(--navbar-height, 76px)); /* Altura completa del viewport */
+    width: 100vw; /* Ancho completo en móviles */
+    background: #f2f2f2 !important; /* Color consistente, forzado sin transparencia */
+    backdrop-filter: none; /* Quitar blur que oscurece */
+    border-right: none; /* Sin borde en móviles */
+    overflow-y: hidden; /* Sin scroll innecesario */
+    z-index: 1030; /* Menor que navbar (1050) */
+  }
+    .sidebar .nav {
+    padding: clamp(40px, 8vw, 48px) clamp(12px, 3vw, 16px) clamp(20px, 4vw, 28px) clamp(12px, 3vw, 16px); /* Mucho más separación en móviles */
+  }
+  
+  .nav-link, .logout-btn {
+    padding: 16px 20px;
+    margin: 6px 12px;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    border-radius: 8px;
+    min-height: 48px;
+  }
+  
+  .nav-link i, .logout-btn i {
+    margin-right: 12px;
+    font-size: clamp(1rem, 2.8vw, 1.2rem);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .sidebar {
+    top: var(--navbar-height, 76px); /* Consistente con navbar */
+    height: calc(100vh - var(--navbar-height, 76px)); /* Altura completa del viewport */
+    background: #f2f2f2 !important; /* Color gris claro consistente forzado */
+    overflow-y: hidden; /* Sin scroll innecesario */
+    z-index: 1030; /* Menor que navbar (1050) */
+  }
+    .sidebar .nav {
+    padding: clamp(44px, 9vw, 52px) clamp(16px, 4vw, 20px) clamp(24px, 5vw, 32px) clamp(16px, 4vw, 20px); /* Máxima separación en móviles pequeños */
+  }
+  
+  .nav-link, .logout-btn {
+    padding: 18px 16px;
+    margin: 8px;
+    font-size: clamp(0.85rem, 2.2vw, 1rem);
+    min-height: 56px; /* Área de toque mínima */
+  }
+  
+  .nav-link i, .logout-btn i {
+    margin-right: 16px;
+    font-size: clamp(1.1rem, 3vw, 1.3rem);
+  }
+}
+
+/* Asegurar que el contenedor sidebar no se deforme */
+.sidebar .nav {
+    padding-right: 8px; /* Espacio adicional para el hover */
+    padding-bottom: 20px; /* Espacio inferior para evitar scroll innecesario */
+    overflow: hidden; /* Eliminar scroll interno */
+  }
+
+/* Forzar color de fondo en todos los estados y breakpoints */
+.sidebar,
+.sidebar.open,
+.sidebar:hover,
+.sidebar:focus,
+.sidebar:active {
+  background-color: #f2f2f2 !important;
+}
+
+/* Asegurar que el overlay no interfiera con el color del sidebar */
+@media (max-width: 991.98px) {  .sidebar.open::before {
+    background: #f2f2f2 !important; /* Mismo color que el sidebar */
+  }
 }

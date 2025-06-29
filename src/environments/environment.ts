@@ -1,6 +1,16 @@
 export const environment = {
   production: false,
+  name: 'DEVELOPMENT',
   apiUrl: 'http://localhost:8090/api/v1',
+  
+  // Base de datos: PostgreSQL Local (puerto 5432)
+  // Backend: Spring Boot Local (puerto 8090)
+  database: {
+    type: 'PostgreSQL',
+    host: 'localhost',
+    port: 5432,
+    name: 'maestranza_db'
+  },
 
   auth: {
     baseUrl: 'http://localhost:8090/api/auth',

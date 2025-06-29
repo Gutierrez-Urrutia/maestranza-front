@@ -1,15 +1,15 @@
 <div class="sidebar" [class.open]="visible">
-  <ul class="nav flex-column p-2 mt-3">
+  <ul class="nav flex-column">
     @for (item of menuItems; track item.name) {
-    <li class="nav-item my-1">
+    <li class="nav-item">
       @if (item.route === '/logout') {
       <!-- Botón especial para logout -->
-      <button class="nav-link d-flex align-items-center py-3 text-danger logout-btn" (click)="onMenuItemClick(item)">
+      <button class="nav-link d-flex align-items-center text-danger logout-btn" (click)="onMenuItemClick(item)">
         <i class="{{item.icon}} me-2"></i>
         <span>{{item.name}}</span>
       </button>
       } @else {
-      <a class="nav-link d-flex align-items-center py-3 text-dark" [routerLink]="item.route">
+      <a class="nav-link d-flex align-items-center text-dark" [routerLink]="item.route">
         <i class="{{item.icon}} me-2"></i>
         <span>{{item.name}}</span>
       </a>

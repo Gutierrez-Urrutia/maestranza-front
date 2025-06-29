@@ -9,16 +9,51 @@
 footer {
   border-top: 1px solid rgba(0,0,0,.125);
   font-size: 0.85rem;
+  padding: 16px 0;
 }
 
+/* Responsive Design */
+@media (max-width: 768px) {
+  footer {
+    border-top: 1px solid rgba(0,0,0,.125);
+    font-size: 0.8rem;
+    padding: 12px 0;
+  }
+  
+  .container {
+    padding: 0 12px;
+  }
+}
 
 @media (max-width: 576px) {
   footer {
     border-top: 1px solid rgba(0,0,0,.125);
     font-size: 0.75rem;
+    padding: 10px 0;
   }
   
   .container {
     padding: 0 8px;
+  }
+  
+  /* Ajustar texto del footer para móviles */
+  footer p {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+  
+  footer .text-center {
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 400px) {
+  footer {
+    font-size: 0.7rem;
+    padding: 8px 0;
+  }
+  
+  .container {
+    padding: 0 6px;
   }
 }

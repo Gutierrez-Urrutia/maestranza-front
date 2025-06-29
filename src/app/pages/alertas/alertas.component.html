@@ -1,33 +1,33 @@
-<div class="page-container">
+<div class="page-container alertas-responsive">
     <div class="container text-center">
         <div class="row my-3">
             <div class="col-12 my-3">
-                <h3>Gestión de Alertas</h3>
-                <p>Monitorea el estado del inventario y gestiona las alertas de stock bajo.</p>
+                <h3 class="text-responsive">Gestión de Alertas</h3>
+                <p class="text-responsive">Monitorea el estado del inventario y gestiona las alertas de stock bajo.</p>
 
                 <!-- Estadísticas rápidas -->
                 <div class="row mt-4 mb-4">
                     <div class="col-md-4">
-                        <div class="card text-center">
+                        <div class="card text-center card-responsive">
                             <div class="card-body">
-                                <h5 class="card-title text-primary">{{getEstadisticas().total}}</h5>
-                                <p class="card-text">Total de Alertas</p>
+                                <h5 class="card-title text-primary text-responsive">{{getEstadisticas().total}}</h5>
+                                <p class="card-text text-responsive">Total de Alertas</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card text-center">
+                        <div class="card text-center card-responsive">
                             <div class="card-body">
-                                <h5 class="card-title text-success">{{getEstadisticas().activas}}</h5>
-                                <p class="card-text">Alertas Activas</p>
+                                <h5 class="card-title text-success text-responsive">{{getEstadisticas().activas}}</h5>
+                                <p class="card-text text-responsive">Alertas Activas</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card text-center">
+                        <div class="card text-center card-responsive">
                             <div class="card-body">
-                                <h5 class="card-title text-danger">{{getEstadisticas().criticas}}</h5>
-                                <p class="card-text">Alertas Críticas</p>
+                                <h5 class="card-title text-danger text-responsive">{{getEstadisticas().criticas}}</h5>
+                                <p class="card-text text-responsive">Alertas Críticas</p>
                             </div>
                         </div>
                     </div>
@@ -37,9 +37,9 @@
 
         <div class="row mb-5">
             <div class="col-12 mb-2">
-                <h3>Filtros</h3>
+                <h3 class="text-responsive">Filtros</h3>
             </div>
-            <div>
+            <div class="filtros-responsive">
                 <label class="fw-bold me-2 mb-2">Nivel de Urgencia:</label>
                 <div class="d-flex flex-wrap mb-2 justify-content-center">
                     @for (urgencia of opcionesUrgencia; track urgencia) {

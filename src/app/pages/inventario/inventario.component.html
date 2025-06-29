@@ -1,16 +1,16 @@
-<div class="page-container">
+<div class="page-container inventario-responsive">
     <div class="container text-center">
         <div class="row my-3">
             <div class="col-12 my-3">
-                <h3>Gestión de Inventario</h3>
-                <p>Administra fácilmente tu inventario y mantén un seguimiento de tus productos.</p>
+                <h3 class="text-responsive">Gestión de Inventario</h3>
+                <p class="text-responsive">Administra fácilmente tu inventario y mantén un seguimiento de tus productos.</p>
             </div>
         </div>
         <div class="row mb-5">
             <div class="col-12 mb-2">
-                <h3>Filtros</h3>
+                <h3 class="text-responsive">Filtros</h3>
             </div>
-            <div>
+            <div class="filtros-responsive">
                 <label class="fw-bold me-2 mb-2">Categoría:</label>
                 <div class="d-flex flex-wrap mb-2 justify-content-center">
                     @for (categoria of categorias; track categoria.id) {
@@ -34,13 +34,14 @@
                 </div>
             </div>
         </div>
+
         <div class="row mt-4">
-            <div class="col-12 d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-2 text-start">Lista de Productos</h2>
-                <div>
+            <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 gap-2 flex-responsive-between">
+                <h2 class="mb-2 text-start order-1 order-md-1 text-responsive">Lista de Productos</h2>
+                <div class="order-2 order-md-2">
                     <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#modalProducto"
                         (click)="abrirModal('agregar')">
-                        <i class="bi bi-plus-circle me-1"></i>Agregar
+                        <i class="bi bi-plus-circle me-1"></i><span class="d-none d-sm-inline">Agregar</span><span class="d-sm-none">+</span>
                     </button>
                 </div>
             </div>
@@ -48,9 +49,8 @@
         <div class="row">
             <!-- Material Table -->
             <div class="col-12 ">
-                <!-- Encabezado con botón agregar -->
-                <!-- Campo de búsqueda -->
-                <mat-form-field class="w-100 mb-3">
+                <!-- Encabezado con botón agregar -->                <!-- Campo de búsqueda -->
+                <mat-form-field class="w-100 mb-3 busqueda-responsive">
                     <mat-label>Buscar productos</mat-label>
                     <input matInput (keyup)="applyFilter($event)"
                         placeholder="Buscar por código, nombre o categoría...">
@@ -58,28 +58,28 @@
                 </mat-form-field>
 
                 <!-- Tabla Material -->
-                <div class="table-responsive">
+                <div class="table-responsive tabla-responsive">
                     <div class="mat-elevation-4">
                         <table mat-table [dataSource]="dataSource" matSort class="w-100 custom-table">
                             <!-- Columna Código -->
                             <ng-container matColumnDef="codigo">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
                                 <td mat-cell *matCellDef="let producto" class="text-center">
-                                    <strong class="d-block text-center">{{producto.codigo}}</strong>
+                                    <strong class="d-block text-center text-responsive">{{producto.codigo}}</strong>
                                 </td>
                             </ng-container>
                             <!-- Columna Nombre -->
                             <ng-container matColumnDef="nombre">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
                                 <td mat-cell *matCellDef="let producto" class="text-center">
-                                    <span class="d-block text-center">{{producto.nombre}}</span>
+                                    <span class="d-block text-center text-responsive">{{producto.nombre}}</span>
                                 </td>
                             </ng-container>
 
                             <!-- Columna Categoría -->                            <ng-container matColumnDef="categoria">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Categoría</th>
                                 <td mat-cell *matCellDef="let producto" class="text-center">
-                                    <span class="badge bg-secondary">{{producto.categoria.nombre}}</span>
+                                    <span class="badge bg-secondary text-responsive">{{producto.categoria.nombre}}</span>
                                 </td>
                             </ng-container>
 
@@ -87,7 +87,7 @@
                             <ng-container matColumnDef="stock">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock</th>
                                 <td mat-cell *matCellDef="let producto" class="text-center">
-                                    <span class="badge"
+                                    <span class="badge text-responsive"
                                         [class]="producto.stock > 0 ? 'bg-success' : 'bg-danger'">
                                         {{producto.stock}}
                                     </span>

@@ -29,8 +29,8 @@
 .main-content-with-fixed-nav {
   display: flex;
   position: relative;
-  margin-top: 76px; /* Altura fija del navbar en píxeles */
-  min-height: calc(100vh - 76px - 56px); /* viewport - navbar - footer */
+  margin-top: var(--navbar-height, 76px); /* Usar variable CSS consistente */
+  min-height: calc(100vh - var(--navbar-height, 76px) - var(--footer-height, 56px)); /* viewport - navbar - footer */
 }
 
 .content-area {
@@ -38,8 +38,60 @@
   padding: 1rem;
   width: 100%;
   transition: margin-left 0.3s ease;
+  overflow-x: hidden; /* Evita scroll horizontal */
 }
 
 .sidebar-open .content-area {
   margin-left: 250px; /* Ancho fijo del sidebar */
+}
+
+/* Estilos para el contenido de login */
+.login-content {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+  .sidebar-open .content-area {
+    margin-left: 0; /* En tablets y móviles, el sidebar no empuja el contenido */
+  }
+  
+  .content-area {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .main-content-with-fixed-nav {
+    margin-top: var(--navbar-height, 76px); /* Usar variable consistente */
+    min-height: calc(100vh - var(--navbar-height, 76px) - var(--footer-height, 56px));
+  }
+  
+  .content-area {
+    padding: 0.5rem;
+  }
+  
+  .hamburger {
+    font-size: 1.8rem;
+    margin: 0.75rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .main-content-with-fixed-nav {
+    margin-top: var(--navbar-height, 76px); /* Usar variable consistente */
+    min-height: calc(100vh - var(--navbar-height, 76px) - var(--footer-height, 56px));
+  }
+  
+  .content-area {
+    padding: 0.25rem;
+  }
+  
+  .hamburger {
+    font-size: 1.6rem;
+    margin: 0.5rem;
+  }
 }

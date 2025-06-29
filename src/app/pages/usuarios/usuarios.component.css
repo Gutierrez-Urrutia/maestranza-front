@@ -173,3 +173,92 @@
   flex-direction: column;
   align-items: center;
 }
+
+/* Responsive Design para tabla de usuarios */
+@media (max-width: 768px) {
+  /* Tabla con scroll horizontal */
+  ::ng-deep .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* Ancho mínimo para scroll */
+  ::ng-deep .custom-table {
+    min-width: 700px !important;
+  }
+  
+  /* Celdas más compactas */
+  ::ng-deep .custom-table .mat-mdc-cell,
+  ::ng-deep .custom-table .mat-mdc-header-cell {
+    padding: 8px 4px !important;
+  }
+  
+  /* Botones más grandes para toque */
+  ::ng-deep .mat-mdc-icon-button {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  
+  /* Campo de búsqueda más grande */
+  ::ng-deep .mat-mdc-form-field {
+    font-size: 16px !important;
+  }
+  
+  /* Avatar más pequeño en móviles para ahorrar espacio */
+  .avatar-circle {
+    width: 35px !important;
+    height: 35px !important;
+    font-size: 14px !important;
+  }
+  
+  /* Badges más compactos */
+  ::ng-deep .mat-mdc-cell .badge {
+    min-width: 80px !important;
+    width: 80px !important;
+    font-size: 11px !important;
+    padding: 4px 6px !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* Tabla aún más compacta */
+  ::ng-deep .custom-table {
+    min-width: 650px !important;
+  }
+  
+  ::ng-deep .custom-table .mat-mdc-cell,
+  ::ng-deep .custom-table .mat-mdc-header-cell {
+    padding: 6px 2px !important;
+    font-size: 13px !important;
+  }
+  
+  /* Avatar muy pequeño */
+  .avatar-circle {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 12px !important;
+  }
+  
+  /* Badges muy compactos */
+  ::ng-deep .mat-mdc-cell .badge {
+    min-width: 70px !important;
+    width: 70px !important;
+    font-size: 10px !important;
+    padding: 2px 4px !important;
+  }
+  
+  /* Títulos más pequeños */
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  h3 {
+    font-size: 1.3rem !important;
+  }
+  
+  /* Botones de acción más compactos */
+  .btn {
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+  }
+}
