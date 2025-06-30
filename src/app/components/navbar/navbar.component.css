@@ -16,6 +16,66 @@
 }
 
 .notification-btn {
+  b  .notification-badge {
+    font-size: 0.55rem;
+    width: 18px !important;
+    height: 18px !important;
+    transform: translate(-10px, 7px) !important;
+  }
+}
+
+/* Dispositivos extra pequeños (menores a 360px) */
+@media (max-width: 359px) {
+  .navbar.fixed-top { 
+    padding: 16px 8px;
+    min-height: var(--navbar-height-tiny, 80px);
+    max-height: var(--navbar-height-tiny, 80px);
+  }
+  
+  .navbar .btn i.bi-list {
+    font-size: clamp(2.2rem, 8vw, 2.8rem) !important; /* EXTRA GRANDE para dispositivos muy pequeños */
+  }
+  
+  .navbar .btn {
+    padding: clamp(16px, 4vw, 20px) clamp(18px, 4.5vw, 22px) !important;
+    min-width: 60px !important;
+    min-height: 60px !important;
+  }
+  
+  .notification-btn {
+    padding: clamp(16px, 4vw, 20px) !important;
+    min-width: 60px !important;
+    min-height: 60px !important;
+  }
+  
+  .notification-btn .bi-bell {
+    font-size: clamp(2.4rem, 8.5vw, 3rem) !important; /* EXTRA GRANDE para dispositivos muy pequeños */
+  }
+  
+  .notification-dropdown {
+    right: -20px !important;
+    width: 240px !important;
+    max-width: calc(100vw - 40px) !important;
+  }
+  
+  .notification-badge {
+    font-size: 0.5rem;
+    width: 16px !important;
+    height: 16px !important;
+    transform: translate(-8px, 5px) !important;
+  }
+}
+
+/* Título responsive */
+.navbar-brand {
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-right: auto;
+}
+
+/* Botón de notificaciones base */
+.notification-btn {
   border: none;
   background: transparent;
   padding: clamp(9px, 2vw, 10px);
@@ -244,6 +304,26 @@
     max-height: var(--navbar-height-mobile, 64px);
     padding: 10px 16px;
   }
+  
+  .navbar .btn i.bi-list {
+    font-size: clamp(1.4rem, 3.5vw, 1.8rem) !important; /* REDUCIDO para tablets/móviles grandes */
+  }
+  
+  .navbar .btn {
+    padding: clamp(8px, 2vw, 12px) clamp(10px, 2.5vw, 14px) !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+  }
+  
+  .notification-btn {
+    padding: clamp(8px, 2vw, 12px) !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+  }
+  
+  .notification-btn .bi-bell {
+    font-size: clamp(1.6rem, 4vw, 2rem) !important; /* REDUCIDO para tablets/móviles grandes */
+  }
 }
 
 @media (max-width: 767px) {
@@ -251,6 +331,26 @@
     min-height: var(--navbar-height-small, 72px);
     max-height: var(--navbar-height-small, 72px);
     padding: 12px 16px;
+  }
+  
+  .navbar .btn i.bi-list {
+    font-size: clamp(1.5rem, 4vw, 1.9rem) !important; /* REDUCIDO para móviles medianos */
+  }
+  
+  .navbar .btn {
+    padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 16px) !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+  }
+  
+  .notification-btn {
+    padding: clamp(10px, 2.5vw, 14px) !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+  }
+  
+  .notification-btn .bi-bell {
+    font-size: clamp(1.7rem, 4.5vw, 2.1rem) !important; /* REDUCIDO para móviles medianos */
   }
   
   .notification-dropdown {
@@ -263,6 +363,26 @@
 @media (max-width: 575px) {
   .navbar.fixed-top { padding: 14px 12px; }
   
+  .navbar .btn i.bi-list {
+    font-size: clamp(1.8rem, 5.5vw, 2.2rem) !important; /* AGRANDADO para móviles pequeños (360px) */
+  }
+  
+  .navbar .btn {
+    padding: clamp(12px, 3vw, 16px) clamp(14px, 3.5vw, 18px) !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+  
+  .notification-btn {
+    padding: clamp(12px, 3vw, 16px) !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+  
+  .notification-btn .bi-bell {
+    font-size: clamp(2rem, 6vw, 2.4rem) !important; /* AGRANDADO para móviles pequeños (360px) */
+  }
+  
   .notification-dropdown {
     right: -15px !important;
     width: 260px !important;
@@ -274,6 +394,48 @@
     width: 18px !important;
     height: 18px !important;
     transform: translate(-10px, 7px) !important;
+  }
+}
+
+/* Media query específica para dispositivos MUY PEQUEÑOS (< 360px) */
+@media (max-width: 361px) {
+  .navbar.fixed-top { 
+    padding: 16px 10px;
+    min-height: 76px !important;
+    max-height: 76px !important;
+  }
+  
+  .navbar .btn i.bi-list {
+    font-size: clamp(1.9rem, 6.5vw, 2.3rem) !important; /* Reducido un poco para dispositivos muy pequeños */
+  }
+  
+  .navbar .btn {
+    padding: clamp(12px, 3.5vw, 16px) clamp(14px, 4vw, 18px) !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+  
+  .notification-btn {
+    padding: clamp(12px, 3.5vw, 16px) !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+  
+  .notification-btn .bi-bell {
+    font-size: clamp(2.1rem, 7vw, 2.5rem) !important; /* Reducido un poco para dispositivos muy pequeños */
+  }
+  
+  .notification-dropdown {
+    right: -20px !important;
+    width: 240px !important;
+    max-width: calc(100vw - 40px) !important;
+  }
+  
+  .notification-badge {
+    font-size: 0.6rem;
+    width: 20px !important;
+    height: 20px !important;
+    transform: translate(-14px, 10px) !important;
   }
 }
 
