@@ -18,14 +18,12 @@ export class AlertasGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     
-    // Verificar si el usuario puede acceder a alertas (Logistica NO puede)
-    const mainRole = this.permissionService.getUserMainRole();
-    
-    if (mainRole !== 'LOGISTICA') {
+    // Verificar si el usuario puede acceder a alertas usando el nuevo método
+    if (this.permissionService.canAccessAlertas()) {
       return true;
     }
 
-    // Si es Logistica, mostrar mensaje y redirigir
+    // Si no tiene acceso, mostrar mensaje y redirigir
     Swal.fire({
       icon: 'error',
       title: 'Acceso Denegado',

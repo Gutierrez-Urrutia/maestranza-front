@@ -63,7 +63,7 @@ export class PermissionService {
     const user = this.authService.getUser();
     if (!user || !user.roles) return false;
     
-    // Admin, Gerencia, Auditor, Inventario y Logistica pueden ver
+    // Admin, Gerencia, Auditor, Inventario, Logistica, Produccion y Trabajador pueden ver
     return user.roles.includes('ADMIN') || 
            user.roles.includes('ROLE_ADMINISTRADOR') || 
            user.roles.includes('GERENCIA') || 
@@ -73,7 +73,11 @@ export class PermissionService {
            user.roles.includes('INVENTARIO') ||
            user.roles.includes('ROLE_INVENTARIO') ||
            user.roles.includes('LOGISTICA') ||
-           user.roles.includes('ROLE_LOGISTICA');
+           user.roles.includes('ROLE_LOGISTICA') ||
+           user.roles.includes('PRODUCCION') ||
+           user.roles.includes('ROLE_PRODUCCION') ||
+           user.roles.includes('TRABAJADOR') ||
+           user.roles.includes('ROLE_TRABAJADOR');
   }
 
   // ===== PERMISOS ESPECÍFICOS POR MÓDULO =====
@@ -85,7 +89,7 @@ export class PermissionService {
     const user = this.authService.getUser();
     if (!user || !user.roles) return false;
     
-    // Admin, Inventario y Logistica pueden crear productos
+    // Admin, Inventario y Logistica pueden crear productos, PRODUCCION NO
     return user.roles.includes('ADMIN') || 
            user.roles.includes('ROLE_ADMINISTRADOR') ||
            user.roles.includes('INVENTARIO') ||
@@ -98,7 +102,7 @@ export class PermissionService {
     const user = this.authService.getUser();
     if (!user || !user.roles) return false;
     
-    // Admin, Inventario y Logistica pueden editar productos
+    // Admin, Inventario y Logistica pueden editar productos, PRODUCCION NO
     return user.roles.includes('ADMIN') || 
            user.roles.includes('ROLE_ADMINISTRADOR') ||
            user.roles.includes('INVENTARIO') ||
@@ -111,7 +115,7 @@ export class PermissionService {
     const user = this.authService.getUser();
     if (!user || !user.roles) return false;
     
-    // Admin, Inventario y Logistica pueden eliminar productos
+    // Admin, Inventario y Logistica pueden eliminar productos, PRODUCCION NO
     return user.roles.includes('ADMIN') || 
            user.roles.includes('ROLE_ADMINISTRADOR') ||
            user.roles.includes('INVENTARIO') ||
@@ -127,44 +131,71 @@ export class PermissionService {
     const user = this.authService.getUser();
     if (!user || !user.roles) return false;
     
-    // Admin e Inventario pueden crear alertas
+    // Admin, Inventario y Trabajador pueden crear alertas
     return user.roles.includes('ADMIN') || 
            user.roles.includes('ROLE_ADMINISTRADOR') ||
            user.roles.includes('INVENTARIO') ||
-           user.roles.includes('ROLE_INVENTARIO');
+           user.roles.includes('ROLE_INVENTARIO') ||
+           user.roles.includes('TRABAJADOR') ||
+           user.roles.includes('ROLE_TRABAJADOR');
   }
 
   canEditAlertas(): boolean {
     const user = this.authService.getUser();
     if (!user || !user.roles) return false;
     
-    // Admin e Inventario pueden editar alertas
+    // Admin, Inventario y Trabajador pueden editar alertas
     return user.roles.includes('ADMIN') || 
            user.roles.includes('ROLE_ADMINISTRADOR') ||
            user.roles.includes('INVENTARIO') ||
-           user.roles.includes('ROLE_INVENTARIO');
+           user.roles.includes('ROLE_INVENTARIO') ||
+           user.roles.includes('TRABAJADOR') ||
+           user.roles.includes('ROLE_TRABAJADOR');
   }
 
   canDeleteAlertas(): boolean {
     const user = this.authService.getUser();
     if (!user || !user.roles) return false;
     
-    // Admin e Inventario pueden eliminar alertas
+    // Admin, Inventario y Trabajador pueden eliminar alertas
     return user.roles.includes('ADMIN') || 
            user.roles.includes('ROLE_ADMINISTRADOR') ||
            user.roles.includes('INVENTARIO') ||
-           user.roles.includes('ROLE_INVENTARIO');
+           user.roles.includes('ROLE_INVENTARIO') ||
+           user.roles.includes('TRABAJADOR') ||
+           user.roles.includes('ROLE_TRABAJADOR');
   }
 
   canManageAlertas(): boolean {
     const user = this.authService.getUser();
     if (!user || !user.roles) return false;
     
-    // Admin e Inventario pueden gestionar alertas
-    return user.roles.includes('ADMIN') || 
+    // Admin, Inventario y Trabajador pueden gestionar alertas, pero LOGISTICA y PRODUCCION NO
+    return (user.roles.includes('ADMIN') || 
            user.roles.includes('ROLE_ADMINISTRADOR') ||
            user.roles.includes('INVENTARIO') ||
-           user.roles.includes('ROLE_INVENTARIO');
+           user.roles.includes('ROLE_INVENTARIO') ||
+           user.roles.includes('TRABAJADOR') ||
+           user.roles.includes('ROLE_TRABAJADOR')) &&
+           // Excluir explícitamente LOGISTICA y PRODUCCION
+           !(user.roles.includes('LOGISTICA') || 
+             user.roles.includes('ROLE_LOGISTICA') ||
+             user.roles.includes('PRODUCCION') ||
+             user.roles.includes('ROLE_PRODUCCION'));
+  }
+
+  /**
+   * Verifica si el usuario puede acceder a las alertas
+   */
+  canAccessAlertas(): boolean {
+    const user = this.authService.getUser();
+    if (!user || !user.roles) return false;
+    
+    // LOGISTICA y PRODUCCION NO pueden acceder a alertas, pero los demás sí
+    return !(user.roles.includes('LOGISTICA') || 
+             user.roles.includes('ROLE_LOGISTICA') ||
+             user.roles.includes('PRODUCCION') ||
+             user.roles.includes('ROLE_PRODUCCION'));
   }
 
   /**
@@ -174,7 +205,7 @@ export class PermissionService {
     const user = this.authService.getUser();
     if (!user || !user.roles) return false;
     
-    // Admin y Logistica pueden crear movimientos, Inventario NO
+    // Admin y Logistica pueden crear movimientos, Inventario y PRODUCCION NO
     return user.roles.includes('ADMIN') || 
            user.roles.includes('ROLE_ADMINISTRADOR') ||
            user.roles.includes('LOGISTICA') ||
@@ -185,7 +216,7 @@ export class PermissionService {
     const user = this.authService.getUser();
     if (!user || !user.roles) return false;
     
-    // Admin y Logistica pueden editar movimientos, Inventario NO
+    // Admin y Logistica pueden editar movimientos, Inventario y PRODUCCION NO
     return user.roles.includes('ADMIN') || 
            user.roles.includes('ROLE_ADMINISTRADOR') ||
            user.roles.includes('LOGISTICA') ||
@@ -194,9 +225,9 @@ export class PermissionService {
 
   canDeleteMovimientos(): boolean {
     const user = this.authService.getUser();
-    if (!user || !user.roles) return false;
+    if (!user.roles) return false;
     
-    // Admin y Logistica pueden eliminar movimientos, Inventario NO
+    // Admin y Logistica pueden eliminar movimientos, Inventario y PRODUCCION NO
     return user.roles.includes('ADMIN') || 
            user.roles.includes('ROLE_ADMINISTRADOR') ||
            user.roles.includes('LOGISTICA') ||
@@ -234,6 +265,8 @@ export class PermissionService {
     if (user.roles.includes('AUDITOR') || user.roles.includes('ROLE_AUDITOR')) return 'AUDITOR';
     if (user.roles.includes('INVENTARIO') || user.roles.includes('ROLE_INVENTARIO')) return 'INVENTARIO';
     if (user.roles.includes('LOGISTICA') || user.roles.includes('ROLE_LOGISTICA')) return 'LOGISTICA';
+    if (user.roles.includes('PRODUCCION') || user.roles.includes('ROLE_PRODUCCION')) return 'PRODUCCION';
+    if (user.roles.includes('TRABAJADOR') || user.roles.includes('ROLE_TRABAJADOR')) return 'TRABAJADOR';
     
     // Retornar el primer rol encontrado
     return user.roles[0];
@@ -248,7 +281,7 @@ export class PermissionService {
 
   /**
    * Verifica si el usuario puede acceder a la gestión de usuarios
-   * Solo Admin y Gerencia pueden acceder, Auditor NO
+   * Solo Admin y Gerencia pueden acceder, Auditor, Inventario, Logistica y Produccion NO
    */
   canAccessUsuarios(): boolean {
     const user = this.authService.getUser();
@@ -277,7 +310,11 @@ export class PermissionService {
       case 'INVENTARIO':
         return 'Gestión de inventario - Puede gestionar inventario y alertas, solo ver movimientos';
       case 'LOGISTICA':
-        return 'Gestión logística - Puede gestionar inventario y movimientos, sin acceso a alertas ni usuarios';
+        return 'Gestión logística - Puede gestionar inventario y movimientos completamente, sin acceso a alertas ni usuarios';
+      case 'PRODUCCION':
+        return 'Solo lectura - Puede ver inventario y movimientos sin acciones, sin acceso a alertas ni usuarios';
+      case 'TRABAJADOR':
+        return 'Solo lectura - Puede ver inventario, alertas y movimientos sin acciones, sin acceso a usuarios';
       default:
         return 'Sin acceso definido';
     }

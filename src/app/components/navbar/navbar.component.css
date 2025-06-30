@@ -62,22 +62,29 @@
 .notification-badge {
   background-color: #dc3545;
   color: white;
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  min-width: 18px;
-  height: 18px;
-  display: flex;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  max-width: 20px !important;
+  border-radius: 50% !important;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   line-height: 1;
   z-index: 1050;
   top: 0px !important;
   right: 0px !important;
-  transform: none !important;
+  transform: translate(-16px, 12px) !important;
   animation: pulse 2s infinite;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  text-align: center !important;
+  overflow: hidden;
 }
 
 @keyframes pulse {
@@ -302,11 +309,18 @@
   }
 
   .notification-badge {
-    font-size: clamp(0.55rem, 1.5vw, 0.6rem);
-    min-width: 16px;
-    height: 16px;
-    top: -1px !important;
-    right: -1px !important;
+    font-size: 0.55rem;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    max-width: 18px !important;
+    border-radius: 50% !important;
+    top: 0px !important;
+    right: 0px !important;
+    transform: translate(-10px, 7px) !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    overflow: hidden;
   }
 
   /* Dropdown de notificaciones */
@@ -405,10 +419,17 @@
 
   .notification-badge {
     font-size: 0.5rem;
-    min-width: 14px;
-    height: 14px;
-    top: -2px !important;
-    right: -2px !important;
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    max-width: 16px !important;
+    border-radius: 50% !important;
+    top: 0px !important;
+    right: 0px !important;
+    transform: translate(-8px, 6px) !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    overflow: hidden;
   }
 
   /* Dropdown compacto para pantallas muy pequeñas */

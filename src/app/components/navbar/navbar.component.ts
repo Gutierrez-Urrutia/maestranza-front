@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/login/auth.service';
 import { AlertaService } from '../../services/alerta/alerta.service';
+import { PermissionService } from '../../services/permission/permission.service';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../services/notification/notification.service';
 import { Alerta } from '../../interfaces/Alerta';
@@ -31,7 +32,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private alertaService: AlertaService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private permissionService: PermissionService
   ) { }
 
   ngOnInit() {
@@ -175,5 +177,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
       case 'BAJA': return 'info';
       default: return 'secondary';
     }
+  }
+
+  // Método para verificar si el usuario puede acceder a alertas
+  canAccessAlertas(): boolean {
+    return this.permissionService.canAccessAlertas();
   }
 }

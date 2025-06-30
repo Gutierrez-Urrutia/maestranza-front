@@ -88,9 +88,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   // Método helper para verificar acceso a alertas
   private canAccessAlertas(): boolean {
-    const mainRole = this.permissionService.getUserMainRole();
-    // Logistica NO puede acceder a alertas
-    return mainRole !== 'LOGISTICA';
+    return this.permissionService.canAccessAlertas();
   }
 
   onMenuItemClick(item: MenuItem): void {
