@@ -29,9 +29,12 @@
 
             <!-- Icono de notificaciones con dropdown - Solo para roles con acceso a alertas -->
             @if (canAccessAlertas()) {
-            <div class="notification-container position-relative me-2 dropdown">
+            <div class="notification-container position-relative me-2 dropdown" 
+                 [attr.aria-expanded]="notificacionesAbiertas">
                 <button class="notification-btn btn btn-outline-warning border-0" type="button"
-                    (click)="toggleNotificaciones($event)" [attr.aria-expanded]="notificacionesAbiertas"
+                    (click)="toggleNotificaciones($event)" 
+                    (mousedown)="debugClick()"
+                    [attr.aria-expanded]="notificacionesAbiertas"
                     [title]="getTooltipNotificaciones()" [attr.aria-label]="getTooltipNotificaciones()">
 
                     <i class="bi bi-bell" [class.text-warning]="numeroNotificaciones > 0"

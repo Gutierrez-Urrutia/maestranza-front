@@ -89,10 +89,44 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   // Toggle para mostrar/ocultar el panel de notificaciones
   toggleNotificaciones(event: Event) {
+    console.log('🔔 toggleNotificaciones EJECUTADA - evento:', event);
+    
     event.preventDefault();
     event.stopPropagation();
     
+    console.log('🔔 Toggle notificaciones - Estado anterior:', this.notificacionesAbiertas);
     this.notificacionesAbiertas = !this.notificacionesAbiertas;
+    console.log('🔔 Toggle notificaciones - Estado nuevo:', this.notificacionesAbiertas);
+    
+    // Forzar la actualización del DOM
+    setTimeout(() => {
+      const dropdown = document.querySelector('.notification-dropdown');
+      const container = document.querySelector('.notification-container');
+      
+      console.log('🔔 Container aria-expanded:', container?.getAttribute('aria-expanded'));
+      console.log('🔔 Dropdown después del toggle:', dropdown);
+      
+      if (dropdown) {
+        console.log('🔔 Dropdown classes:', dropdown.className);
+        console.log('🔔 Dropdown styles:', {
+          display: window.getComputedStyle(dropdown).display,
+          opacity: window.getComputedStyle(dropdown).opacity,
+          visibility: window.getComputedStyle(dropdown).visibility
+        });
+        
+        // Forzar mostrar el dropdown manualmente si notificacionesAbiertas es true
+        if (this.notificacionesAbiertas) {
+          console.log('🔔 Forzando mostrar dropdown...');
+          (dropdown as HTMLElement).style.display = 'block';
+          (dropdown as HTMLElement).style.opacity = '1';
+          (dropdown as HTMLElement).style.visibility = 'visible';
+          (dropdown as HTMLElement).style.transform = 'translateY(0)';
+        } else {
+          console.log('🔔 Ocultando dropdown...');
+          (dropdown as HTMLElement).style.display = 'none';
+        }
+      }
+    }, 10);
     
     if (this.notificacionesAbiertas) {
       this.cargarAlertasRecientes();
@@ -182,5 +216,50 @@ export class NavbarComponent implements OnInit, OnDestroy {
   // Método para verificar si el usuario puede acceder a alertas
   canAccessAlertas(): boolean {
     return this.permissionService.canAccessAlertas();
+  }
+
+  debugClick() {
+    console.log('🔔 Mousedown en botón notificaciones detectado');
+    
+    // Después de un pequeño delay, verificar la posición del dropdown
+    setTimeout(() => {
+      const dropdown = document.querySelector('.notification-dropdown');
+      const button = document.querySelector('.notification-btn');
+      
+      if (dropdown && button) {
+        const dropdownRect = dropdown.getBoundingClientRect();
+        const buttonRect = button.getBoundingClientRect();
+        
+        console.log('📍 Posición del botón:', {
+          top: buttonRect.top,
+          left: buttonRect.left,
+          bottom: buttonRect.bottom,
+          right: buttonRect.right,
+          width: buttonRect.width,
+          height: buttonRect.height
+        });
+        
+        console.log('📍 Posición del dropdown:', {
+          top: dropdownRect.top,
+          left: dropdownRect.left,
+          bottom: dropdownRect.bottom,
+          right: dropdownRect.right,
+          width: dropdownRect.width,
+          height: dropdownRect.height
+        });
+        
+        console.log('📍 ¿Dropdown visible en viewport?', {
+          dentroViewportHorizontal: dropdownRect.left >= 0 && dropdownRect.right <= window.innerWidth,
+          dentroViewportVertical: dropdownRect.top >= 0 && dropdownRect.bottom <= window.innerHeight,
+          viewportWidth: window.innerWidth,
+          viewportHeight: window.innerHeight
+        });
+        
+        // Añadir un borde rojo al dropdown para debugging visual
+        (dropdown as HTMLElement).style.border = '3px solid red';
+        (dropdown as HTMLElement).style.backgroundColor = 'yellow';
+        console.log('🎨 Dropdown destacado con borde rojo y fondo amarillo para debug visual');
+      }
+    }, 100);
   }
 }

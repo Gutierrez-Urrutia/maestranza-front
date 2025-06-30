@@ -18,6 +18,7 @@ import { environment } from '../../../environments/environment';
         <br>
         <button (click)="debugModal()" class="btn btn-warning btn-sm mt-1">Debug Modal</button>
         <button (click)="testSweetAlert()" class="btn btn-success btn-sm mt-1">Test SWAL</button>
+        <button (click)="debugNotifications()" class="btn btn-primary btn-sm mt-1">Debug Notif</button>
         <button (click)="showZIndexInfo()" class="btn btn-info btn-sm mt-1">Z-Index Info</button>
       </small>
     </div>
@@ -151,6 +152,44 @@ export class DebugInfoComponent implements OnInit {
       console.log('Elemento en centro del modal:', elementAtPoint);
       console.log('Es parte del modal:', modalDialog.contains(elementAtPoint));
       console.log('Es el backdrop:', elementAtPoint === backdrop);
+    }
+  }
+
+  debugNotifications() {
+    console.clear();
+    console.log('🔔 DEBUG NOTIFICACIONES');
+    
+    const notificationContainer = document.querySelector('.notification-container');
+    const notificationDropdown = document.querySelector('.notification-dropdown');
+    const notificationBtn = document.querySelector('.notification-btn');
+    
+    console.log('Contenedor notificaciones:', notificationContainer);
+    console.log('Dropdown notificaciones:', notificationDropdown);
+    console.log('Botón notificaciones:', notificationBtn);
+    
+    if (notificationContainer) {
+      const styles = window.getComputedStyle(notificationContainer);
+      console.log('Container z-index:', styles.zIndex);
+      console.log('Container position:', styles.position);
+    }
+    
+    if (notificationDropdown) {
+      const styles = window.getComputedStyle(notificationDropdown);
+      console.log('Dropdown z-index:', styles.zIndex);
+      console.log('Dropdown position:', styles.position);
+      console.log('Dropdown display:', styles.display);
+      console.log('Dropdown opacity:', styles.opacity);
+      console.log('Dropdown visibility:', styles.visibility);
+      console.log('Dropdown classes:', notificationDropdown.className);
+    }
+    
+    // Verificar si hay algún elemento tapando
+    if (notificationBtn) {
+      const rect = notificationBtn.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.bottom + 10;
+      const elementAtPoint = document.elementFromPoint(centerX, centerY);
+      console.log('Elemento en posición de dropdown:', elementAtPoint);
     }
   }
 
