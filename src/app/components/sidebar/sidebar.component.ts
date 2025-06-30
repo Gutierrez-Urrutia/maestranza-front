@@ -77,9 +77,20 @@ export class SidebarComponent implements OnInit, OnDestroy {
       if (item.route === '/usuarios') {
         return this.permissionService.canAccessUsuarios();
       }
+      // Mostrar "Alertas" solo si el usuario NO es Logistica
+      if (item.route === '/alertas') {
+        return this.canAccessAlertas();
+      }
       // Mostrar todos los demás elementos
       return true;
     });
+  }
+
+  // Método helper para verificar acceso a alertas
+  private canAccessAlertas(): boolean {
+    const mainRole = this.permissionService.getUserMainRole();
+    // Logistica NO puede acceder a alertas
+    return mainRole !== 'LOGISTICA';
   }
 
   onMenuItemClick(item: MenuItem): void {
