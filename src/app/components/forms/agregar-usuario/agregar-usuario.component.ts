@@ -26,6 +26,8 @@ export class AgregarUsuarioComponent implements OnInit {
   // Errores de validación específicos
   usernameError: string | null = null;
   emailError: string | null = null;
+  nombreError: string | null = null;
+  apellidoError: string | null = null;
 
   // Modelo del formulario
   formData = {
@@ -75,10 +77,84 @@ export class AgregarUsuarioComponent implements OnInit {
   // Limpiar errores cuando se modifica un campo
   onUsernameChange() {
     this.usernameError = null;
+    if (this.formData.username.trim() && !this.validateUsername(this.formData.username)) {
+      this.usernameError = 'El nombre de usuario solo puede contener letras, números y punto (.)';
+    }
   }
 
   onEmailChange() {
     this.emailError = null;
+    if (this.formData.email.trim() && !this.validateEmail(this.formData.email)) {
+      this.emailError = 'Ingrese un correo electrónico válido';
+    }
+  }
+
+  // Validación para nombre de usuario (letras, números y punto)
+  validateUsername(value: string): boolean {
+    const regex = /^[a-zA-Z0-9.]+$/;
+    return regex.test(value);
+  }
+
+  // Validación para correo electrónico
+  validateEmail(value: string): boolean {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(value);
+  }
+
+  // Validación para campos que solo deben contener letras
+  validateOnlyLetters(value: string): boolean {
+    const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
+    return regex.test(value);
+  }
+
+  onNombreChange() {
+    this.nombreError = null;
+    if (this.formData.nombre.trim() && !this.validateOnlyLetters(this.formData.nombre)) {
+      this.nombreError = 'El nombre solo puede contener letras';
+    }
+  }
+
+  onApellidoChange() {
+    this.apellidoError = null;
+    if (this.formData.apellido.trim() && !this.validateOnlyLetters(this.formData.apellido)) {
+      this.apellidoError = 'El apellido solo puede contener letras';
+    }
+  }
+
+  // Prevenir entrada de caracteres no válidos en tiempo real para nombre y apellido
+  onKeyPress(event: KeyboardEvent): boolean {
+    const char = String.fromCharCode(event.which);
+    const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]$/;
+    
+    if (!regex.test(char)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  // Prevenir entrada de caracteres no válidos en username (letras, números y punto)
+  onUsernameKeyPress(event: KeyboardEvent): boolean {
+    const char = String.fromCharCode(event.which);
+    const regex = /^[a-zA-Z0-9.]$/;
+    
+    if (!regex.test(char)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  // Prevenir entrada de caracteres no válidos en email
+  onEmailKeyPress(event: KeyboardEvent): boolean {
+    const char = String.fromCharCode(event.which);
+    const regex = /^[a-zA-Z0-9._%+-@]$/;
+    
+    if (!regex.test(char)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
 
   // Manejar selección de roles
@@ -130,10 +206,16 @@ export class AgregarUsuarioComponent implements OnInit {
     return !!(
       this.formData.username.trim() &&
       !this.usernameError &&
+      this.validateUsername(this.formData.username) &&
       this.formData.email.trim() &&
       !this.emailError &&
+      this.validateEmail(this.formData.email) &&
       this.formData.nombre.trim() &&
+      !this.nombreError &&
+      this.validateOnlyLetters(this.formData.nombre) &&
       this.formData.apellido.trim() &&
+      !this.apellidoError &&
+      this.validateOnlyLetters(this.formData.apellido) &&
       this.formData.password &&
       this.formData.confirmPassword &&
       this.formData.password === this.formData.confirmPassword &&
@@ -228,5 +310,7 @@ export class AgregarUsuarioComponent implements OnInit {
     };
     this.usernameError = null;
     this.emailError = null;
+    this.nombreError = null;
+    this.apellidoError = null;
   }
 }

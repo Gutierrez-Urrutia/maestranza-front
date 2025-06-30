@@ -6,7 +6,7 @@
         </button>
 
         <ul class="navbar-nav ms-2 me-auto">
-            <li class="nav-item">                <!-- Título completo en pantallas grandes -->
+            <li class="nav-item"> <!-- Título completo en pantallas grandes -->
                 <h1 class="d-none d-md-block">Sistema de Gestión Maestranza Unidos
                     <span class="visually-hidden">(current)</span>
                 </h1>
@@ -27,15 +27,12 @@
 
             <!-- Icono de notificaciones con dropdown -->
             <div class="notification-container position-relative me-2 dropdown">
-                <button class="notification-btn btn btn-outline-warning border-0" 
-                        type="button" 
-                        (click)="toggleNotificaciones($event)"
-                        [attr.aria-expanded]="notificacionesAbiertas"
-                        [title]="getTooltipNotificaciones()"
-                        [attr.aria-label]="getTooltipNotificaciones()">
+                <button class="notification-btn btn btn-outline-warning border-0" type="button"
+                    (click)="toggleNotificaciones($event)" [attr.aria-expanded]="notificacionesAbiertas"
+                    [title]="getTooltipNotificaciones()" [attr.aria-label]="getTooltipNotificaciones()">
 
-                    <i class="bi bi-bell" [class.text-warning]="numeroNotificaciones > 0" 
-                       [class.text-muted]="numeroNotificaciones === 0"></i>
+                    <i class="bi bi-bell" [class.text-warning]="numeroNotificaciones > 0"
+                        [class.text-muted]="numeroNotificaciones === 0"></i>
 
                     <!-- Burbuja de notificación -->
                     @if (numeroNotificaciones > 0) {
@@ -47,48 +44,38 @@
                 </button>
 
                 <!-- Panel desplegable de alertas -->
-                <div class="dropdown-menu dropdown-menu-end notification-dropdown p-0 shadow-lg" 
-                     [class.show]="notificacionesAbiertas">
+                <div class="dropdown-menu dropdown-menu-end notification-dropdown p-0 shadow-lg"
+                    [class.show]="notificacionesAbiertas">
                     <div class="notification-header p-2 d-flex justify-content-between align-items-center bg-light">
                         <h6 class="m-0 py-1">Alertas recientes</h6>
                     </div>
-                    
+
                     <div class="notification-body" style="max-height: 300px; overflow-y: auto;">
                         @if (alertasRecientes.length) {
-                            @for (alerta of alertasRecientes; track alerta.id) {
-                            <div class="notification-item p-2 border-bottom" 
-                                 [class]="'bg-opacity-10 bg-' + getNivelUrgenciaClass(alerta.nivelUrgencia)">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <strong class="me-2">{{alerta.productoNombre || 'Producto'}}</strong>
-                                    <small class="text-muted">{{alerta.fecha | date:'short'}}</small>
-                                </div>
-                                <p class="mb-0 small">{{alerta.descripcion || 'Sin descripción'}}</p>
-                                <div class="d-flex justify-content-between align-items-center mt-1">
-                                    <span class="badge" [class]="'bg-' + getNivelUrgenciaClass(alerta.nivelUrgencia)">
-                                        {{alerta.nivelUrgencia}}
-                                    </span>
-                                    <button class="btn btn-sm btn-link p-0" 
-                                            (click)="marcarComoLeida(alerta.id)">
-                                        Marcar como leída
-                                    </button>
-                                </div>
+                        @for (alerta of alertasRecientes; track alerta.id) {
+                        <div class="notification-item p-2 border-bottom bg-opacity-10 bg-warning">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <strong class="me-2">{{alerta.productoNombre || 'Producto'}}</strong>
+                                <small class="text-muted">{{alerta.fecha | date:'short'}}</small>
                             </div>
-                            }
+                            <p class="mb-0 small">{{alerta.descripcion || 'Sin descripción'}}</p>
+                        </div>
+                        }
                         } @else if (cargandoAlertas) {
-                            <div class="p-3 text-center">
-                                <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                    <span class="visually-hidden">Cargando...</span>
-                                </div>
-                                <p class="mb-0 mt-2">Cargando alertas...</p>
+                        <div class="p-3 text-center">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
                             </div>
+                            <p class="mb-0 mt-2">Cargando alertas...</p>
+                        </div>
                         } @else {
-                            <div class="p-3 text-center">
-                                <i class="bi bi-check-circle text-success fs-3"></i>
-                                <p class="mb-0 mt-2">No hay alertas activas</p>
-                            </div>
+                        <div class="p-3 text-center">
+                            <i class="bi bi-check-circle text-success fs-3"></i>
+                            <p class="mb-0 mt-2">No hay alertas activas</p>
+                        </div>
                         }
                     </div>
-                    
+
                     <div class="notification-footer p-2 bg-light text-center">
                         <a routerLink="/alertas" class="text-decoration-none">
                             Ver historial completo de alertas

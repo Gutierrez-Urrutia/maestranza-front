@@ -323,6 +323,22 @@ export class MovimientoFormComponent implements OnInit, OnDestroy {
 
     const formData = form.value;
 
+    // Validar stock suficiente para movimientos de salida
+    if (formData.tipo === 'SALIDA') {
+      const cantidadSolicitada = Number(formData.cantidad);
+      const stockDisponible = this.productoSeleccionado?.stock ?? 0;
+
+      if (cantidadSolicitada > stockDisponible) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Stock insuficiente',
+          text: `Solo hay ${stockDisponible} unidades disponibles. No puede retirar ${cantidadSolicitada}.`
+        });
+        this.isSubmitting = false;
+        return; // Cancelar creación del movimiento
+      }
+    }
+
     // Obtener el usuario logueado
     const usuarioLogueado = this.authService.getUser();
     

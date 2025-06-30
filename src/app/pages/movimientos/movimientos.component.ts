@@ -21,7 +21,8 @@ import Swal from 'sweetalert2';
   selector: 'app-movimientos',
   templateUrl: './movimientos.component.html',
   styleUrls: ['./movimientos.component.css'],
-  standalone: true,  imports: [
+  standalone: true,  
+  imports: [
     CommonModule,
     FormsModule,
     FooterComponent,

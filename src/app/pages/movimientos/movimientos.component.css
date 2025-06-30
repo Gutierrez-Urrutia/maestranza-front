@@ -24,7 +24,10 @@
 }
 
 /* Estilos para badges de tipo de movimiento */
-::ng-deep .mat-mdc-cell .badge {
+/* Mayor especificidad para superar estilos globales */
+::ng-deep .custom-table .mat-mdc-cell .badge,
+::ng-deep .mat-mdc-table .mat-mdc-cell .badge,
+::ng-deep table .mat-mdc-cell .badge {
   min-width: 100px !important;
   width: 100px !important;
   text-align: center !important;
@@ -36,21 +39,28 @@
   line-height: 1 !important;
   padding: 6px 12px !important;
   vertical-align: middle !important;
-  font-weight: 500;
+  font-weight: normal !important;
   border-radius: 6px !important;
 }
 
 /* Estilos específicos para tipos de movimiento */
-.bg-success {
+/* Mayor especificidad para superar estilos globales */
+::ng-deep .custom-table .mat-mdc-cell .badge.bg-success,
+::ng-deep .mat-mdc-table .mat-mdc-cell .badge.bg-success,
+::ng-deep table .mat-mdc-cell .badge.bg-success {
   background-color: #d1e7dd !important;
   color: #0f5132 !important;
   border: 1px solid #a3cfbb !important;
+  font-weight: normal !important;
 }
 
-.bg-danger {
+::ng-deep .custom-table .mat-mdc-cell .badge.bg-danger,
+::ng-deep .mat-mdc-table .mat-mdc-cell .badge.bg-danger,
+::ng-deep table .mat-mdc-cell .badge.bg-danger {
   background-color: #f8d7da !important;
   color: #842029 !important;
   border: 1px solid #f5c2c7 !important;
+  font-weight: normal !important;
 }
 
 /* Estilos para filas según tipo de movimiento */
@@ -99,22 +109,28 @@
 }
 
 /* Badge para cantidad */
-::ng-deep .mat-mdc-cell .badge.bg-info {
+/* Mayor especificidad para superar estilos globales */
+::ng-deep .custom-table .mat-mdc-cell .badge.bg-info,
+::ng-deep .mat-mdc-table .mat-mdc-cell .badge.bg-info,
+::ng-deep table .mat-mdc-cell .badge.bg-info {
   background-color: #cff4fc !important;
   color: #055160 !important;
   border: 1px solid #9eeaf9 !important;
-  font-weight: normal;
+  font-weight: normal !important;
   font-size: 12px !important;
   min-width: 60px !important;
   width: 60px !important;
 }
 
 /* Badge para código de producto */
-::ng-deep .mat-mdc-cell .badge.bg-secondary {
+/* Mayor especificidad para superar estilos globales */
+::ng-deep .custom-table .mat-mdc-cell .badge.bg-secondary,
+::ng-deep .mat-mdc-table .mat-mdc-cell .badge.bg-secondary,
+::ng-deep table .mat-mdc-cell .badge.bg-secondary {
   background-color: #d3d3d4 !important;
   color: #41464b !important;
   border: 1px solid #b7bcc1 !important;
-  font-weight: normal;
+  font-weight: normal !important;
   font-size: 12px !important;
   min-width: 80px !important;
   width: 80px !important;

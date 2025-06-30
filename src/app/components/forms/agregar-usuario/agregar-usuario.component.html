@@ -4,14 +4,26 @@
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="nombre" [(ngModel)]="formData.nombre" name="nombre"
-                    placeholder="Ej: Juan" required>
+                    (ngModelChange)="onNombreChange()" (keypress)="onKeyPress($event)"
+                    [ngClass]="{'is-invalid': nombreError}" placeholder="Ej: Juan" required>
+                @if (nombreError) {
+                <div class="invalid-feedback d-block">
+                    {{nombreError}}
+                </div>
+                }
             </div>
         </div>
         <div class="col-md-6">
             <div class="mb-3">
                 <label for="apellido" class="form-label">Apellido</label>
                 <input type="text" class="form-control" id="apellido" [(ngModel)]="formData.apellido" name="apellido"
-                    placeholder="Ej: Pérez" required>
+                    (ngModelChange)="onApellidoChange()" (keypress)="onKeyPress($event)"
+                    [ngClass]="{'is-invalid': apellidoError}" placeholder="Ej: Pérez" required>
+                @if (apellidoError) {
+                <div class="invalid-feedback d-block">
+                    {{apellidoError}}
+                </div>
+                }
             </div>
         </div>
     </div>
@@ -21,8 +33,8 @@
         <div class="mb-3">
             <label for="username" class="form-label">Nombre de Usuario</label>
             <input type="text" class="form-control" id="username" [(ngModel)]="formData.username" name="username"
-                (ngModelChange)="onUsernameChange()" [ngClass]="{'is-invalid': usernameError}" placeholder="Ej: jperez"
-                required>
+                (ngModelChange)="onUsernameChange()" (keypress)="onUsernameKeyPress($event)"
+                [ngClass]="{'is-invalid': usernameError}" placeholder="Ej: jperez" required>
             @if (usernameError) {
             <div class="invalid-feedback d-block">
                 {{usernameError}}
@@ -34,20 +46,13 @@
         <div class="mb-3">
             <label for="email" class="form-label">Correo Electrónico</label>
             <input type="email" class="form-control" id="email" [(ngModel)]="formData.email" name="email"
-                (ngModelChange)="onEmailChange()" [ngClass]="{'is-invalid': emailError}"
-                placeholder="Ej: juan.perez@empresa.com" required>
+                (ngModelChange)="onEmailChange()" (keypress)="onEmailKeyPress($event)"
+                [ngClass]="{'is-invalid': emailError}" placeholder="Ej: juan.perez@empresa.com" required>
             @if (emailError) {
             <div class="invalid-feedback d-block">
                 {{emailError}}
             </div>
             }
-        </div>
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label for="email" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="email" [(ngModel)]="formData.email" name="email"
-                    placeholder="Ej: juan.perez@empresa.com" required>
-            </div>
         </div>
     </div>
 

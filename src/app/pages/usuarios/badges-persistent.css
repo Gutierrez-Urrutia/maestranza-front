@@ -1,0 +1,107 @@
+/* Estilos persistentes para badges de usuarios con máxima especificidad */
+/* Este archivo asegura que los estilos no se pierdan al navegar entre páginas */
+
+/* Estilos base para todos los badges con especificidad máxima */
+body app-usuarios ::ng-deep .custom-table .mat-mdc-cell .badge,
+body app-usuarios ::ng-deep .mat-mdc-table .mat-mdc-cell .badge,
+body app-usuarios ::ng-deep table .mat-mdc-cell .badge,
+body ::ng-deep app-usuarios .custom-table .mat-mdc-cell .badge,
+body ::ng-deep app-usuarios .mat-mdc-table .mat-mdc-cell .badge,
+body ::ng-deep app-usuarios table .mat-mdc-cell .badge {
+  min-width: 80px !important;
+  width: auto !important;
+  max-width: 160px !important;
+  text-align: center !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  height: 34px !important;
+  line-height: 1 !important;
+  padding: 8px 14px !important;
+  vertical-align: middle !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  font-size: 0.875rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Badge de administrador con especificidad máxima */
+body app-usuarios ::ng-deep .custom-table .mat-mdc-cell .badge.admin,
+body app-usuarios ::ng-deep .mat-mdc-table .mat-mdc-cell .badge.admin,
+body app-usuarios ::ng-deep table .mat-mdc-cell .badge.admin,
+body ::ng-deep app-usuarios .custom-table .mat-mdc-cell .badge.admin,
+body ::ng-deep app-usuarios .mat-mdc-table .mat-mdc-cell .badge.admin,
+body ::ng-deep app-usuarios table .mat-mdc-cell .badge.admin {
+  background-color: #fbd0d4 !important;
+  color: #842029 !important;
+  border: 1px solid #f5a2aa !important;
+  min-width: 130px !important;
+  max-width: 150px !important;
+  padding: 8px 16px !important;
+  width: auto !important;
+  font-size: 0.875rem !important;
+  display: inline-flex !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+/* Estilos para badges de estado con especificidad máxima */
+body app-usuarios ::ng-deep .custom-table .mat-mdc-cell .badge.bg-success,
+body app-usuarios ::ng-deep .mat-mdc-table .mat-mdc-cell .badge.bg-success,
+body app-usuarios ::ng-deep table .mat-mdc-cell .badge.bg-success,
+body ::ng-deep app-usuarios .custom-table .mat-mdc-cell .badge.bg-success,
+body ::ng-deep app-usuarios .mat-mdc-table .mat-mdc-cell .badge.bg-success,
+body ::ng-deep app-usuarios table .mat-mdc-cell .badge.bg-success {
+  background-color: #d1e7dd !important;
+  color: #0f5132 !important;
+  border: 1px solid #a3cfbb !important;
+  font-size: 0.875rem !important;
+}
+
+body app-usuarios ::ng-deep .custom-table .mat-mdc-cell .badge.bg-secondary,
+body app-usuarios ::ng-deep .mat-mdc-table .mat-mdc-cell .badge.bg-secondary,
+body app-usuarios ::ng-deep table .mat-mdc-cell .badge.bg-secondary,
+body ::ng-deep app-usuarios .custom-table .mat-mdc-cell .badge.bg-secondary,
+body ::ng-deep app-usuarios .mat-mdc-table .mat-mdc-cell .badge.bg-secondary,
+body ::ng-deep app-usuarios table .mat-mdc-cell .badge.bg-secondary {
+  background-color: #d3d3d4 !important;
+  color: #41464b !important;
+  border: 1px solid #b7bcc1 !important;
+  font-size: 0.875rem !important;
+}
+
+/* Responsive para dispositivos móviles con especificidad máxima */
+@media (max-width: 575.98px) {
+  body app-usuarios ::ng-deep .custom-table .mat-mdc-cell .badge,
+  body app-usuarios ::ng-deep .mat-mdc-table .mat-mdc-cell .badge,
+  body app-usuarios ::ng-deep table .mat-mdc-cell .badge,
+  body ::ng-deep app-usuarios .custom-table .mat-mdc-cell .badge,
+  body ::ng-deep app-usuarios .mat-mdc-table .mat-mdc-cell .badge,
+  body ::ng-deep app-usuarios table .mat-mdc-cell .badge {
+    min-width: 80px !important;
+    width: auto !important;
+    max-width: 140px !important;
+    font-size: 0.7rem !important;
+    padding: 5px 8px !important;
+    height: 30px !important;
+  }
+  
+  body app-usuarios ::ng-deep .custom-table .mat-mdc-cell .badge.admin,
+  body app-usuarios ::ng-deep .mat-mdc-table .mat-mdc-cell .badge.admin,
+  body app-usuarios ::ng-deep table .mat-mdc-cell .badge.admin,
+  body ::ng-deep app-usuarios .custom-table .mat-mdc-cell .badge.admin,
+  body ::ng-deep app-usuarios .mat-mdc-table .mat-mdc-cell .badge.admin,
+  body ::ng-deep app-usuarios table .mat-mdc-cell .badge.admin {
+    min-width: 110px !important;
+    max-width: 130px !important;
+    font-size: 0.7rem !important;
+    padding: 5px 10px !important;
+  }
+}
