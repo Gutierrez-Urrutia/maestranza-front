@@ -52,6 +52,7 @@ export class AgregarUsuarioComponent implements OnInit {
   private cargarRoles() {
     this.rolService.obtenerTodos().subscribe({
       next: (roles) => {
+        console.log('📋 Roles cargados desde el backend:', roles);
         this.roles = roles;
       },
       error: (error) => {
@@ -159,11 +160,16 @@ export class AgregarUsuarioComponent implements OnInit {
 
   // Manejar selección de roles
   onRoleChange(rolNombre: string, event: any) {
+    console.log('🔄 Cambio de rol:', rolNombre, 'Checked:', event.target.checked);
+    console.log('📋 Roles antes del cambio:', [...this.formData.roles]);
+    
     if (event.target.checked) {
       this.formData.roles.push(rolNombre);
     } else {
       this.formData.roles = this.formData.roles.filter(rol => rol !== rolNombre);
     }
+    
+    console.log('📋 Roles después del cambio:', [...this.formData.roles]);
   }
 
   // Verificar si un rol está seleccionado
@@ -199,6 +205,25 @@ export class AgregarUsuarioComponent implements OnInit {
       case 'ROLE_TRABAJADOR': return 'work';
       default: return 'bg-secondary';
     }
+  }
+
+  // Convertir roles del formato frontend al formato backend
+  private convertirRolesParaBackend(rolesArray: string[]): string[] {
+    return rolesArray.map(rol => {
+      switch (rol) {
+        case 'ROLE_ADMINISTRADOR': return 'administrador';
+        case 'ROLE_GERENCIA': return 'gerencia';
+        case 'ROLE_AUDITOR': return 'auditor';
+        case 'ROLE_INVENTARIO': return 'inventario';
+        case 'ROLE_COMPRAS': return 'compras';
+        case 'ROLE_LOGISTICA': return 'logistica';
+        case 'ROLE_PRODUCCION': return 'produccion';
+        case 'ROLE_TRABAJADOR': return 'trabajador';
+        default: 
+          // Si no coincide, convertir quitando 'ROLE_' y pasando a minúsculas
+          return rol.replace('ROLE_', '').toLowerCase();
+      }
+    });
   }
 
   // Validaciones
@@ -240,11 +265,19 @@ export class AgregarUsuarioComponent implements OnInit {
         nombre: this.formData.nombre.trim(),
         apellido: this.formData.apellido.trim(),
         password: this.formData.password,
-        roles: this.formData.roles
+        roles: this.convertirRolesParaBackend(this.formData.roles) // Convertir roles aquí
       };
+
+      // Debug: Registrar los datos que se van a enviar
+      console.log('🔍 Datos del formulario antes de enviar:');
+      console.log('FormData roles (frontend):', this.formData.roles);
+      console.log('Roles convertidos (backend):', nuevoUsuario.roles);
+      console.log('Nuevo usuario objeto:', nuevoUsuario);
+      console.log('Roles en nuevo usuario:', nuevoUsuario.roles);
 
       this.authService.registro(nuevoUsuario).subscribe({
         next: (response) => {
+          console.log('✅ Respuesta del servidor:', response);
           this.isSubmitting = false;
           Swal.fire({
             icon: 'success',

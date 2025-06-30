@@ -127,7 +127,20 @@ export class AuthService {
   }
 
   registro(usuario: RegistroUsuario): Observable<any> {
-    return this.http.post(`${this.baseUrl}/registro`, usuario);
+    console.log('🚀 Enviando datos de registro al backend:');
+    console.log('URL:', `${this.baseUrl}/registro`);
+    console.log('Datos usuario:', usuario);
+    console.log('Roles específicamente:', usuario.roles);
+    
+    return this.http.post(`${this.baseUrl}/registro`, usuario).pipe(
+      tap(response => {
+        console.log('📨 Respuesta del backend:', response);
+      }),
+      catchError(error => {
+        console.error('❌ Error en el registro:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   logoutFromServer(): Observable<any> {
