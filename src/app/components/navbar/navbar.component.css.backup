@@ -4,6 +4,8 @@
   font-weight: 500;
   color: #495057;
   line-height: 1.3;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* Estilos para el contenedor de notificaciones */
@@ -14,13 +16,14 @@
 .notification-btn {
   border: none;
   background: transparent;
-  padding: clamp(9px, 2vw, 10px); /* Padding moderado para el icono */
+  padding: clamp(9px, 2vw, 10px);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
   position: relative;
   color: #6c757d;
+  flex-shrink: 0 !important;
 }
 
 .notification-btn:hover {
@@ -40,260 +43,125 @@
 .notification-btn .bi-bell,
 .notification-btn .bi-bell.text-warning,
 .notification-btn .bi-bell.text-muted {
-  font-size: clamp(1.3rem, 2.5vw, 1.6rem) !important; /* Tamaño intermedio más equilibrado */
+  font-size: clamp(1.8rem, 3.5vw, 2.2rem) !important;
 }
 
 /* Estilos responsivos para el título */
 .navbar h1 {
-  font-size: clamp(0.9rem, 3vw, 1.8rem); /* Tamaño más proporcionado */
-  margin: 0;
-  padding: 0;
-  font-weight: 600;
-  color: #2fa4e7;
-  white-space: nowrap;
-  line-height: 1.1; /* Línea más compacta */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex-shrink: 1; /* Permitir que se encoja si es necesario */
-  max-width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.2 !important;
+  display: flex !important;
+  align-items: center !important;
+  font-weight: 600 !important;
+  color: #2fa4e7 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  flex-shrink: 1 !important;
+  max-width: 100% !important;
 }
 
 /* Estilos para la burbuja de notificación */
-/* Estilos para la burbuja de notificación - ACTUALIZADO */
-.notification-badge {  font-size: 0.65rem;
+.notification-badge {
+  background-color: #dc3545;
+  color: white;
+  font-size: 0.6rem;
   font-weight: 600;
-  min-width: 18px;
-  height: 18px;
-  display: flex;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  max-width: 20px !important;
+  border-radius: 50% !important;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   line-height: 1;
-  z-index: 1050; /* Z-index alto para estar siempre encima */
-
-  /* CAMBIOS PRINCIPALES - Posición más cerca del ícono */
-  top: 0px !important; /* Cambiar de -4px a 0px */
-  right: 0px !important; /* Cambiar de -4px a 0px */
-
-  transform: none !important; /* Eliminar cualquier transform de Bootstrap */
+  z-index: 1050;
+  top: 0px !important;
+  right: 0px !important;
+  transform: translate(-16px, 12px) !important;
   animation: pulse 2s infinite;
-
-  /* Mejorar nitidez del texto */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  backface-visibility: hidden;
-  will-change: transform;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  text-align: center !important;
+  overflow: hidden;
 }
 
-/* Animación de pulso para la burbuja */
 @keyframes pulse {
   0% {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
   100% {
     transform: scale(1);
   }
 }
 
-/* Responsive - Tablet grande (hasta 992px) */
-@media (max-width: 992px) {
-  .navbar.fixed-top {
-    padding: 6px 12px; /* Padding más compacto */
-  }
-  
-  .navbar h1 {
-    font-size: clamp(0.8rem, 3vw, 1.2rem);
-  }
-  
-  .welcome-message {
-    font-size: clamp(0.7rem, 2vw, 0.85rem);
-    margin-right: 0.25rem;
-  }
-  
-  .notification-container {
-    margin-left: 0.25rem;
-  }
-}
-
-/* Responsive - Tablet (hasta 768px) */
-@media (max-width: 768px) {
-  .navbar.fixed-top {
-    padding: 4px 8px; /* Padding más compacto */
-  }
-  
-  .navbar h1 {
-    font-size: clamp(0.75rem, 2.8vw, 1rem);
-  }
-  
-  .welcome-message {
-    display: none !important; /* Ocultar en pantallas medianas */
-  }
-  
-  .notification-btn {
-    padding: clamp(6px, 1.5vw, 8px);
-  }
-}
-
-  .welcome-message {
-    font-size: clamp(0.7rem, 2vw, 0.85rem);
-    margin-right: 0.5rem;
-  }
-
-  .notification-container {
-    margin-left: 0.5rem;
-  }
-  .notification-btn {
-    padding: 6px;
-  }
-  
-  .notification-btn .bi-bell {
-    font-size: clamp(1.2rem, 3vw, 1.4rem) !important; /* Tamaño moderado para tablets */
-  }
-
-  .notification-badge {
-    font-size: clamp(0.55rem, 1.5vw, 0.6rem);
-    font-weight: 600;
-    min-width: 16px;
-    height: 16px;
-    top: 1px !important;
-    right: 1px !important;
-  }
-}
-
-/* Responsive - Móvil (hasta 576px) */
-@media (max-width: 576px) {
-  .navbar.fixed-top {
-    padding: 4px 6px; /* Padding muy compacto */
-  }
-  
-  .navbar h1 {
-    font-size: clamp(0.7rem, 2.5vw, 0.9rem);
-    white-space: normal;
-    word-break: break-word;
-    line-height: 1.2;
-    max-width: 50%; /* Reducir ancho para dar espacio */
-  }
-  .welcome-message {
-    display: none !important; /* Ocultar en móviles */
-  }
-
-  .notification-container {
-    margin-left: 0.5rem;
-  }
-  .notification-btn {
-    padding: clamp(8px, 2vw, 10px); /* Padding aumentado para móviles */
-  }  .notification-btn .bi-bell {
-    font-size: clamp(1.3rem, 3.5vw, 1.5rem) !important; /* Tamaño moderado para móviles */
-  }
-
-  .notification-badge {
-    font-size: clamp(0.5rem, 1.5vw, 0.65rem);
-    font-weight: 600;
-    min-width: 16px;
-    height: 16px;
-    top: -2px !important;
-    right: -2px !important;
-  }
-
-  /* Estilos para el dropdown de notificaciones */
-  .notification-dropdown {
-    width: 90vw;
-    max-width: 300px;
-    right: -10px;
-    font-size: clamp(0.7rem, 2vw, 0.85rem);
-  }
-}
-
-/* Móvil muy pequeño (hasta 400px) */
-@media (max-width: 400px) {
-  .navbar h1 {
-    font-size: clamp(0.8rem, 2.2vw, 0.95rem);
-  }
-
-  .welcome-message {
-    font-size: clamp(0.6rem, 1.8vw, 0.75rem);
-  }
-  
-  .notification-dropdown {
-    width: 260px;
-    font-size: clamp(0.65rem, 1.8vw, 0.8rem);
-  }
-}
-
-/* Efecto hover para la burbuja */
-.notification-btn:hover .notification-badge {
-  animation-duration: 1s;
-}
-
-/* Estilos para el dropdown de notificaciones */
-.notification-badge {
-  top: 0;
-  right: 0;
-  transform: translate(30%, -30%);
-  font-size: 0.65rem;
-}
-
-.notification-dropdown {
-  width: 350px;
-  max-width: 90vw; /* Limitar al 90% del ancho de la ventana */
-  position: absolute;
-  right: 0;
-  left: auto;
-  transform: translateX(0); /* Asegurar que no se desplace */
-}
-
-/* En pantallas muy pequeñas, reducir más el tamaño */
-@media (max-width: 400px) {
-  .notification-dropdown {
-    width: 280px;
-    right: -10px; /* Ajustar posición para evitar desbordamiento */
-  }
-}
-
-.notification-item {
-  transition: background-color 0.2s;
-}
-
-.notification-item:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-/* Ajustes para móviles */
-@media (max-width: 576px) {
-  .notification-dropdown {
-    width: 300px;
-  }
-}
-
-/* Z-index y altura del navbar - Sticky responsivo */
+/* Z-index y altura del navbar - Fixed responsivo MEJORADO */
 .navbar.fixed-top {
-  z-index: 1050 !important; /* Bootstrap modal backdrop es 1040, nosotros 1050 */
-  position: fixed !important; /* Asegurar que sea fijo */
-  top: 0 !important; /* Siempre en la parte superior */
+  z-index: 1050 !important;
+  position: fixed !important;
+  top: 0 !important;
   left: 0 !important;
   right: 0 !important;
   width: 100% !important;
-  min-height: var(--navbar-height);
-  background-color: white !important; /* Fondo sólido para que no se vea el contenido por detrás */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra para separar visualmente del contenido */
-  padding: 8px 16px; /* Padding fijo y consistente */
+  min-height: var(--navbar-height, 76px);
+  max-height: var(--navbar-height, 76px);
+  background-color: white !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 8px 16px;
   display: flex !important;
   align-items: center !important;
-  flex-wrap: nowrap !important; /* Evitar que se rompan los elementos */
+  flex-wrap: nowrap !important;
+  overflow: hidden;
+  border-bottom: 1px solid #dee2e6;
+  /* Asegurar que sea siempre visible */
+  will-change: transform;
 }
 
-/* Botón hamburguesa responsivo */
-.navbar .btn i.bi-list {
-  font-size: clamp(1.2rem, 2.5vw, 1.8rem); /* Tamaño responsivo del icono hamburguesa */
+/* Mejora general para asegurar alineación vertical en todos los tamaños */
+.navbar.fixed-top {
+  display: flex !important;
+  align-items: center !important;
 }
 
-.navbar .btn {
-  padding: clamp(4px, 1vw, 8px) clamp(6px, 1.5vw, 10px); /* Padding responsivo */
-  margin-right: clamp(8px, 2vw, 12px); /* Margen responsivo */
-  flex-shrink: 0; /* No permitir que se encoja */
+.navbar .container-fluid {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 100% !important;
+  min-height: inherit !important;
+}
+
+/* Ajustes específicos para dispositivos móviles */
+@media (max-width: 991.98px) {
+  .navbar.fixed-top {
+    min-height: var(--navbar-height-mobile, 64px);
+    max-height: var(--navbar-height-mobile, 64px);
+    padding: 10px 16px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .navbar.fixed-top {
+    min-height: var(--navbar-height-small, 72px);
+    max-height: var(--navbar-height-small, 72px);
+    padding: 12px 16px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .navbar.fixed-top {
+    min-height: var(--navbar-height-small, 72px);
+    max-height: var(--navbar-height-small, 72px);
+    padding: 14px 12px;
+  }
 }
 
 /* Contenedor del navbar responsivo */
@@ -302,11 +170,23 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: nowrap;
-  min-height: calc(var(--navbar-height) - 16px); /* Altura mínima menos padding */
+  min-height: calc(var(--navbar-height) - 16px);
   width: 100%;
   max-width: 100%;
   padding: 0;
   margin: 0;
+  overflow: hidden;
+}
+
+/* Botón hamburguesa responsivo */
+.navbar .btn i.bi-list {
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+}
+
+.navbar .btn {
+  padding: clamp(4px, 1vw, 8px) clamp(6px, 1.5vw, 10px);
+  margin-right: clamp(8px, 2vw, 12px);
+  flex-shrink: 0;
 }
 
 /* Sección de navegación y usuario */
@@ -316,7 +196,9 @@
   margin: 0;
   padding: 0;
   flex-grow: 1;
-  min-width: 0; /* Permitir que se encoja */
+  min-width: 0;
+  display: flex !important;
+  align-items: center !important;
 }
 
 .navbar .navbar-nav .nav-item {
@@ -328,6 +210,515 @@
 
 /* Sección de usuario */
 .navbar .d-flex.align-items-center {
-  flex-shrink: 0; /* No permitir que se encoja */
-  margin-left: auto; /* Empujar a la derecha */
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Estilos para el dropdown de notificaciones */
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  z-index: 1055;
+  width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  font-size: 0.875rem;
+}
+
+.notification-header {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+
+.notification-item {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f8f9fa;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.notification-item:hover {
+  background-color: #f8f9fa;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item strong {
+  color: #495057;
+  font-weight: 600;
+}
+
+.notification-item .text-muted {
+  font-size: 0.8rem;
+}
+
+.notification-footer {
+  padding: 0.5rem 1rem;
+  text-align: center;
+  border-top: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+}
+
+.notification-footer a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.notification-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ================================================
+   MEDIA QUERIES - RESPONSIVE DESIGN
+   ================================================ */
+
+/* 🖥️ DESKTOP MEDIANO / TABLET GRANDE (lg-md) - 768px a 1199px */
+/* Layout: hamburguesa + título centrado + campana */
+@media (max-width: 1199px) {
+  .navbar.fixed-top {
+    padding: 8px 12px;
+  }
+
+  /* Ocultar mensaje de bienvenida */
+  .welcome-message {
+    display: none !important;
+  }
+
+  .notification-container {
+    margin-left: 0.75rem;
+  }
+
+  .notification-btn {
+    padding: clamp(8px, 1.5vw, 9px);
+  }
+
+  .notification-btn .bi-bell {
+    font-size: clamp(1.4rem, 2.8vw, 1.8rem) !important;
+  }
+}
+
+/* 📱 TABLET PEQUEÑO / MOBILE GRANDE (sm-xs) - 576px a 767px */
+/* Layout: hamburguesa + título centrado (SGM) + campana */
+@media (max-width: 767px) and (min-width: 576px) {
+  .navbar.fixed-top {
+    padding: 10px 8px;
+    min-height: var(--navbar-height-mobile, 64px);
+  }
+  
+  /* Mostrar SGM centrado */
+  .title-large {
+    display: none !important;
+  }
+  
+  .title-medium {
+    display: block !important;
+    text-align: center !important;
+    font-size: clamp(1.2rem, 4vw, 1.5rem) !important;
+  }
+
+  /* Ocultar mensaje de bienvenida */
+  .welcome-message {
+    display: none !important;
+  }
+
+  .navbar .btn {
+    padding: clamp(6px, 1.2vw, 8px) clamp(8px, 1.8vw, 10px);
+    margin-right: clamp(6px, 1.5vw, 8px);
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .navbar .btn i.bi-list {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+  }
+
+  .notification-container {
+    margin-left: 0.5rem;
+  }
+
+  .notification-btn {
+    padding: clamp(6px, 1.5vw, 8px);
+    min-width: 42px;
+    min-height: 42px;
+  }
+
+  .notification-btn .bi-bell {
+    font-size: clamp(1.3rem, 3.2vw, 1.6rem) !important;
+  }
+
+  .notification-badge {
+    font-size: 0.55rem;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    max-width: 18px !important;
+    border-radius: 50% !important;
+    top: 0px !important;
+    right: 0px !important;
+    transform: translate(-10px, 7px) !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  /* Dropdown de notificaciones */
+  .notification-dropdown {
+    width: 90vw;
+    max-width: 300px;
+    right: -10px;
+    font-size: 0.8rem;
+  }
+}
+
+/* 📱 MOBILE PEQUEÑO (xs) - 575px hacia abajo */
+/* Layout: hamburguesa (izquierda) + campana (derecha) - SIN TÍTULO */
+@media (max-width: 575px) {
+  .navbar.fixed-top {
+    padding: 12px 8px;
+    min-height: var(--navbar-height-small, 72px);
+  }
+
+  /* Grid de 2 columnas: hamburguesa y campana */
+  .navbar .container-fluid {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Botón hamburguesa - columna izquierda */
+  .navbar .btn {
+    grid-column: 1 !important;
+    justify-self: flex-start !important;
+    padding: 10px 12px !important;
+    margin: 0 !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .navbar .btn i.bi-list {
+    font-size: clamp(1.4rem, 4vw, 1.8rem) !important;
+  }
+
+  .navbar .btn:hover {
+    background-color: #f8f9fa !important;
+    transform: scale(1.05) !important;
+  }
+
+  /* Ocultar título completamente en pantallas pequeñas */
+  .title-large,
+  .title-medium {
+    display: none !important;
+  }
+  
+  .navbar .navbar-nav {
+    display: none !important;
+  }
+}
+
+/* Ajustes específicos para pantallas muy pequeñas (< 400px) */
+@media (max-width: 400px) {
+  .navbar .btn {
+    padding: 12px 14px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+
+  .navbar .btn i.bi-list {
+    font-size: clamp(1.6rem, 5vw, 2rem) !important;
+  }
+  
+  .notification-btn {
+    padding: 12px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+
+  .notification-btn .bi-bell {
+    font-size: clamp(1.6rem, 5vw, 1.8rem) !important;
+  }
+}
+
+  /* Sección de notificaciones - columna derecha */
+  .navbar .d-flex.align-items-center {
+    grid-column: 2 !important;
+    justify-self: flex-end !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .notification-container {
+    margin: 0 !important;
+  }
+
+  .notification-btn {
+    padding: 10px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .notification-btn .bi-bell {
+    font-size: clamp(1.4rem, 4vw, 1.6rem) !important;
+  }
+
+  .notification-badge {
+    font-size: 0.5rem;
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    max-width: 16px !important;
+    border-radius: 50% !important;
+    top: 0px !important;
+    right: 0px !important;
+    transform: translate(-8px, 6px) !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  /* Dropdown compacto para pantallas muy pequeñas */
+  .notification-dropdown {
+    width: 95vw;
+    max-width: 280px; /* Dropdown compacto para pantallas muy pequeñas */
+    .notification-dropdown {
+      width: 95vw;
+      max-width: 280px;
+      right: -5px;
+      font-size: 0.75rem;
+    }
+  }
+}
+
+/* Ajustes específicos para tablets horizontales/móviles grandes (600px-700px) */
+@media (min-width: 600px) and (max-width: 700px) {
+  .navbar.fixed-top {
+    padding: 12px 16px;
+    min-height: 68px;
+    max-height: 68px;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .navbar .container-fluid {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 100% !important;
+  }
+  
+  .navbar .btn {
+    padding: 12px 16px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .navbar .btn i.bi-list {
+    font-size: 1.5rem !important;
+  }
+  
+  .notification-container {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+  }
+  
+  .notification-btn {
+    padding: 12px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .notification-btn .bi-bell {
+    font-size: 1.5rem !important;
+  }
+  
+  /* Asegurar alineación vertical del título */
+  .navbar h1 {
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+}
+
+/* Ajustes específicos para tablets grandes/desktop pequeño (1000px-1100px) */
+@media (min-width: 1000px) and (max-width: 1100px) {
+  .navbar.fixed-top {
+    padding: 16px 20px;
+    min-height: 84px;
+    max-height: 84px;
+  }
+  
+  .navbar .btn {
+    padding: 14px 18px !important;
+    min-width: 50px !important;
+    min-height: 50px !important;
+  }
+  
+  .navbar .btn i.bi-list {
+    font-size: 1.6rem !important;
+  }
+  
+  .notification-btn {
+    padding: 14px !important;
+    min-width: 50px !important;
+    min-height: 50px !important;
+  }
+  
+  .notification-btn .bi-bell {
+    font-size: 1.6rem !important;
+  }
+  
+  .navbar h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  .welcome-message {
+    font-size: 1rem !important;
+  }
+}
+
+/* Ajustes específicos para desktop mediano (1200px-1400px) */
+@media (min-width: 1200px) and (max-width: 1400px) {
+  .navbar.fixed-top {
+    padding: 18px 24px;
+    min-height: 88px;
+    max-height: 88px;
+  }
+  
+  .navbar .btn {
+    padding: 16px 20px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+  
+  .navbar .btn i.bi-list {
+    font-size: 1.7rem !important;
+  }
+  
+  .notification-btn {
+    padding: 16px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+  }
+  
+  .notification-btn .bi-bell {
+    font-size: 1.7rem !important;
+  }
+  
+  .navbar h1 {
+    font-size: 1.6rem !important;
+  }
+  
+  .welcome-message {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* ================================================
+   TÍTULOS RESPONSIVE DEL NAVBAR - SOLUCIÓN DEFINITIVA
+   ================================================ */
+
+/* OCULTAR AMBOS TÍTULOS POR DEFECTO */
+.title-large {
+  display: none !important;
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem) !important;
+  font-weight: 600 !important;
+  color: #2fa4e7 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.2 !important;
+}
+
+.title-medium {
+  display: none !important;
+  font-size: clamp(1.4rem, 3vw, 2rem) !important;
+  font-weight: 700 !important;
+  color: #2fa4e7 !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.1 !important;
+  text-align: center !important;
+  letter-spacing: 0.1em !important;
+}
+
+/* PANTALLAS GRANDES (>= 992px) - SOLO TÍTULO COMPLETO */
+@media screen and (min-width: 992px) {
+  .title-large {
+    display: block !important;
+  }
+  
+  .title-medium {
+    display: none !important;
+  }
+}
+
+/* PANTALLAS MEDIANAS (576px - 991px) - SOLO SGM */
+@media screen and (min-width: 576px) and (max-width: 991px) {
+  .title-large {
+    display: none !important;
+  }
+  
+  .title-medium {
+    display: block !important;
+  }
+}
+
+/* PANTALLAS PEQUEÑAS (< 576px) - SIN TÍTULO */
+@media screen and (max-width: 575px) {
+  .title-large {
+    display: none !important;
+  }
+  
+  .title-medium {
+    display: none !important;
+  }
+}
+
+/* ================================================
+   MEJORAS FINALES PARA TÍTULOS RESPONSIVE
+   ================================================ */
+
+/* Asegurar que el contenedor del navbar se adapte correctamente */
+.navbar .navbar-nav .nav-item {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }

@@ -1,5 +1,5 @@
 .login-container {
-    min-height: calc(100vh + var(--navbar-height, 76px)); /* Altura completa + compensación */
+    min-height: 100vh; /* Usar toda la altura del viewport */
     width: 100vw;
     display: grid; /* Usar grid para el centrado */
     place-items: center; /* Centrado perfecto */
@@ -8,9 +8,11 @@
     background: #f5f6fa;
     padding: clamp(1rem, 3vw, 2rem); /* Padding responsivo */
     box-sizing: border-box;
-    position: relative;
+    position: fixed; /* Posición fija para ignorar el padding del body */
+    top: 0;
+    left: 0;
     overflow-x: hidden; /* Prevenir scroll horizontal */
-    margin-top: calc(-1 * var(--navbar-height, 76px)); /* Compensar el padding-top del body */
+    z-index: 999; /* Asegurar que esté por encima del contenido normal */
 }
 
 .login-container {

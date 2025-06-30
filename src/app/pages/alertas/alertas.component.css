@@ -144,3 +144,76 @@
 .card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+/* ===== MEJORAS RESPONSIVAS PARA ALERTAS ===== */
+
+/* Contenedor principal responsivo */
+:host {
+  display: block;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Cards responsivas para estadísticas */
+.card-responsive {
+  margin-bottom: 1rem;
+}
+
+.card-responsive .card-body {
+  padding: clamp(0.75rem, 3vw, 1.5rem);
+}
+
+.card-responsive h5 {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+.card-responsive .display-6 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* Mejoras para filtros */
+.filtros-responsive {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filtros-responsive .btn {
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  padding: 6px 12px;
+  margin: 2px;
+  white-space: nowrap;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 767.98px) {
+  .card-responsive {
+    margin-bottom: 0.75rem;
+  }
+  
+  .filtros-responsive .d-flex {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .filtros-responsive .btn {
+    width: 100%;
+    margin: 2px 0;
+  }
+  
+  /* Estadísticas en columna en móviles */
+  .row .col-md-4 {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .container {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  
+  h2, h3 {
+    font-size: 1.1rem;
+    text-align: center;
+  }
+}

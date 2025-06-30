@@ -7,10 +7,16 @@
 
 body {
   padding: 0;
+  padding-top: var(--navbar-height, 76px); /* Siempre reservar espacio para el navbar sticky */
 }
+
 /* Definir las variables necesarias */
 :root {
-  --navbar-height: 76px; /* Altura original del navbar */
+  --navbar-height: 76px; /* Altura del navbar en desktop por defecto */
+  --navbar-height-mobile: 64px; /* Altura del navbar en tablets */
+  --navbar-height-small: 72px; /* Altura del navbar en móviles */
+  --navbar-height-tablet-large: 84px; /* Altura para tablets grandes (1000-1100px) */
+  --navbar-height-desktop-medium: 88px; /* Altura para desktop mediano (1200-1400px) */
   --footer-height: 56px; /* Altura responsiva del footer */
   --sidebar-width: 250px; /* Ancho del sidebar */
   
@@ -43,7 +49,9 @@ body {
   line-height: 1.5;
   overflow-x: hidden;
   font-family: 'Roboto', sans-serif;
-  padding-top: var(--navbar-height, 76px); /* Espacio para el navbar fijo */
+  padding-top: 0; /* Removemos el padding-top general del body */
+  margin: 0;
+  position: relative;
 }
 
 /* Sistema de tipografía responsiva mejorado */
@@ -136,12 +144,11 @@ img {
 /* Extra Small - Móviles en vertical (hasta 575px) */
 @media (max-width: 575.98px) {
   :root {
-    --min-touch-target: 48px; /* Más grande en móviles */
+    --navbar-height: var(--navbar-height-small, 72px);
   }
   
   body {
-    font-size: clamp(14px, 3.5vw, 16px);
-    line-height: 1.6;
+    padding-top: var(--navbar-height-small, 72px);
   }
   
   .container, .container-fluid {
@@ -296,6 +303,70 @@ img {
   /* Espaciado generoso en pantallas grandes */
   .p-desktop { padding: 2rem !important; }
   .m-desktop { margin: 2rem !important; }
+}
+
+/* Ajustes responsivos para altura del navbar */
+@media (max-width: 991.98px) {
+  :root {
+    --navbar-height: var(--navbar-height-mobile, 64px);
+  }
+  
+  body {
+    padding-top: var(--navbar-height-mobile, 64px);
+  }
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --navbar-height: var(--navbar-height-small, 72px);
+  }
+  
+  body {
+    padding-top: var(--navbar-height-small, 72px);
+  }
+}
+
+@media (max-width: 575.98px) {
+  :root {
+    --navbar-height: var(--navbar-height-small, 72px);
+  }
+  
+  body {
+    padding-top: var(--navbar-height-small, 72px);
+  }
+}
+
+/* Ajustes específicos para tablets grandes (1000px-1100px) */
+@media (min-width: 1000px) and (max-width: 1100px) {
+  :root {
+    --navbar-height: var(--navbar-height-tablet-large, 84px);
+  }
+  
+  body {
+    padding-top: var(--navbar-height-tablet-large, 84px);
+  }
+}
+
+/* Ajustes específicos para desktop mediano (1200px-1400px) */
+@media (min-width: 1200px) and (max-width: 1400px) {
+  :root {
+    --navbar-height: var(--navbar-height-desktop-medium, 88px);
+  }
+  
+  body {
+    padding-top: var(--navbar-height-desktop-medium, 88px);
+  }
+}
+
+/* Ajustes específicos para pantallas muy pequeñas (< 400px) */
+@media (max-width: 400px) {
+  :root {
+    --navbar-height: 76px; /* Altura un poco mayor para iconos más grandes */
+  }
+  
+  body {
+    padding-top: 76px;
+  }
 }
 
 /* Clases utilitarias responsivas */
@@ -558,5 +629,284 @@ img {
   background-color: rgba(189, 54, 47, 0.8) !important;
   border: 2px solid;
   border-color: rgb(189, 54, 47);
+}
+
+/* =============================================== */
+/* MEJORAS ADICIONALES PARA RESPONSIVIDAD COMPLETA */
+/* =============================================== */
+
+/* Asegurar que las páginas tengan scroll correcto */
+.page-container {
+  min-height: calc(100vh - var(--navbar-height, 76px));
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  padding-bottom: 2rem; /* Espacio para el footer */
+}
+
+.page-container .container {
+  flex: 1;
+  padding-bottom: 2rem;
+  overflow-y: auto; /* Permitir scroll en el contenido */
+}
+
+/* Tablas Material Design completamente responsivas */
+.mat-mdc-table-sticky {
+  overflow-x: auto !important;
+  width: 100% !important;
+  -webkit-overflow-scrolling: touch; /* Scroll suave en móviles */
+}
+
+.mat-mdc-table {
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
+.mat-mdc-header-row,
+.mat-mdc-row {
+  min-width: fit-content;
+}
+
+.mat-mdc-cell,
+.mat-mdc-header-cell {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 200px; /* Limitar ancho máximo para forzar responsive */
+}
+
+/* Contenedores de tabla responsivos */
+.table-responsive {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  border-radius: clamp(4px, 1vw, 8px);
+  margin-bottom: 1rem;
+}
+
+/* En pantallas pequeñas, forzar scroll horizontal en tablas */
+@media (max-width: 768px) {
+  .mat-mdc-table {
+    min-width: 600px !important; /* Ancho mínimo para forzar scroll horizontal */
+  }
+  
+  .table-responsive {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 576px) {
+  .mat-mdc-table {
+    min-width: 700px !important; /* Más ancho en móviles para mantener usabilidad */
+  }
+  
+  .mat-mdc-cell,
+  .mat-mdc-header-cell {
+    font-size: 0.75rem !important;
+    padding: 6px 4px !important;
+    max-width: 150px;
+  }
+  
+  /* Badges más compactos en móviles */
+  .badge {
+    font-size: clamp(0.65rem, 1.5vw, 0.8rem) !important;
+    padding: clamp(4px, 1vw, 6px) clamp(6px, 1.5vw, 8px) !important;
+  }
+}
+
+/* Mejoras para formularios dentro de modales */
+.modal .form-control,
+.modal .form-select {
+  font-size: 16px !important; /* Evita zoom en iOS */
+  min-height: 44px;
+}
+
+/* Mejoras para botones en dispositivos táctiles */
+.btn, .mat-mdc-button, .mat-mdc-raised-button {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+}
+
+/* Scroll suave para toda la aplicación */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mejorar el scroll en contenedores específicos */
+.content-area {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+/* Asegurar que los dropdowns funcionen bien en móviles */
+.dropdown-menu {
+  max-width: 90vw;
+  overflow-x: hidden;
+  word-wrap: break-word;
+}
+
+/* Mejoras para campos de búsqueda Material */
+.mat-mdc-form-field {
+  width: 100% !important;
+}
+
+.mat-mdc-text-field-wrapper {
+  width: 100% !important;
+}
+
+/* Mejorar la experiencia táctil en móviles */
+@media (max-width: 767.98px) {
+  .btn, .mat-mdc-button {
+    min-height: 48px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+  }
+  
+  .form-control, .form-select, .mat-mdc-input-element {
+    min-height: 48px;
+    font-size: 16px !important;
+  }
+  
+  /* Tablas más compactas en móviles */
+  .mat-mdc-cell,
+  .mat-mdc-header-cell {
+    font-size: 0.75rem !important;
+    padding: 6px 4px !important;
+  }
+  
+  /* Modales que ocupen casi toda la pantalla en móviles */
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100vw - 1rem);
+    max-height: calc(100vh - 1rem);
+  }
+  
+  .modal-content {
+    max-height: calc(100vh - 1rem);
+    overflow-y: auto;
+  }
+}
+
+/* Mejoras para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .container, .container-fluid {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  
+  .btn {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  
+  .btn:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* =============================================== */
+/* MEJORAS ADICIONALES PARA EVITAR SUPERPOSICIÓN */
+/* =============================================== */
+
+/* Asegurar que el navbar sea siempre sticky y visible */
+.navbar.fixed-top {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1050 !important;
+  width: 100% !important;
+}
+
+/* Asegurar que el sidebar esté siempre debajo del navbar */
+.sidebar {
+  z-index: 1030 !important;
+  top: var(--navbar-height, 76px) !important;
+}
+
+/* Contenido principal siempre debajo del navbar y sidebar */
+.content-area {
+  z-index: 1 !important;
+  position: relative;
+}
+
+/* Footer siempre al final, no sticky */
+footer, app-footer {
+  position: relative !important;
+  z-index: 999 !important;
+}
+
+/* Mejoras específicas para dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+  /* Botones más grandes en dispositivos táctiles */
+  .btn, .mat-mdc-button {
+    min-height: 48px !important;
+    min-width: 48px !important;
+    padding: 12px 16px !important;
+  }
+  
+  /* Campos de formulario más grandes */
+  .form-control, .form-select, .mat-mdc-input-element {
+    min-height: 48px !important;
+    font-size: 16px !important; /* Evita zoom en iOS */
+  }
+  
+  /* Enlaces más fáciles de tocar */
+  a, .nav-link {
+    min-height: 44px !important;
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* Mejoras para orientación horizontal en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --navbar-height-small: 64px; /* Reducir altura en landscape */
+  }
+  
+  .navbar.fixed-top {
+    min-height: 64px;
+    max-height: 64px;
+    padding: 8px 12px;
+  }
+  
+  body {
+    padding-top: 64px;
+  }
+  
+  .sidebar {
+    top: 64px;
+    height: calc(100vh - 64px);
+  }
+  
+  .content-area {
+    height: calc(100vh - 64px);
+  }
+}
+
+/* Scroll suave para toda la aplicación */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Asegurar que los dropdowns y overlays funcionen bien */
+.dropdown-menu {
+  z-index: 1055 !important;
+}
+
+.modal {
+  z-index: 1060 !important;
+}
+
+.modal-backdrop {
+  z-index: 1059 !important;
+}
+
+/* Tooltip y popover por encima de todo */
+.tooltip, .popover {
+  z-index: 1070 !important;
 }
 

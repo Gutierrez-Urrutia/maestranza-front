@@ -1,5 +1,46 @@
 /* ==== MEJORAS RESPONSIVAS ESPECÍFICAS PARA PÁGINAS ==== */
 
+/* Asegurar que todas las páginas tengan el layout correcto */
+.page-container {
+  min-height: calc(100vh - var(--navbar-height, 76px));
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
+  padding-bottom: 2rem; /* Espacio para el footer */
+  z-index: 1;
+  background: white;
+}
+
+.page-container .container {
+  flex: 1;
+  min-height: 0; /* Permite que el contenido sea scrolleable */
+  overflow-y: auto; /* Permitir scroll en el contenido de las páginas */
+}
+
+/* Footer siempre al final de cada página, NO sticky */
+.page-container app-footer {
+  margin-top: auto;
+  position: relative; /* NO sticky - se mueve con el scroll */
+  z-index: 999;
+}
+
+/* Contenedor de tablas responsivo mejorado */
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  margin: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejoras específicas para Material Tables */
+.mat-mdc-table-container {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Mejoras para componentes de inventario */
 .inventario-responsive {
   .page-container {
@@ -232,6 +273,114 @@
   }
 }
 
+/* Responsive adjustments for page container */
+@media (max-width: 991.98px) {
+  .page-container {
+    min-height: calc(100vh - var(--navbar-height-mobile, 64px));
+  }
+}
+
+@media (max-width: 767.98px) {
+  .page-container {
+    min-height: calc(100vh - var(--navbar-height-small, 72px));
+  }
+}
+
+@media (max-width: 575.98px) {
+  .page-container {
+    min-height: calc(100vh - var(--navbar-height-small, 72px));
+  }
+}
+
+/* Responsive breakpoints específicos para tablas */
+@media (max-width: 1200px) {
+  .mat-mdc-table {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .mat-mdc-table {
+    font-size: 0.85rem;
+  }
+  
+  .mat-mdc-cell,
+  .mat-mdc-header-cell {
+    padding: 8px 6px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Tablas más compactas en tablets */
+  .mat-mdc-table {
+    font-size: 0.8rem;
+    min-width: 600px; /* Forzar scroll horizontal */
+  }
+  
+  .mat-mdc-cell,
+  .mat-mdc-header-cell {
+    padding: 6px 4px !important;
+    min-height: 40px;
+  }
+  
+  /* Botones de acción más grandes para toque */
+  .mat-mdc-icon-button {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Móviles: scroll horizontal obligatorio */
+  .mat-mdc-table {
+    font-size: 0.75rem;
+    min-width: 700px; /* Más ancho para mantener usabilidad */
+  }
+  
+  .mat-mdc-cell,
+  .mat-mdc-header-cell {
+    padding: 4px 3px !important;
+    min-height: 36px;
+    font-size: 0.7rem !important;
+  }
+  
+  /* Botones de acción táctiles */
+  .mat-mdc-icon-button {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  
+  /* Campo de búsqueda más grande para evitar zoom */
+  .mat-mdc-form-field .mat-mdc-input-element {
+    font-size: 16px !important;
+  }
+}
+
+/* Mejoras para modales en móviles */
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+    max-height: calc(100% - 1rem);
+  }
+  
+  .modal-content {
+    max-height: calc(100vh - 1rem);
+    overflow-y: auto;
+  }
+  
+  .modal-header,
+  .modal-footer {
+    padding: 1rem;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+}
+
 /* Utilidades adicionales para responsive */
 .text-truncate-responsive {
   white-space: nowrap;
@@ -266,7 +415,6 @@
   }
 }
 
-/* Mejoras para alto contraste */
 @media (prefers-contrast: high) {
   .btn, .badge, .card {
     border: 2px solid currentColor;

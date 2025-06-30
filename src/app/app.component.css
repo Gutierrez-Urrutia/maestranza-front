@@ -12,10 +12,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-.sidebar-open .content-area {
-  margin-left: var(--sidebar-width);
+  position: relative;
 }
 
 /* Asegura que app-container use toda la altura disponible */
@@ -23,14 +20,16 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
 }
 
-/* Ajuste para contenedor principal con navbar fijo */
+/* Ajuste para contenedor principal con navbar sticky */
 .main-content-with-fixed-nav {
   display: flex;
   position: relative;
-  margin-top: var(--navbar-height, 76px); /* Usar variable CSS consistente */
-  min-height: calc(100vh - var(--navbar-height, 76px) - var(--footer-height, 56px)); /* viewport - navbar - footer */
+  margin-top: 0; /* El body ya tiene padding-top para el navbar */
+  min-height: calc(100vh - var(--navbar-height, 76px)); /* viewport - navbar */
+  flex: 1;
 }
 
 .content-area {
@@ -39,6 +38,10 @@
   width: 100%;
   transition: margin-left 0.3s ease;
   overflow-x: hidden; /* Evita scroll horizontal */
+  overflow-y: auto; /* Permitir scroll vertical en el contenido */
+  position: relative;
+  z-index: 1; /* Asegurar que esté debajo del navbar */
+  height: calc(100vh - var(--navbar-height, 76px)); /* Altura fija para permitir scroll */
 }
 
 .sidebar-open .content-area {
@@ -51,6 +54,14 @@
   display: flex;
   width: 100%;
   min-height: 100vh;
+  position: relative;
+}
+
+/* Footer siempre al final, no sticky */
+.app-container app-footer {
+  margin-top: auto;
+  position: relative;
+  z-index: 999; /* Menor que navbar pero sobre contenido */
 }
 
 /* Responsive Design */
@@ -61,17 +72,19 @@
   
   .content-area {
     padding: 0.75rem;
+    height: calc(100vh - var(--navbar-height-mobile, 64px)); /* Mantener altura fija para scroll */
   }
 }
 
 @media (max-width: 767.98px) {
   .main-content-with-fixed-nav {
-    margin-top: var(--navbar-height, 76px); /* Usar variable consistente */
-    min-height: calc(100vh - var(--navbar-height, 76px) - var(--footer-height, 56px));
+    margin-top: 0; /* El body ya tiene padding-top */
+    min-height: calc(100vh - var(--navbar-height-small, 72px));
   }
   
   .content-area {
     padding: 0.5rem;
+    height: calc(100vh - var(--navbar-height-small, 72px)); /* Mantener altura fija para scroll */
   }
   
   .hamburger {
@@ -82,16 +95,37 @@
 
 @media (max-width: 575.98px) {
   .main-content-with-fixed-nav {
-    margin-top: var(--navbar-height, 76px); /* Usar variable consistente */
-    min-height: calc(100vh - var(--navbar-height, 76px) - var(--footer-height, 56px));
+    margin-top: 0; /* El body ya tiene padding-top */
+    min-height: calc(100vh - var(--navbar-height-small, 72px));
   }
   
   .content-area {
     padding: 0.25rem;
+    height: calc(100vh - var(--navbar-height-small, 72px)); /* Mantener altura fija para scroll */
   }
   
   .hamburger {
     font-size: 1.6rem;
     margin: 0.5rem;
+  }
+}
+
+/* Ajustes para tablets grandes y desktop */
+@media (min-width: 1000px) and (max-width: 1100px) {
+  .content-area {
+    height: calc(100vh - var(--navbar-height-tablet-large, 84px));
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1400px) {
+  .content-area {
+    height: calc(100vh - var(--navbar-height-desktop-medium, 88px));
+  }
+}
+
+@media (max-width: 400px) {
+  .content-area {
+    height: calc(100vh - 76px);
+    padding: 0.5rem;
   }
 }

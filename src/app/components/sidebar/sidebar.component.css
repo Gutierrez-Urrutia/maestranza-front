@@ -9,10 +9,11 @@
   transform: translateX(-100%);
   transition: transform 0.3s ease;
   z-index: 1030; /* Menor que el navbar (1050) pero mayor que contenido */
-  overflow-y: hidden; /* Eliminar scroll innecesario */
-  overflow-x: hidden; /* Evitar scroll horizontal */
+  overflow: hidden; /* IMPORTANTE: Sin scroll en el sidebar */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-right: 1px solid #dee2e6; /* Separador visual */
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar.open {
@@ -102,16 +103,18 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-  padding: clamp(24px, 4vw, 32px) clamp(8px, 2vw, 12px) clamp(16px, 3vw, 20px) clamp(8px, 2vw, 12px); /* Separación adecuada del navbar */
+  padding: clamp(16px, 3vw, 24px) clamp(8px, 2vw, 12px) clamp(16px, 3vw, 20px) clamp(8px, 2vw, 12px);
   margin: 0;
   box-sizing: border-box;
-  overflow: hidden; /* Eliminar cualquier scroll */
+  overflow: hidden; /* IMPORTANTE: Sin scroll en el contenedor de navegación */
+  gap: clamp(4px, 1vw, 8px); /* Espaciado consistente entre elementos */
+  max-height: 100%; /* Asegurar que no exceda la altura del sidebar */
 }
 
 /* Elementos de navegación optimizados */
 .sidebar .nav-item {
   flex-shrink: 0; /* No reducir el tamaño */
-  margin-bottom: clamp(4px, 1vw, 8px); /* Espaciado uniforme entre todos los elementos */
+  width: 100%;
 }
 
 /* Overlay para móviles cuando el sidebar está abierto */
@@ -119,10 +122,10 @@
   .sidebar.open::before {
     content: '';
     position: fixed;
-    top: var(--navbar-height, 76px); /* Empezar después del navbar */
+    top: var(--navbar-height-mobile, 64px); /* Empezar después del navbar */
     left: 0;
     width: 100vw;
-    height: calc(100vh - var(--navbar-height, 76px));
+    height: calc(100vh - var(--navbar-height-mobile, 64px));
     background: rgba(0, 0, 0, 0.3); /* Overlay más sutil */
     z-index: -1;
     backdrop-filter: blur(1px); /* Blur mínimo */
@@ -135,16 +138,16 @@
     width: 280px; /* Más ancho en tablets para mejor usabilidad */
     z-index: 1030; /* Menor que navbar (1050) pero mayor que contenido */
     background: #f2f2f2 !important; /* Mantener color gris claro forzado */
-    top: var(--navbar-height, 76px); /* Respeta el navbar */
-    height: calc(100vh - var(--navbar-height, 76px)); /* Altura completa del viewport */
+    top: var(--navbar-height-mobile, 64px); /* Respeta el navbar en tablets */
+    height: calc(100vh - var(--navbar-height-mobile, 64px)); /* Altura completa del viewport */
     overflow-y: hidden; /* Sin scroll innecesario */
   }
 }
 
 @media (max-width: 767.98px) {
   .sidebar {
-    top: var(--navbar-height, 76px); /* Ajuste dinámico - SIEMPRE debajo del navbar */
-    height: calc(100vh - var(--navbar-height, 76px)); /* Altura completa del viewport */
+    top: var(--navbar-height-small, 72px); /* Ajuste dinámico - SIEMPRE debajo del navbar */
+    height: calc(100vh - var(--navbar-height-small, 72px)); /* Altura completa del viewport */
     width: 100vw; /* Ancho completo en móviles */
     background: #f2f2f2 !important; /* Color consistente, forzado sin transparencia */
     backdrop-filter: none; /* Quitar blur que oscurece */
@@ -172,8 +175,8 @@
 
 @media (max-width: 575.98px) {
   .sidebar {
-    top: var(--navbar-height, 76px); /* Consistente con navbar */
-    height: calc(100vh - var(--navbar-height, 76px)); /* Altura completa del viewport */
+    top: var(--navbar-height-small, 72px); /* Consistente con navbar */
+    height: calc(100vh - var(--navbar-height-small, 72px)); /* Altura completa del viewport */
     background: #f2f2f2 !important; /* Color gris claro consistente forzado */
     overflow-y: hidden; /* Sin scroll innecesario */
     z-index: 1030; /* Menor que navbar (1050) */
@@ -192,6 +195,28 @@
   .nav-link i, .logout-btn i {
     margin-right: 16px;
     font-size: clamp(1.1rem, 3vw, 1.3rem);
+  }
+}
+
+/* Ajustes para tablets grandes y desktop */
+@media (min-width: 1000px) and (max-width: 1100px) {
+  .sidebar {
+    top: var(--navbar-height-tablet-large, 84px);
+    height: calc(100vh - var(--navbar-height-tablet-large, 84px));
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1400px) {
+  .sidebar {
+    top: var(--navbar-height-desktop-medium, 88px);
+    height: calc(100vh - var(--navbar-height-desktop-medium, 88px));
+  }
+}
+
+@media (max-width: 400px) {
+  .sidebar {
+    top: 76px;
+    height: calc(100vh - 76px);
   }
 }
 
