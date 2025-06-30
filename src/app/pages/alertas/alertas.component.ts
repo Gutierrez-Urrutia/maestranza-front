@@ -11,6 +11,7 @@ import { FooterComponent } from '../../components/footer/footer.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Alerta, NivelUrgencia } from '../../interfaces/Alerta';
 import { AlertaService } from '../../services/alerta/alerta.service';
+import { PermissionService } from '../../services/permission/permission.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -35,7 +36,7 @@ export class AlertasComponent implements AfterViewInit, OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  displayedColumns: string[] = ['urgencia', 'producto', 'stock', 'descripcion', 'tiempo', 'estado', 'acciones'];
+  displayedColumns: string[] = ['urgencia', 'producto', 'stock', 'descripcion', 'tiempo', 'estado'];
   dataSource = new MatTableDataSource<Alerta>();
 
   alertas: Alerta[] = [];
@@ -59,10 +60,39 @@ export class AlertasComponent implements AfterViewInit, OnInit {
   urgenciaSeleccionada: string = 'Todos';
   estadoSeleccionado: string = 'Todos';
 
-  constructor(private alertaService: AlertaService) { }
+  constructor(
+    private alertaService: AlertaService,
+    private permissionService: PermissionService
+  ) {
+    // Inicializar columnas inmediatamente en el constructor
+    this.setupDisplayedColumns();
+  }
 
   ngOnInit() {
+    // Asegurar que las columnas estén configuradas
+    this.setupDisplayedColumns();
     this.cargarAlertas();
+  }
+
+  private setupDisplayedColumns() {
+    // Columnas base que todos pueden ver
+    const baseColumns = ['urgencia', 'producto', 'stock', 'descripcion', 'tiempo', 'estado'];
+    
+    // Verificar si los servicios están disponibles
+    try {
+      // Solo agregar columna de acciones si el usuario puede gestionar
+      if (this.canManageAlertas()) {
+        this.displayedColumns = [...baseColumns, 'acciones'];
+      } else {
+        this.displayedColumns = [...baseColumns];
+      }
+    } catch (error) {
+      // Si hay error con los permisos, usar solo columnas base
+      console.warn('Error al verificar permisos en alertas, usando columnas base:', error);
+      this.displayedColumns = [...baseColumns];
+    }
+    
+    console.log('Columnas de alertas configuradas:', this.displayedColumns);
   }
 
   private cargarAlertas() {
@@ -351,6 +381,12 @@ export class AlertasComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
+    // Asegurar que las columnas estén configuradas antes de configurar la tabla
+    if (this.displayedColumns.length === 0) {
+      console.warn('Columnas no configuradas en ngAfterViewInit para alertas, reconfigurando...');
+      this.setupDisplayedColumns();
+    }
+    
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
@@ -385,5 +421,34 @@ export class AlertasComponent implements AfterViewInit, OnInit {
       };
       this.paginator._intl.changes.next();
     }
+  }
+
+  // Métodos de control de permisos
+  canCreateAlertas(): boolean {
+    return this.permissionService.canCreateAlertas();
+  }
+
+  canEditAlertas(): boolean {
+    return this.permissionService.canEditAlertas();
+  }
+
+  canDeleteAlertas(): boolean {
+    return this.permissionService.canDeleteAlertas();
+  }
+
+  canViewAlertas(): boolean {
+    return this.permissionService.canView();
+  }
+
+  canManageAlertas(): boolean {
+    return this.permissionService.canManageAlertas();
+  }
+
+  getUserRole(): string {
+    return this.permissionService.getUserMainRole();
+  }
+
+  getAccessLevelDescription(): string {
+    return this.permissionService.getAccessLevelDescription();
   }
 }

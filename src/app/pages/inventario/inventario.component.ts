@@ -16,6 +16,7 @@ import { ProductoService } from '../../services/producto/producto.service';
 import { CategoriaService } from '../../services/categoria/categoria.service';
 import { MovimientoService } from '../../services/movimiento/movimiento.service';
 import { AuthService } from '../../services/login/auth.service';
+import { PermissionService } from '../../services/permission/permission.service';
 import { TipoMovimiento } from '../../interfaces/Movimiento';
 import Swal from 'sweetalert2';
 
@@ -44,10 +45,11 @@ export class InventarioComponent implements AfterViewInit, OnInit {
   private categoriaService = inject(CategoriaService);
   private movimientoService = inject(MovimientoService);
   private authService = inject(AuthService);
+  private permissionService = inject(PermissionService);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  displayedColumns: string[] = ['codigo', 'nombre', 'categoria', 'stock', 'precio', 'acciones'];
+  displayedColumns: string[] = ['codigo', 'nombre', 'categoria', 'stock', 'precio'];
   dataSource = new MatTableDataSource<any>();
   productoParaImagen: any = null;
 
@@ -68,6 +70,45 @@ export class InventarioComponent implements AfterViewInit, OnInit {
     'En Stock',
     'Agotados'
   ];
+
+  constructor() {
+    // Inicializar columnas inmediatamente en el constructor
+    this.setupDisplayedColumns();
+  }
+
+  // Métodos de permisos - definidos temprano para evitar problemas de inicialización
+  canManageInventario(): boolean {
+    return this.permissionService.canCreateInventario() || 
+           this.permissionService.canEditInventario() || 
+           this.permissionService.canDeleteInventario();
+  }
+
+  ngOnInit() {
+    // Asegurar que las columnas estén configuradas
+    this.setupDisplayedColumns();
+    this.cargarDatos();
+  }
+
+  private setupDisplayedColumns() {
+    // Columnas base que todos pueden ver
+    const baseColumns = ['codigo', 'nombre', 'categoria', 'stock', 'precio'];
+    
+    // Verificar si los servicios están disponibles
+    try {
+      // Solo agregar columna de acciones si el usuario puede gestionar
+      if (this.canManageInventario()) {
+        this.displayedColumns = [...baseColumns, 'acciones'];
+      } else {
+        this.displayedColumns = [...baseColumns];
+      }
+    } catch (error) {
+      // Si hay error con los permisos, usar solo columnas base
+      console.warn('Error al verificar permisos, usando columnas base:', error);
+      this.displayedColumns = [...baseColumns];
+    }
+    
+    console.log('Columnas configuradas:', this.displayedColumns);
+  }
 
   abrirModal(tipo: 'agregar' | 'editar', producto?: any) {
     this.tipoModal = tipo;
@@ -112,8 +153,7 @@ export class InventarioComponent implements AfterViewInit, OnInit {
   categoriaSeleccionada: string = 'Todos';
   stockSeleccionado: string = 'Todos';
 
-  ngOnInit() {
-
+  private cargarDatos() {
     this.cargarCategorias();
     this.cargarProductos();
   }
@@ -516,6 +556,12 @@ export class InventarioComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
+    // Asegurar que las columnas estén configuradas antes de configurar la tabla
+    if (this.displayedColumns.length === 0) {
+      console.warn('Columnas no configuradas en ngAfterViewInit, reconfigurando...');
+      this.setupDisplayedColumns();
+    }
+    
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
@@ -550,5 +596,29 @@ export class InventarioComponent implements AfterViewInit, OnInit {
         return `${startIndex + 1} - ${endIndex} de ${length}`;
       };
       this.paginator._intl.changes.next();    }
+  }
+
+  canCreateInventario(): boolean {
+    return this.permissionService.canCreateInventario();
+  }
+
+  canEditInventario(): boolean {
+    return this.permissionService.canEditInventario();
+  }
+
+  canDeleteInventario(): boolean {
+    return this.permissionService.canDeleteInventario();
+  }
+
+  canViewInventario(): boolean {
+    return this.permissionService.canView();
+  }
+
+  getUserRole(): string {
+    return this.permissionService.getUserMainRole();
+  }
+
+  getAccessLevelDescription(): string {
+    return this.permissionService.getAccessLevelDescription();
   }
 }

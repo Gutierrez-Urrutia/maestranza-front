@@ -4,6 +4,12 @@
             <div class="col-12 my-3">
                 <h3 class="text-responsive">Gestión de Inventario</h3>
                 <p class="text-responsive">Administra fácilmente tu inventario y mantén un seguimiento de tus productos.</p>
+                
+                <!-- Información del nivel de acceso del usuario -->
+                <div class="alert alert-info mb-3" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Nivel de acceso ({{getUserRole()}}):</strong> {{getAccessLevelDescription()}}
+                </div>
             </div>
         </div>
         <div class="row mb-5">
@@ -39,10 +45,17 @@
             <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 gap-2 flex-responsive-between">
                 <h2 class="mb-2 text-start order-1 order-md-1 text-responsive">Lista de Productos</h2>
                 <div class="order-2 order-md-2">
+                    @if (canCreateInventario()) {
                     <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#modalProducto"
                         (click)="abrirModal('agregar')">
                         <i class="bi bi-plus-circle me-1"></i><span class="d-none d-sm-inline">Agregar</span><span class="d-sm-none">+</span>
                     </button>
+                    } @else {
+                    <!-- Mensaje informativo para usuarios sin permisos de creación -->
+                    <small class="text-muted">
+                        <i class="bi bi-eye me-1"></i>Solo visualización
+                    </small>
+                    }
                 </div>
             </div>
         </div>
@@ -103,18 +116,27 @@
                                 </td>
                             </ng-container>
 
-                            <!-- Columna Acciones - AGREGAR text-center -->
+                            <!-- Columna Acciones - Solo visible para usuarios con permisos -->
                             <ng-container matColumnDef="acciones">
                                 <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
                                 <td mat-cell *matCellDef="let producto" class="text-center">
+                                    @if (canEditInventario()) {
                                     <button mat-icon-button class="mat-warning" (click)="editarProducto(producto)"
                                         data-bs-toggle="modal" data-bs-target="#modalProducto" matTooltip="Editar">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
+                                    }
+                                    @if (canDeleteInventario()) {
                                     <button mat-icon-button class="mat-danger" (click)="eliminarProducto(producto)"
                                         matTooltip="Eliminar">
                                         <i class="bi bi-trash"></i>
                                     </button>
+                                    }
+                                    @if (!canEditInventario() && !canDeleteInventario()) {
+                                    <small class="text-muted">
+                                        <i class="bi bi-eye"></i>
+                                    </small>
+                                    }
                                 </td>
                             </ng-container>
 

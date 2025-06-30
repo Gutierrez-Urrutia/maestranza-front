@@ -1,8 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { MenuItem } from '../../interfaces/MenuItem';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/login/auth.service';
+import { PermissionService } from '../../services/permission/permission.service';
+import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,13 +16,31 @@ import Swal from 'sweetalert2';
     CommonModule, RouterModule
   ]
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit, OnDestroy {
   @Input() visible = false;
+
+  private userSubscription: Subscription = new Subscription();
+  visibleMenuItems: MenuItem[] = [];
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private permissionService: PermissionService
   ) { }
+
+  ngOnInit() {
+    // Suscribirse a los cambios del usuario para actualizar el menú
+    this.userSubscription = this.authService.user$.subscribe(() => {
+      this.updateVisibleMenuItems();
+    });
+    
+    // Cargar elementos del menú inicialmente
+    this.updateVisibleMenuItems();
+  }
+
+  ngOnDestroy() {
+    this.userSubscription.unsubscribe();
+  }
 
   menuItems: MenuItem[] = [
     {
@@ -49,6 +69,18 @@ export class SidebarComponent {
       route: '/logout'
     }
   ];
+
+  // Método para actualizar elementos visibles del menú
+  private updateVisibleMenuItems() {
+    this.visibleMenuItems = this.menuItems.filter(item => {
+      // Mostrar "Usuarios" solo si el usuario tiene permisos para acceder
+      if (item.route === '/usuarios') {
+        return this.permissionService.canAccessUsuarios();
+      }
+      // Mostrar todos los demás elementos
+      return true;
+    });
+  }
 
   onMenuItemClick(item: MenuItem): void {
     if (item.route === '/logout') {

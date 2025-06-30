@@ -1,6 +1,6 @@
 <div class="sidebar" [class.open]="visible">
   <ul class="nav flex-column">
-    @for (item of menuItems; track item.name) {
+    @for (item of visibleMenuItems; track item.name) {
     <li class="nav-item">
       @if (item.route === '/logout') {
       <!-- Botón especial para logout -->

@@ -4,6 +4,12 @@
             <div class="col-12 my-3">
                 <h3 class="text-responsive">Gestión de Usuarios</h3>
                 <p class="text-responsive">Administra los usuarios del sistema y sus permisos.</p>
+                
+                <!-- Información del nivel de acceso del usuario -->
+                <div class="alert alert-info mb-3" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Nivel de acceso ({{getUserRole()}}):</strong> {{getAccessLevelDescription()}}
+                </div>
             </div>
         </div>
 
@@ -39,10 +45,17 @@
             <div class="col-12 d-flex justify-content-between align-items-center mb-3 flex-responsive-between">
                 <h2 class="mb-2 text-start text-responsive">Lista de Usuarios</h2>
                 <div>
+                    @if (canCreateUsuarios()) {
                     <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#modalUsuario"
                         (click)="abrirModal('agregar')">
                         <i class="bi bi-person-plus me-1"></i><span class="d-none d-sm-inline">Agregar </span>Usuario
                     </button>
+                    } @else {
+                    <!-- Mensaje informativo para usuarios sin permisos de creación -->
+                    <small class="text-muted">
+                        <i class="bi bi-eye me-1"></i>Solo visualización
+                    </small>
+                    }
                 </div>
             </div>
         </div>
@@ -135,19 +148,30 @@
                             <ng-container matColumnDef="acciones">
                                 <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
                                 <td mat-cell *matCellDef="let usuario" class="text-center">
+                                    @if (canEditUsuarios()) {
                                     <button mat-icon-button class="mat-warning" (click)="editarUsuario(usuario)"
                                         data-bs-toggle="modal" data-bs-target="#modalUsuario" matTooltip="Editar">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
+                                    }
+                                    @if (canManageUsuarios()) {
                                     <button mat-icon-button [class]="usuario.activo ? 'text-secondary' : 'text-success'"
                                         (click)="toggleEstadoUsuario(usuario)"
                                         [matTooltip]="usuario.activo ? 'Desactivar' : 'Activar'">
                                         <i [class]="usuario.activo ? 'bi bi-pause-circle' : 'bi bi-play-circle'"></i>
                                     </button>
+                                    }
+                                    @if (canDeleteUsuarios()) {
                                     <button mat-icon-button class="mat-danger" (click)="eliminarUsuario(usuario)"
                                         matTooltip="Eliminar">
                                         <i class="bi bi-trash"></i>
                                     </button>
+                                    }
+                                    @if (!canEditUsuarios() && !canDeleteUsuarios() && !canManageUsuarios()) {
+                                    <small class="text-muted">
+                                        <i class="bi bi-eye"></i>
+                                    </small>
+                                    }
                                 </td>
                             </ng-container>
 
@@ -175,20 +199,22 @@
     <app-footer></app-footer>
 </div>
 
-<!-- Modal de Usuario -->
+<!-- Modal de Usuario - Solo visible para usuarios con permisos -->
+@if (canCreateUsuarios() || canEditUsuarios()) {
 <app-modal modalId="modalUsuario" [title]="modalConfig.title" [icon]="modalConfig.icon"
     [iconColor]="modalConfig.iconColor" size="xl">
 
-    @if (tipoModal === 'agregar') {
+    @if (tipoModal === 'agregar' && canCreateUsuarios()) {
     <app-agregar-usuario (usuarioCreado)="onUsuarioCreado($event)" (cancelar)="onCancelarModal()">
     </app-agregar-usuario>
-    } @else if (tipoModal === 'editar') {
+    } @else if (tipoModal === 'editar' && canEditUsuarios()) {
     <app-editar-usuario [usuario]="usuarioSeleccionado" (usuarioActualizado)="onUsuarioActualizado($event)"
         (cancelar)="onCancelarModal()">
     </app-editar-usuario>
     } @else {
     <div class="text-center p-4">
-        <p class="text-muted">Tipo de formulario no reconocido</p>
+        <p class="text-muted">No tienes permisos para realizar esta acción</p>
     </div>
     }
 </app-modal>
+}

@@ -15,6 +15,7 @@ import { Rol } from '../../interfaces/Rol';
 import Swal from 'sweetalert2';
 import { UsuarioService } from '../../services/usuario/usuario.service';
 import { RolService } from '../../services/rol/rol.service';
+import { PermissionService } from '../../services/permission/permission.service';
 import { forkJoin } from 'rxjs';
 import { AgregarUsuarioComponent } from '../../components/forms/agregar-usuario/agregar-usuario.component';
 import { EditarUsuarioComponent } from '../../components/forms/editar-usuario/editar-usuario.component';
@@ -74,11 +75,24 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
 
   constructor(
     private usuarioService: UsuarioService,
-    private rolService: RolService
+    private rolService: RolService,
+    private permissionService: PermissionService
   ) { }
 
   ngOnInit() {
+    // Configurar columnas según permisos
+    this.setupDisplayedColumns();
     this.cargarDatos();
+  }
+
+  private setupDisplayedColumns() {
+    // Columnas base que todos pueden ver
+    this.displayedColumns = ['username', 'nombre', 'email', 'roles', 'estado'];
+    
+    // Solo agregar columna de acciones si el usuario puede gestionar
+    if (this.canManageUsuarios() || this.canEditUsuarios() || this.canDeleteUsuarios()) {
+      this.displayedColumns.push('acciones');
+    }
   }
 
   private cargarDatos() {
@@ -441,5 +455,34 @@ export class UsuariosComponent implements AfterViewInit, OnInit {
     }
 
     return resultado;
+  }
+
+  // Métodos de control de permisos
+  canCreateUsuarios(): boolean {
+    return this.permissionService.canCreate();
+  }
+
+  canEditUsuarios(): boolean {
+    return this.permissionService.canEdit();
+  }
+
+  canDeleteUsuarios(): boolean {
+    return this.permissionService.canDelete();
+  }
+
+  canViewUsuarios(): boolean {
+    return this.permissionService.canView();
+  }
+
+  canManageUsuarios(): boolean {
+    return this.permissionService.canManage();
+  }
+
+  getUserRole(): string {
+    return this.permissionService.getUserMainRole();
+  }
+
+  getAccessLevelDescription(): string {
+    return this.permissionService.getAccessLevelDescription();
   }
 }

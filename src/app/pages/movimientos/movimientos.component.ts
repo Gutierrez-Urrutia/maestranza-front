@@ -15,6 +15,7 @@ import { Movimiento, TipoMovimiento } from '../../interfaces/Movimiento';
 import { Usuario } from '../../interfaces/Usuario';
 import { AuthService } from '../../services/login/auth.service';
 import { MovimientoService } from '../../services/movimiento/movimiento.service';
+import { PermissionService } from '../../services/permission/permission.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -54,7 +55,8 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
   constructor(
     private authService: AuthService,
     private movimientoService: MovimientoService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private permissionService: PermissionService
   ) { }ngOnInit() {
     this.cargarMovimientos();
   }
@@ -355,5 +357,34 @@ export class MovimientosComponent implements OnInit, AfterViewInit {
   formatearTipoTexto(tipo: string): string {
     if (tipo === 'Todos') return 'Todos';
     return tipo.charAt(0).toUpperCase() + tipo.slice(1).toLowerCase();
+  }
+
+  // Métodos de control de permisos
+  canCreateMovimientos(): boolean {
+    return this.permissionService.canCreateMovimientos();
+  }
+
+  canEditMovimientos(): boolean {
+    return this.permissionService.canEditMovimientos();
+  }
+
+  canDeleteMovimientos(): boolean {
+    return this.permissionService.canDeleteMovimientos();
+  }
+
+  canViewMovimientos(): boolean {
+    return this.permissionService.canView();
+  }
+
+  canManageMovimientos(): boolean {
+    return this.permissionService.canManageMovimientos();
+  }
+
+  getUserRole(): string {
+    return this.permissionService.getUserMainRole();
+  }
+
+  getAccessLevelDescription(): string {
+    return this.permissionService.getAccessLevelDescription();
   }
 }
