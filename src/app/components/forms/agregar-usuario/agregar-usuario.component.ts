@@ -28,6 +28,8 @@ export class AgregarUsuarioComponent implements OnInit {
   emailError: string | null = null;
   nombreError: string | null = null;
   apellidoError: string | null = null;
+  passwordError: string | null = null;
+  confirmPasswordError: string | null = null;
 
   // Modelo del formulario
   formData = {
@@ -90,6 +92,24 @@ export class AgregarUsuarioComponent implements OnInit {
     }
   }
 
+  onPasswordChange() {
+    this.passwordError = null;
+    if (this.formData.password && !this.validatePassword(this.formData.password)) {
+      this.passwordError = 'La contraseña debe tener al menos 6 caracteres';
+    }
+    // Verificar también si las contraseñas coinciden si ya hay confirmación
+    this.onConfirmPasswordChange();
+  }
+
+  onConfirmPasswordChange() {
+    this.confirmPasswordError = null;
+    if (this.formData.confirmPassword) {
+      if (this.formData.password !== this.formData.confirmPassword) {
+        this.confirmPasswordError = 'Las contraseñas no coinciden';
+      }
+    }
+  }
+
   // Validación para nombre de usuario (letras, números y punto)
   validateUsername(value: string): boolean {
     const regex = /^[a-zA-Z0-9.]+$/;
@@ -100,6 +120,11 @@ export class AgregarUsuarioComponent implements OnInit {
   validateEmail(value: string): boolean {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(value);
+  }
+
+  // Validación para contraseña (mínimo 6 caracteres)
+  validatePassword(password: string): boolean {
+    return password != null && password.length >= 6;
   }
 
   // Validación para campos que solo deben contener letras
@@ -242,7 +267,10 @@ export class AgregarUsuarioComponent implements OnInit {
       !this.apellidoError &&
       this.validateOnlyLetters(this.formData.apellido) &&
       this.formData.password &&
+      !this.passwordError &&
+      this.validatePassword(this.formData.password) &&
       this.formData.confirmPassword &&
+      !this.confirmPasswordError &&
       this.formData.password === this.formData.confirmPassword &&
       this.formData.roles.length > 0
     );
@@ -345,5 +373,7 @@ export class AgregarUsuarioComponent implements OnInit {
     this.emailError = null;
     this.nombreError = null;
     this.apellidoError = null;
+    this.passwordError = null;
+    this.confirmPasswordError = null;
   }
 }

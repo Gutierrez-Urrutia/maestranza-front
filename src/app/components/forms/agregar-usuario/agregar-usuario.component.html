@@ -62,12 +62,20 @@
                 <label for="password" class="form-label">Contraseña</label>
                 <div class="input-group">
                     <input [type]="mostrarPassword ? 'text' : 'password'" class="form-control" id="password"
-                        [(ngModel)]="formData.password" name="password" placeholder="Ingrese la contraseña" required>
+                        [(ngModel)]="formData.password" name="password" 
+                        (ngModelChange)="onPasswordChange()"
+                        [ngClass]="{'is-invalid': passwordError}"
+                        placeholder="Mínimo 6 caracteres" required>
                     <button class="btn btn-outline-secondary" type="button"
                         (click)="togglePasswordVisibility('password')">
                         <i [class]="mostrarPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                     </button>
                 </div>
+                @if (passwordError) {
+                <div class="invalid-feedback d-block">
+                    {{passwordError}}
+                </div>
+                }
             </div>
         </div>
         <div class="col-md-6">
@@ -76,14 +84,18 @@
                 <div class="input-group">
                     <input [type]="mostrarConfirmPassword ? 'text' : 'password'" class="form-control"
                         id="confirmPassword" [(ngModel)]="formData.confirmPassword" name="confirmPassword"
+                        (ngModelChange)="onConfirmPasswordChange()"
+                        [ngClass]="{'is-invalid': confirmPasswordError}"
                         placeholder="Confirme la contraseña" required>
                     <button class="btn btn-outline-secondary" type="button"
                         (click)="togglePasswordVisibility('confirmPassword')">
                         <i [class]="mostrarConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                     </button>
                 </div>
-                @if (formData.confirmPassword && !passwordsMatch()) {
-                <div class="text-danger small mt-1">Las contraseñas no coinciden</div>
+                @if (confirmPasswordError) {
+                <div class="invalid-feedback d-block">
+                    {{confirmPasswordError}}
+                </div>
                 }
             </div>
         </div>
