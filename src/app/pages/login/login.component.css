@@ -32,10 +32,10 @@
     margin: 0 auto; /* Centrado horizontal adicional */
     margin-left: auto;
     margin-right: auto;
-    transform: translateZ(0); /* Activar aceleración por hardware */
+    /* transform: translateZ(0); REMOVIDO - causa stacking context */
     box-sizing: border-box;
     position: relative;
-    z-index: 1; /* Asegurar que esté encima del fondo */
+    /* z-index: 1; REMOVIDO - innecesario */
 }
 
 .login-form h2 {

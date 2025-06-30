@@ -2,6 +2,7 @@ import { Component, AfterViewInit, HostListener } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { NavbarComponent } from "./components/navbar/navbar.component";
+import { DebugInfoComponent } from "./components/debug-info/debug-info.component";
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { SessionService } from './services/session/session.service';
@@ -11,7 +12,7 @@ import { SessionService } from './services/session/session.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, NavbarComponent, CommonModule],
+  imports: [RouterOutlet, SidebarComponent, NavbarComponent, DebugInfoComponent, CommonModule],
 })
 export class AppComponent implements AfterViewInit {
   title = 'maestranza-front';

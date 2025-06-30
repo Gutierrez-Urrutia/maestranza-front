@@ -465,6 +465,46 @@ img {
   border-top: 1px solid #e9ecef;
 }
 
+/* ===== SOLUCIÓN DEFINITIVA PARA MODAL ===== */
+
+/* FORZAR ngx-toastr por DEBAJO del modal */
+.toast-container {
+  z-index: 1050 !important; /* Debajo del modal Bootstrap */
+}
+
+/* FORZAR el modal por encima de TODO CON Z-INDEX EXTREMO */
+.modal.show {
+  z-index: 2147483647 !important; /* Valor máximo posible */
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+.modal-backdrop.show {
+  z-index: 2147483646 !important; /* Un nivel debajo del modal */
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.modal-dialog {
+  z-index: 2147483647 !important;
+  position: relative !important;
+  margin: 1.75rem auto !important;
+  pointer-events: auto !important;
+}
+
+.modal-content {
+  z-index: 2147483647 !important;
+  position: relative !important;
+  pointer-events: auto !important;
+}
+
 /* ==== UTILIDADES RESPONSIVAS ESPECÍFICAS ==== */
 
 /* Texto responsivo con clases utilitarias */
@@ -897,13 +937,7 @@ html {
   z-index: 1055 !important;
 }
 
-.modal {
-  z-index: 1060 !important;
-}
-
-.modal-backdrop {
-  z-index: 1059 !important;
-}
+/* Sin estilos de modal - usar Bootstrap nativo */
 
 /* Tooltip y popover por encima de todo */
 .tooltip, .popover {
