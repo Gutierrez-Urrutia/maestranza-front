@@ -17,6 +17,7 @@ import { environment } from '../../../environments/environment';
         <span>DB: {{databaseInfo}}</span>
         <br>
         <button (click)="debugModal()" class="btn btn-warning btn-sm mt-1">Debug Modal</button>
+        <button (click)="testSweetAlert()" class="btn btn-success btn-sm mt-1">Test SWAL</button>
         <button (click)="showZIndexInfo()" class="btn btn-info btn-sm mt-1">Z-Index Info</button>
       </small>
     </div>
@@ -177,6 +178,28 @@ export class DebugInfoComponent implements OnInit {
     console.log('Elementos con z-index (ordenados de mayor a menor):');
     zIndexElements.forEach(item => {
       console.log(`${item.zIndex}: ${item.tagName}${item.id ? '#' + item.id : ''}${item.classes ? '.' + item.classes.replace(/\s+/g, '.') : ''}`);
+    });
+  }
+
+  testSweetAlert() {
+    console.log('🧪 Probando SweetAlert2 con z-index máximo');
+    
+    // Importar SweetAlert dinámicamente para la prueba
+    import('sweetalert2').then(({ default: Swal }) => {
+      Swal.fire({
+        title: 'Prueba de Z-Index',
+        text: '¿SweetAlert aparece por encima del modal?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, funciona',
+        cancelButtonText: 'No, sigue tapado'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log('✅ SweetAlert funciona correctamente');
+        } else {
+          console.log('❌ SweetAlert sigue tapado por el modal');
+        }
+      });
     });
   }
 

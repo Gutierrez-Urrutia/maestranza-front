@@ -1,0 +1,18 @@
+<div class="debug-info" [ngClass]="isProduction ? 'prod-mode' : 'dev-mode'">
+  <strong>🐛 DEBUG INFO</strong><br>
+  <small>Env: {{ environmentName }}</small><br>
+  <small>API: {{ apiUrl }}</small><br>
+  <small>DB: {{ databaseInfo }}</small>
+  
+  <div class="debug-buttons">
+    <button class="btn btn-sm btn-outline-info" (click)="debugModal()" title="Debug Modal Z-index">
+      🔍 Modal
+    </button>
+    <button class="btn btn-sm btn-outline-warning" (click)="testSweetAlert()" title="Probar SweetAlert">
+      🍭 SWAL
+    </button>
+    <button class="btn btn-sm btn-outline-secondary" (click)="showZIndexInfo()" title="Ver Z-index">
+      📊 Z-Index
+    </button>
+  </div>
+</div>

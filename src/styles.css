@@ -472,9 +472,15 @@ img {
   z-index: 1050 !important; /* Debajo del modal Bootstrap */
 }
 
-/* FORZAR el modal por encima de TODO CON Z-INDEX EXTREMO */
+/* Z-index hierarchy simple y efectivo:
+   - SweetAlert2: 999999+ (máxima prioridad absoluta)
+   - Modales Bootstrap: 9999
+   - Otros elementos: < 9000
+*/
+
+/* MODAL con z-index alto pero razonable */
 .modal.show {
-  z-index: 2147483647 !important; /* Valor máximo posible */
+  z-index: 9999 !important;
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
@@ -484,7 +490,7 @@ img {
 }
 
 .modal-backdrop.show {
-  z-index: 2147483646 !important; /* Un nivel debajo del modal */
+  z-index: 9998 !important; /* Un nivel debajo del modal */
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
@@ -493,16 +499,33 @@ img {
 }
 
 .modal-dialog {
-  z-index: 2147483647 !important;
+  z-index: 9999 !important;
   position: relative !important;
   margin: 1.75rem auto !important;
   pointer-events: auto !important;
 }
 
 .modal-content {
-  z-index: 2147483647 !important;
+  z-index: 9999 !important;
   position: relative !important;
   pointer-events: auto !important;
+}
+
+/* SweetAlert2 con z-index EXTREMO para que siempre esté por encima */
+.swal2-container {
+  z-index: 999999 !important; /* Z-index extremo para SweetAlert */
+}
+
+.swal2-popup {
+  z-index: 999999 !important;
+}
+
+.swal2-backdrop-show {
+  z-index: 999998 !important; /* Backdrop de SweetAlert */
+}
+
+.swal2-toast {
+  z-index: 999999 !important; /* Toasts de SweetAlert */
 }
 
 /* ==== UTILIDADES RESPONSIVAS ESPECÍFICAS ==== */

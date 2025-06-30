@@ -6,6 +6,7 @@ import { DebugInfoComponent } from "./components/debug-info/debug-info.component
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { SessionService } from './services/session/session.service';
+import { configureSweetAlert } from './config/swal.config';
 
 @Component({
   selector: 'app-root',
@@ -45,6 +46,9 @@ export class AppComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    // Configurar SweetAlert2 con z-index máximo
+    configureSweetAlert();
+    
     this.updateHeights();
   }
 
