@@ -64,9 +64,26 @@ export class NavbarComponent implements OnInit, OnDestroy {
   // Cerrar notificaciones al hacer clic fuera
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.notification-container')) {
+    // Usar setTimeout para asegurar que el click del toggle se procese primero
+    setTimeout(() => {
+      const target = event.target as HTMLElement;
+      
+      // Solo cerrar si está abierto y el click no fue dentro del contenedor de notificaciones
+      if (this.notificacionesAbiertas && !target.closest('.notification-container')) {
+        console.log('🔔 Click fuera detectado, cerrando dropdown');
+        this.notificacionesAbiertas = false;
+      }
+    }, 0);
+  }
+
+  // Cerrar notificaciones al presionar Escape
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    if (this.notificacionesAbiertas) {
+      console.log('🔔 Escape presionado, cerrando dropdown');
       this.notificacionesAbiertas = false;
+      event.preventDefault();
+      event.stopPropagation();
     }
   }
 
@@ -92,7 +109,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     console.log('🔔 toggleNotificaciones EJECUTADA - evento:', event);
     
     event.preventDefault();
-    event.stopPropagation();
+    event.stopPropagation(); // Prevenir que el click se propague al document
     
     console.log('🔔 Toggle notificaciones - Estado anterior:', this.notificacionesAbiertas);
     this.notificacionesAbiertas = !this.notificacionesAbiertas;

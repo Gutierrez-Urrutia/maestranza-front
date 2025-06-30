@@ -1,4 +1,4 @@
-/* Estilos para el mensaje de bienvenida */
+/* Estilos base */
 .welcome-message {
   font-size: clamp(0.8rem, 2.5vw, 1rem);
   font-weight: 500;
@@ -8,11 +8,11 @@
   padding: 0 !important;
 }
 
-/* Estilos para el contenedor de notificaciones - FIXED POSITIONING */
 .notification-container {
   margin-left: 1rem;
-  z-index: 9500 !important; /* Asegurar que el contenedor tenga z-index alto */
-  position: relative !important; /* Necesario para z-index */
+  z-index: 9500 !important;
+  position: relative !important;
+  overflow: visible !important;
 }
 
 .notification-btn {
@@ -35,20 +35,11 @@
   transform: scale(1.05);
 }
 
-.notification-btn:focus {
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  outline: none;
-  border-radius: 4px;
-}
-
-/* Estilos para el icono de campana */
-.notification-btn .bi-bell,
-.notification-btn .bi-bell.text-warning,
-.notification-btn .bi-bell.text-muted {
+.notification-btn .bi-bell {
   font-size: clamp(1.8rem, 3.5vw, 2.2rem) !important;
 }
 
-/* Estilos responsivos para el título - Solo aplicar cuando es visible */
+/* Navbar base */
 .navbar h1 {
   margin: 0 !important;
   padding: 0 !important;
@@ -56,13 +47,12 @@
   font-weight: 600 !important;
   color: #2fa4e7 !important;
   white-space: nowrap !important;
-  overflow: visible !important; /* CAMBIADO: permitir overflow para dropdowns */
+  overflow: visible !important;
   text-overflow: ellipsis !important;
   flex-shrink: 1 !important;
   max-width: 100% !important;
 }
 
-/* Estilos para la burbuja de notificación */
 .notification-badge {
   background-color: #dc3545;
   color: white;
@@ -70,8 +60,6 @@
   font-weight: 600;
   width: 20px !important;
   height: 20px !important;
-  min-width: 20px !important;
-  max-width: 20px !important;
   border-radius: 50% !important;
   display: flex !important;
   align-items: center;
@@ -82,28 +70,15 @@
   right: 0px !important;
   transform: translate(-16px, 12px) !important;
   animation: pulse 2s infinite;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  box-sizing: border-box !important;
-  padding: 0 !important;
-  text-align: center !important;
-  overflow: hidden;
+  position: absolute;
 }
 
 @keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
-/* Z-index y altura del navbar - Fixed responsivo MEJORADO */
+/* Navbar principal */
 .navbar.fixed-top {
   z-index: 1020 !important;
   position: fixed !important;
@@ -119,15 +94,8 @@
   display: flex !important;
   align-items: center !important;
   flex-wrap: nowrap !important;
-  overflow: visible !important; /* CAMBIADO: permitir overflow para dropdowns */
+  overflow: visible !important;
   border-bottom: 1px solid #dee2e6;
-  /* will-change: transform; REMOVIDO - causa stacking context */
-}
-
-/* Mejora general para asegurar alineación vertical en todos los tamaños */
-.navbar.fixed-top {
-  display: flex !important;
-  align-items: center !important;
 }
 
 .navbar .container-fluid {
@@ -136,78 +104,11 @@
   justify-content: space-between !important;
   height: 100% !important;
   min-height: inherit !important;
-}
-
-/* Layout para pantallas menores a 600px: solo hamburguesa y notificaciones */
-@media (max-width: 599px) {
-  .navbar .container-fluid {
-    display: grid !important;
-    grid-template-columns: auto 1fr !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 8px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  
-  /* Botón hamburguesa - columna izquierda */
-  .navbar .btn {
-    grid-column: 1 !important;
-    justify-self: flex-start !important;
-  }
-  
-  /* Sección de notificaciones - columna derecha */
-  .navbar .d-flex.align-items-center {
-    grid-column: 2 !important;
-    justify-self: flex-end !important;
-    margin: 0 !important;
-  }
-}
-
-/* Ajustes específicos para dispositivos móviles */
-@media (max-width: 991.98px) {
-  .navbar.fixed-top {
-    min-height: var(--navbar-height-mobile, 64px);
-    max-height: var(--navbar-height-mobile, 64px);
-    padding: 10px 16px;
-  }
-}
-
-@media (max-width: 767.98px) {
-  .navbar.fixed-top {
-    min-height: var(--navbar-height-small, 72px);
-    max-height: var(--navbar-height-small, 72px);
-    padding: 12px 16px;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .navbar.fixed-top {
-    min-height: var(--navbar-height-small, 72px);
-    max-height: var(--navbar-height-small, 72px);
-    padding: 14px 12px;
-  }
-}
-
-/* Contenedor del navbar responsivo */
-.navbar .container-fluid {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  min-height: calc(var(--navbar-height) - 16px);
   width: 100%;
   max-width: 100%;
   padding: 0;
   margin: 0;
-  overflow: visible !important; /* CAMBIADO: permitir overflow para dropdowns */
-}
-
-/* Botón hamburguesa responsivo */
-.navbar .btn i.bi-list {
-  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  overflow: visible !important;
 }
 
 .navbar .btn {
@@ -216,7 +117,11 @@
   flex-shrink: 0;
 }
 
-/* Sección de navegación y usuario */
+.navbar .btn i.bi-list {
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+}
+
+/* Navegación */
 .navbar .navbar-nav {
   display: flex;
   align-items: center;
@@ -226,50 +131,33 @@
   min-width: 0;
 }
 
-/* Solo mostrar navbar-nav en pantallas de 600px o más */
-@media (min-width: 600px) {
-  .navbar .navbar-nav {
-    display: flex !important;
-    align-items: center !important;
-  }
-}
-
-/* Ocultar navbar-nav en pantallas menores a 600px */
-@media (max-width: 599px) {
-  .navbar .navbar-nav {
-    display: none !important;
-  }
-}
-
 .navbar .navbar-nav .nav-item {
-  margin: 0;
-  padding: 0;
-  flex-shrink: 1;
-  min-width: 0;
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-/* Sección de usuario */
 .navbar .d-flex.align-items-center {
   flex-shrink: 0;
   margin-left: auto;
 }
 
-/* Estilos para el dropdown de notificaciones - POSITIONING FIXED */
+/* Dropdown de notificaciones */
 .notification-dropdown {
   position: absolute !important;
-  top: calc(100% + 5px) !important; /* Pequeño gap debajo del botón */
-  right: 0 !important; /* Alineado a la derecha del contenedor */
-  background: white !important; /* Fondo blanco normal */
-  border: 1px solid #dee2e6 !important; /* Borde normal */
+  top: calc(100% + 5px) !important;
+  right: 0 !important;
+  background: white !important;
+  border: 1px solid #dee2e6 !important;
   border-radius: 0.5rem !important;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-  z-index: 9500 !important; /* Z-index alto para asegurar visibilidad */
+  z-index: 9500 !important;
   width: 320px !important;
-  max-width: 90vw !important; /* No exceder el viewport en móviles */
+  max-width: 90vw !important;
   max-height: 400px !important;
   overflow-y: auto !important;
   font-size: 0.875rem !important;
-  /* Estados por defecto */
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
@@ -277,62 +165,12 @@
   transition: all 0.15s ease-in-out !important;
 }
 
-/* Asegurar que el dropdown de notificaciones se muestre correctamente */
 .notification-dropdown.show {
   display: block !important;
-  position: absolute !important;
-  top: calc(100% + 5px) !important;
-  right: 0 !important;
-  z-index: 99999 !important; /* Z-index extremadamente alto */
+  z-index: 99999 !important;
   opacity: 1 !important;
   visibility: visible !important;
-  transform: none !important; /* Sin transformaciones que puedan crear stacking context */
-  background: white !important;
-  border: 1px solid #dee2e6 !important;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-  width: 320px !important;
-  max-width: 90vw !important;
-  max-height: 400px !important;
-}
-
-/* Asegurar que el dropdown tenga contenido visible */
-.notification-dropdown.show .notification-header,
-.notification-dropdown.show .notification-body,
-.notification-dropdown.show .notification-footer {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* FORZAR VISUALIZACIÓN DEL DROPDOWN DE NOTIFICACIONES */
-.notification-container[aria-expanded="true"] .notification-dropdown,
-.notification-container .notification-dropdown.show,
-.notification-dropdown[style*="display: block"] {
-  display: block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: translateY(0) !important;
-  z-index: 9500 !important;
-  position: absolute !important;
-  top: calc(100% + 5px) !important;
-  right: 0 !important;
-  background: white !important;
-  border: 1px solid #dee2e6 !important;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
-
-/* Asegurar que el contenedor padre no corte el dropdown */
-.notification-container {
-  position: relative !important;
-  overflow: visible !important;
-  z-index: 9500 !important;
-}
-
-/* Asegurar que toda la jerarquía permita overflow visible */
-.navbar,
-.navbar .container-fluid,
-.navbar .d-flex.align-items-center {
-  overflow: visible !important;
+  transform: none !important;
 }
 
 .notification-header {
@@ -353,19 +191,6 @@
   background-color: #f8f9fa;
 }
 
-.notification-item:last-child {
-  border-bottom: none;
-}
-
-.notification-item strong {
-  color: #495057;
-  font-weight: 600;
-}
-
-.notification-item .text-muted {
-  font-size: 0.8rem;
-}
-
 .notification-footer {
   padding: 0.5rem 1rem;
   text-align: center;
@@ -373,296 +198,86 @@
   background-color: #f8f9fa;
 }
 
-.notification-footer a {
-  color: #007bff;
-  text-decoration: none;
-  font-size: 0.875rem;
+
+
+/* Responsive Design - Media Queries Optimizadas */
+
+/* Pantallas menores a 600px: solo hamburguesa y notificaciones */
+@media (max-width: 599px) {
+  .navbar .container-fluid {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    gap: 8px !important;
+  }
+  
+  .navbar .btn { grid-column: 1 !important; }
+  .navbar .d-flex.align-items-center { grid-column: 2 !important; justify-self: flex-end !important; }
+  .navbar .navbar-nav { display: none !important; }
 }
 
-.notification-footer a:hover {
-  text-decoration: underline;
+/* Mostrar navbar-nav en pantallas de 600px o más */
+@media (min-width: 600px) {
+  .navbar .navbar-nav { 
+    display: flex !important; 
+    align-items: center !important; 
+  }
+  .navbar-title-large { 
+    display: block !important; 
+  }
 }
 
+/* Mostrar mensaje de bienvenida solo en pantallas grandes */
+@media (min-width: 1200px) {
+  .welcome-message { 
+    display: block !important; 
+  }
+}
 
-
-/* ================================================
-   MEDIA QUERIES - RESPONSIVE DESIGN
-   ================================================ */
-
-/* 🖥️ DESKTOP MEDIANO / TABLET GRANDE (lg-md) - 768px a 1199px */
-/* Layout: hamburguesa + título centrado + campana */
+/* Mobile ajustes */
 @media (max-width: 1199px) {
+  .welcome-message { display: none !important; }
+}
+
+@media (max-width: 991.98px) {
   .navbar.fixed-top {
-    padding: 8px 12px;
-  }
-
-  /* Ocultar mensaje de bienvenida */
-  .welcome-message {
-    display: none !important;
-  }
-
-  .notification-container {
-    margin-left: 0.75rem;
-  }
-
-  .notification-btn {
-    padding: clamp(8px, 1.5vw, 9px);
-  }
-
-  .notification-btn .bi-bell {
-    font-size: clamp(1.4rem, 2.8vw, 1.8rem) !important;
+    min-height: var(--navbar-height-mobile, 64px);
+    max-height: var(--navbar-height-mobile, 64px);
+    padding: 10px 16px;
   }
 }
 
-/* 📱 TABLET PEQUEÑO / MOBILE GRANDE (sm-xs) - 576px a 767px */
-/* Layout: hamburguesa + título centrado (SGM) + campana */
-@media (max-width: 767px) and (min-width: 576px) {
+@media (max-width: 767px) {
   .navbar.fixed-top {
-    padding: 10px 8px;
-    min-height: var(--navbar-height-mobile, 64px);
+    min-height: var(--navbar-height-small, 72px);
+    max-height: var(--navbar-height-small, 72px);
+    padding: 12px 16px;
   }
-
-  /* Ocultar mensaje de bienvenida */
-  .welcome-message {
-    display: none !important;
+  
+  .notification-dropdown {
+    right: -10px !important;
+    width: 280px !important;
+    max-width: calc(100vw - 20px) !important;
   }
+}
 
-  .navbar .btn {
-    padding: clamp(6px, 1.2vw, 8px) clamp(8px, 1.8vw, 10px);
-    margin-right: clamp(6px, 1.5vw, 8px);
-    min-width: 44px;
-    min-height: 44px;
+@media (max-width: 575px) {
+  .navbar.fixed-top { padding: 14px 12px; }
+  
+  .notification-dropdown {
+    right: -15px !important;
+    width: 260px !important;
+    max-width: calc(100vw - 30px) !important;
   }
-
-  .navbar .btn i.bi-list {
-    font-size: clamp(1.4rem, 3vw, 1.8rem);
-  }
-
-  .notification-container {
-    margin-left: 0.5rem;
-  }
-
-  .notification-btn {
-    padding: clamp(6px, 1.5vw, 8px);
-    min-width: 42px;
-    min-height: 42px;
-  }
-
-  .notification-btn .bi-bell {
-    font-size: clamp(1.3rem, 3.2vw, 1.6rem) !important;
-  }
-
+  
   .notification-badge {
     font-size: 0.55rem;
     width: 18px !important;
     height: 18px !important;
-    min-width: 18px !important;
-    max-width: 18px !important;
-    border-radius: 50% !important;
-    top: 0px !important;
-    right: 0px !important;
     transform: translate(-10px, 7px) !important;
-    box-sizing: border-box !important;
-    padding: 0 !important;
-    overflow: hidden;
-  }
-
-  /* Dropdown de notificaciones */
-  .notification-dropdown {
-    width: 90vw;
-    max-width: 300px;
-    right: -10px;
-    font-size: 0.8rem;
   }
 }
 
-/* 📱 MOBILE PEQUEÑO (xs) - 575px hacia abajo */
-/* Layout: hamburguesa (izquierda) + campana (derecha) - SIN TÍTULO */
-@media (max-width: 575px) {
-  .navbar.fixed-top {
-    padding: 12px 8px;
-    min-height: var(--navbar-height-small, 72px);
-  }
-}
-
-/* Ajustes específicos para pantallas muy pequeñas (< 400px) */
-@media (max-width: 400px) {
-  .navbar .btn {
-    padding: 12px 14px !important;
-    min-width: 52px !important;
-    min-height: 52px !important;
-  }
-
-  .navbar .btn i.bi-list {
-    font-size: clamp(1.6rem, 5vw, 2rem) !important;
-  }
-
-  .notification-btn {
-    padding: 12px !important;
-    min-width: 52px !important;
-    min-height: 52px !important;
-  }
-
-  .notification-btn .bi-bell {
-    font-size: clamp(1.6rem, 5vw, 1.8rem) !important;
-  }
-
-  /* Ocultar título completamente en pantallas pequeñas */
-  .navbar-title-large {
-    display: none !important;
-  }
-
-  .navbar .navbar-nav {
-    display: none !important;
-  }
-}
-
-/* Dropdown compacto para pantallas muy pequeñas */
-.notification-dropdown {
-  width: 95vw;
-  max-width: 280px;
-  right: -5px;
-  font-size: 0.75rem;
-}
-
-/* Ajustes específicos para tablets horizontales/móviles grandes (600px-700px) */
-@media (min-width: 600px) and (max-width: 700px) {
-  .navbar.fixed-top {
-    padding: 12px 16px;
-    min-height: 68px;
-    max-height: 68px;
-    display: flex !important;
-    align-items: center !important;
-  }
-
-  .navbar .container-fluid {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    height: 100% !important;
-  }
-
-  .navbar .btn {
-    padding: 12px 16px !important;
-    min-width: 48px !important;
-    min-height: 48px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .navbar .btn i.bi-list {
-    font-size: 1.5rem !important;
-  }
-
-  .notification-container {
-    display: flex !important;
-    align-items: center !important;
-    height: 100% !important;
-  }
-
-  .notification-btn {
-    padding: 12px !important;
-    min-width: 48px !important;
-    min-height: 48px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .notification-btn .bi-bell {
-    font-size: 1.5rem !important;
-  }
-
-  /* Asegurar alineación vertical del título */
-  .navbar h1 {
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 1 !important;
-    display: flex !important;
-    align-items: center !important;
-  }
-}
-
-/* Ajustes específicos para tablets grandes/desktop pequeño (1000px-1100px) */
-@media (min-width: 1000px) and (max-width: 1100px) {
-  .navbar.fixed-top {
-    padding: 16px 20px;
-    min-height: 84px;
-    max-height: 84px;
-  }
-
-  .navbar .btn {
-    padding: 14px 18px !important;
-    min-width: 50px !important;
-    min-height: 50px !important;
-  }
-
-  .navbar .btn i.bi-list {
-    font-size: 1.6rem !important;
-  }
-
-  .notification-btn {
-    padding: 14px !important;
-    min-width: 50px !important;
-    min-height: 50px !important;
-  }
-
-  .notification-btn .bi-bell {
-    font-size: 1.6rem !important;
-  }
-
-  .navbar h1 {
-    font-size: 1.5rem !important;
-  }
-
-  .welcome-message {
-    font-size: 1rem !important;
-  }
-}
-
-/* Ajustes específicos para desktop mediano (1200px-1400px) */
-@media (min-width: 1200px) and (max-width: 1400px) {
-  .navbar.fixed-top {
-    padding: 18px 24px;
-    min-height: 88px;
-    max-height: 88px;
-  }
-
-  .navbar .btn {
-    padding: 16px 20px !important;
-    min-width: 52px !important;
-    min-height: 52px !important;
-  }
-
-  .navbar .btn i.bi-list {
-    font-size: 1.7rem !important;
-  }
-
-  .notification-btn {
-    padding: 16px !important;
-    min-width: 52px !important;
-    min-height: 52px !important;
-  }
-
-  .notification-btn .bi-bell {
-    font-size: 1.7rem !important;
-  }
-
-  .navbar h1 {
-    font-size: 1.6rem !important;
-  }
-
-  .welcome-message {
-    font-size: 1.1rem !important;
-  }
-}
-
-/* ================================================
-   TÍTULO RESPONSIVE DEL NAVBAR - REGLA SIMPLIFICADA
-   ================================================ */
-
-/* OCULTAR TÍTULO POR DEFECTO EN TODAS LAS PANTALLAS */
+/* Título responsive */
 .navbar-title-large {
   display: none !important;
   margin: 0 !important;
@@ -671,86 +286,16 @@
   font-weight: 600 !important;
   color: #2fa4e7 !important;
   white-space: nowrap !important;
-  overflow: visible !important; /* CAMBIADO: permitir overflow para dropdowns */
+  overflow: visible !important;
   text-overflow: ellipsis !important;
   font-size: clamp(1.2rem, 2.5vw, 1.8rem) !important;
 }
 
-/* MOSTRAR TÍTULO SOLO EN PANTALLAS DE 600px O MÁS */
+/* FORZAR que el título se muestre en pantallas de 600px o más */
 @media (min-width: 600px) {
   .navbar-title-large {
     display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
-}
-
-/* Asegurar que el contenedor del navbar se adapte correctamente */
-.navbar .navbar-nav .nav-item {
-  display: flex !important;
-  align-items: center !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Ajustes específicos para pantallas pequeñas - DROPDOWN POSITIONING */
-@media (max-width: 767px) {
-  .notification-dropdown {
-    right: -10px !important; /* Ajuste para pantallas pequeñas */
-    width: 280px !important;
-    max-width: calc(100vw - 20px) !important;
-  }
-}
-
-@media (max-width: 575px) {
-  .notification-dropdown {
-    right: -15px !important;
-    width: 260px !important;
-    max-width: calc(100vw - 30px) !important;
-  }
-}
-
-/* OVERRIDES ESPECÍFICOS PARA BOOTSTRAP DROPDOWNS */
-.dropdown-menu {
-  display: none !important;
-  position: absolute !important;
-  z-index: 9999 !important;
-  min-width: 10rem !important;
-  padding: 0.5rem 0 !important;
-  margin: 0 !important;
-  font-size: 0.875rem !important;
-  color: #212529 !important;
-  text-align: left !important;
-  list-style: none !important;
-  background-color: #fff !important;
-  background-clip: padding-box !important;
-  border: 1px solid rgba(0, 0, 0, 0.15) !important;
-  border-radius: 0.375rem !important;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
-
-.dropdown-menu.show {
-  display: block !important;
-  position: absolute !important;
-  z-index: 9999 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: none !important;
-}
-
-/* OVERRIDE DE BOOTSTRAP PARA DROPDOWN-MENU-END */
-.dropdown-menu-end {
-  right: 0 !important;
-  left: auto !important;
-}
-
-/* Asegurar que los dropdowns no sean cortados por contenedores padre */
-.dropdown {
-  position: relative !important;
-  overflow: visible !important;
-}
-
-.dropdown.show .dropdown-menu {
-  display: block !important;
-  position: absolute !important;
-  top: 100% !important;
-  z-index: 9999 !important;
 }
