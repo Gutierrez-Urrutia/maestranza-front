@@ -122,41 +122,41 @@
   .sidebar.open::before {
     content: '';
     position: fixed;
-    top: var(--navbar-height-mobile, 64px); /* Empezar después del navbar */
+    top: var(--navbar-height-mobile, 64px); /* CORREGIDO: Empezar después del navbar */
     left: 0;
     width: 100vw;
-    height: calc(100vh - var(--navbar-height-mobile, 64px));
-    background: rgba(0, 0, 0, 0.3); /* Overlay más sutil */
+    height: calc(100vh - var(--navbar-height-mobile, 64px)); /* CORREGIDO: Cubrir desde navbar hasta abajo */
+    background: rgba(0, 0, 0, 0.3); 
     z-index: -1;
-    backdrop-filter: blur(1px); /* Blur mínimo */
+    backdrop-filter: blur(1px); 
   }
 }
 
 /* Responsive Design */
 @media (max-width: 991.98px) {
   .sidebar {
-    width: 280px; /* Más ancho en tablets para mejor usabilidad */
-    z-index: 1030; /* Menor que navbar (1050) pero mayor que contenido */
-    background: #f2f2f2 !important; /* Mantener color gris claro forzado */
-    top: var(--navbar-height-mobile, 64px); /* Respeta el navbar en tablets */
-    height: calc(100vh - var(--navbar-height-mobile, 64px)); /* Altura completa del viewport */
-    overflow-y: hidden; /* Sin scroll innecesario */
+    width: 280px; 
+    z-index: 1030; 
+    background: #f2f2f2 !important; 
+    top: var(--navbar-height-mobile, 64px) !important; /* CORREGIDO: Empezar después del navbar */
+    height: calc(100vh - var(--navbar-height-mobile, 64px)) !important; /* CORREGIDO: Cubrir desde navbar hasta abajo */
+    overflow-y: hidden; 
   }
 }
 
 @media (max-width: 767.98px) {
   .sidebar {
-    top: var(--navbar-height-small, 72px); /* Ajuste dinámico - SIEMPRE debajo del navbar */
-    height: calc(100vh - var(--navbar-height-small, 72px)); /* Altura completa del viewport */
-    width: 100vw; /* Ancho completo en móviles */
-    background: #f2f2f2 !important; /* Color consistente, forzado sin transparencia */
-    backdrop-filter: none; /* Quitar blur que oscurece */
-    border-right: none; /* Sin borde en móviles */
-    overflow-y: hidden; /* Sin scroll innecesario */
-    z-index: 1030; /* Menor que navbar (1050) */
+    top: var(--navbar-height-small, 72px) !important; /* CORREGIDO: Empezar después del navbar */
+    height: calc(100vh - var(--navbar-height-small, 72px)) !important; /* CORREGIDO: Cubrir desde navbar hasta abajo */
+    width: 100vw; 
+    background: #f2f2f2 !important; 
+    backdrop-filter: none; 
+    border-right: none; 
+    overflow-y: hidden; 
+    z-index: 1030; 
   }
     .sidebar .nav {
-    padding: clamp(40px, 8vw, 48px) clamp(12px, 3vw, 16px) clamp(20px, 4vw, 28px) clamp(12px, 3vw, 16px); /* Mucho más separación en móviles */
+    padding: clamp(40px, 8vw, 48px) clamp(12px, 3vw, 16px) clamp(20px, 4vw, 28px) clamp(12px, 3vw, 16px); 
   }
   
   .nav-link, .logout-btn {
@@ -175,21 +175,21 @@
 
 @media (max-width: 575.98px) {
   .sidebar {
-    top: var(--navbar-height-small, 72px); /* Consistente con navbar */
-    height: calc(100vh - var(--navbar-height-small, 72px)); /* Altura completa del viewport */
-    background: #f2f2f2 !important; /* Color gris claro consistente forzado */
-    overflow-y: hidden; /* Sin scroll innecesario */
-    z-index: 1030; /* Menor que navbar (1050) */
+    top: var(--navbar-height-small, 72px) !important; /* CORREGIDO: Empezar después del navbar */
+    height: calc(100vh - var(--navbar-height-small, 72px)) !important; /* CORREGIDO: Cubrir desde navbar hasta abajo */
+    background: #f2f2f2 !important; 
+    overflow-y: hidden; 
+    z-index: 1030; 
   }
     .sidebar .nav {
-    padding: clamp(44px, 9vw, 52px) clamp(16px, 4vw, 20px) clamp(24px, 5vw, 32px) clamp(16px, 4vw, 20px); /* Máxima separación en móviles pequeños */
+    padding: clamp(44px, 9vw, 52px) clamp(16px, 4vw, 20px) clamp(24px, 5vw, 32px) clamp(16px, 4vw, 20px); 
   }
   
   .nav-link, .logout-btn {
     padding: 18px 16px;
     margin: 8px;
     font-size: clamp(0.85rem, 2.2vw, 1rem);
-    min-height: 56px; /* Área de toque mínima */
+    min-height: 56px; 
   }
   
   .nav-link i, .logout-btn i {
@@ -215,8 +215,8 @@
 
 @media (max-width: 400px) {
   .sidebar {
-    top: 76px;
-    height: calc(100vh - 76px);
+    top: 76px !important; /* CORREGIDO: Empezar después del navbar */
+    height: calc(100vh - 76px) !important; /* CORREGIDO: Cubrir desde navbar hasta abajo */
   }
 }
 
