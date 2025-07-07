@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'bootswatch/dist/cerulean/bootstrap.min.css'; 
-@import 'bootstrap-icons/font/bootstrap-icons.css';
+/* Bootstrap Icons se cargan desde CDN en index.html para evitar problemas de fuentes */
 @import '../node_modules/ngx-toastr/toastr.css';
 @import './app/responsive-improvements.css';
 @import './app/pages/usuarios/badges-persistent.css'; /* Estilos persistentes para badges de usuarios */

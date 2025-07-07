@@ -129,8 +129,8 @@
 /* Mejoras para filtros y botones de acción */
 .filtros-responsive {
   .btn-outline-secondary {
-    font-size: clamp(0.7rem, 2vw, 0.9rem);
-    padding: clamp(6px, 1.5vw, 10px) clamp(10px, 2.5vw, 16px);
+    padding: 6px 12px !important;
+    font-size: 0.9rem !important;
     margin: clamp(2px, 0.5vw, 4px);
     border-radius: clamp(4px, 1vw, 6px);
     white-space: nowrap;
